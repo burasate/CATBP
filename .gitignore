@@ -5,3 +5,4 @@ data/config.json
 data/preset.json
 *.pyc
 __pycache__/gSheet.cpython-37.pyc
+*.pyc
