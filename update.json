@@ -1,3 +1,7 @@
 {
-  
+  "historical.py" : "https://raw.githubusercontent.com/burasate/BitPy/master/historical.py",
+  "gSheet.py" : "https://raw.githubusercontent.com/burasate/BitPy/master/gSheet.py",
+  "kbApi.py" : "https://raw.githubusercontent.com/burasate/BitPy/master/kbApi.py",
+  "lineNotify.py" : "https://raw.githubusercontent.com/burasate/BitPy/master/lineNotify.py",
+  "update.py" : "https://raw.githubusercontent.com/burasate/BitPy/master/update.py"
 }

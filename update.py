@@ -18,8 +18,6 @@ while True:
 fileNameSet = json.loads(updateFilePath)
 
 def updateAllFile(*_):
-    pass
-    """
     for file in fileNameSet:
         print('Updating {} from {}'.format(file,fileNameSet[file]))
         url = fileNameSet[file]
@@ -33,7 +31,6 @@ def updateAllFile(*_):
                 mainWriter.close()
                 break
     print('System Updated')
-    """
 
 def updateConfig(*_):
     print('updating config...')
