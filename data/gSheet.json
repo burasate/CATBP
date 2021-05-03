@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "stockpy-282306",
+  "private_key_id": "c93b657b4adaae3b3f47176177459dca0b0119dc",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCpDQMrijZxeDML\nZm3ds1ISHvupfBtZ+FIU7hYMPB6/ALvwUq4AfYTKKVrOhOG+gkXCalzVOPdIM2uJ\n8k3E8fviZ6aCn2kSQuJpRpcLRanmailOImXNvnO0w9JoP1SLmWIp7JSh8JM1o8Ha\nIj6BrO3KGevj3wBRd3HsCwJsPI0Av7zbmbnrv6Yqp6AL6Di709yEGnUfEf+LQR60\nebfRq6MuZQAkeYHKCWruqodO34czXWYe5UBT2FIsb4GYkUdXKfLOZw1SuC5mTdHH\n/3+6tXJomlQBTWfqbXHliemesHH0Y+rmayNlcsRof0xHrF0gkrKTJP0uZfrzIFpF\nmguk7Kh3AgMBAAECggEAFjYeTq1ewOLqULBOdXzW/DLeSGME6aR9uGqd3VFVjYKz\nBCeriBH14rqzR9jgG5qx6rz0jJQVstgFZFRrURn68+uVeP/T8NvL3smGaqs7tbQI\n0E98W8o5xAGfVtDMss4zk87rVSmvAIhkczI2T0MhjSvXDr4hTxLoFiZOKlrRq0wk\nn2iDLkfMqHGcdgHs83hh26NiVo+PMpatOIlK3L0FwpOmgtV2gAXeNgJRG+I1eLIr\nXvwFMQ6oOnhxJBbE+4a5mRVtq1JICpdkMeAgKWeYxyTeGQSxRxExglFU8Qj2KDUr\nx/IXnUx7MiqdhhZRyCCIYuiRvhsVndNrQ3Ac6kXYLQKBgQDZE1OLqx5l0qJC1I1e\nVM+FMwDBCTaQqDKe9rUKPmUJZHecg69sh51VmK9FyzzHnJx6t9IxckSHZelpqrEx\nwZ6Jp83LGneiDdy9yQP3mUXXU1MUiyjQA3ahREOeFH0spryhjAt7wrG/zCiLcfGR\nDLBLVZrP2oTqZaxXiiq3mTs2VQKBgQDHXSco5HFWnUEMxzjBCnZpBn2hsa4Xmal3\nn6V9RKIrTeGuz4zsaS8ihldnzOuuLMWa39dFVZQNGWu6xPRkicj/aCmUkcAz9kUz\n97gJ4uGeraFaMTDCTeezL+JZmeQDx0JagjsAO//T5g9cZqStUE0eYkM3jLA7Qyls\n5bMhxUy3mwKBgQDFKze8af5fUDXP7A5H+1LO0qfBrmOgexYXq1B/cHMHV/kI8dd6\nBagT4m55P4QCby72jFbgUMEMFrYvIzp1Tj95GzDiZTT6vgqdW6M91ztHvMh+pXO5\nlRvAmSetw0B7OSumtHSNwib/ZioBlsprDJJoquXGG96UpSsoDDiGsSjGTQKBgA4h\nTxY54sKV0Ld8I0yjVjMpb5wXQNSRYo6E9TDEvY2+LmG6ei2DYwDabrV/s7CbocHR\nXaufXifzhkwti3jYvzNDCbdrASltqgf95cBloUIi4k3HMMKEzQhJO4zIOH4AEHbj\nxhTFK+Oz6aDN8ZwLFfwyULtOMGty3ivGuASLvF1DAoGAZ0p9jhRw4mMXOcRY3Ziv\nKkLARJpiSTiOXDB4i57JJboDT0XP39ug1+y4Z3xJn+UwxoU+Wv5rqFW/qK1zDCHs\nvY0syDNQkRHyHefAsmaRUdp+LpyacX1/t9JCfxEQeNpMzaQzmkEI1NMgx11+F07W\nfR9mZ+O0zU3iFhBxppst90k=\n-----END PRIVATE KEY-----\n",
+  "client_email": "stockpysheet@stockpy-282306.iam.gserviceaccount.com",
+  "client_id": "117898732733604129961",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/stockpysheet%40stockpy-282306.iam.gserviceaccount.com"
+}
