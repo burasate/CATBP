@@ -57,10 +57,10 @@
     },
     "S5": {
         "preset": "S5",
-        "description": "Day Trader 0-6 Baht",
-        "value": 100000000,
+        "description": "Day Trader 0-10 Baht",
+        "value": 60000000,
         "priceMin": 0,
-        "priceMax": 6,
+        "priceMax": 10,
         "smaS": 3,
         "smaL": 7,
         "breakOutH": 5,

@@ -9,7 +9,7 @@ configJson = json.load(open(configPath))
 presetPath = dataPath + '/preset.json'
 presetJson = json.load(open(presetPath))
 
-updateListURL = 'https://raw.githubusercontent.com/burasate/StockPy/main/update/update.json'
+updateListURL = 'https://raw.githubusercontent.com/burasate/BitPy/master/update.json'
 while True:
     connectStatus = requests.get(updateListURL).status_code
     if connectStatus == 200:
@@ -57,6 +57,7 @@ def updatePreset(*_):
     print(dataS)
 
     json.dump(dataS, open(presetPath, 'w'), indent=4)
+
 
 if __name__ == '__main__':
     updateConfig()

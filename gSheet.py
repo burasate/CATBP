@@ -3,8 +3,8 @@ from oauth2client.service_account import ServiceAccountCredentials
 
 rootPath = os.path.dirname(os.path.abspath(__file__))
 dataPath = rootPath+'/data'
-jsonKeyPath = dataPath + '/sgAnimRecGoogleSheet.json'
-sheetName = 'sgOGS_ShotMornitor'
+jsonKeyPath = dataPath + '/gSheet.json'
+sheetName = 'BitkubPy'
 
 def connect(*_):
     scope = ['https://spreadsheets.google.com/feeds',

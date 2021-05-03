@@ -1,42 +1,12 @@
 {
-    "user2": {
-        "idName": "user2",
-        "description": "Gloymai",
-        "email": "kanlayamart5437@gmail.com",
-        "active": 0,
-        "preset": "S3",
-        "lineToken": "FnBxxXP2vq1w3Mi0avGH6Ip3i08mbAZaWxDXrclbNoH"
-    },
-    "user3": {
-        "idName": "user3",
-        "description": "Popia",
-        "email": "burasedborvon@gmail.com",
-        "active": 0,
-        "preset": "S3",
-        "lineToken": "yVAFm9IfyVqov14Q7wU9BEtpUWkfRUlssosOtHTneWc"
-    },
-    "user4": {
-        "idName": "user4",
-        "description": "O",
-        "email": "sivagon-123@hotmail.com",
-        "active": 0,
-        "preset": "S3",
-        "lineToken": "H75UGKBxGRLMrlWibkpKyp99eOkphBv6h9m7TY3FiOh"
-    },
     "user1": {
         "idName": "user1",
         "description": "Kaofang",
         "email": "burasedborvon@gmail.com",
-        "active": 0,
+        "active": 1,
         "preset": "S4",
-        "lineToken": "Fq2uIz8AnqmCS2J9eA6ttmVhY1dfDdPp7lzAlsrDc44"
-    },
-    "user5": {
-        "idName": "user5",
-        "description": "Poko",
-        "email": "kareejairai@hotmail.com",
-        "active": 0,
-        "preset": "S3",
-        "lineToken": "9KaYwAxNjjpMKAucHlaYl62HBgOytvY1JL4keUX0wka"
+        "lineToken": "Fq2uIz8AnqmCS2J9eA6ttmVhY1dfDdPp7lzAlsrDc44",
+        "bk_apiKey": "fe4200d37b56b6d63b28e1533a0a48ef",
+        "bk_apiSecret": "07e0df8ad34bd2ae9f2d152b03b1e7ca"
     }
 }
