@@ -3,5 +3,8 @@
   "gSheet.py" : "https://raw.githubusercontent.com/burasate/BitPy/master/gSheet.py",
   "kbApi.py" : "https://raw.githubusercontent.com/burasate/BitPy/master/kbApi.py",
   "lineNotify.py" : "https://raw.githubusercontent.com/burasate/BitPy/master/lineNotify.py",
-  "update.py" : "https://raw.githubusercontent.com/burasate/BitPy/master/update.py"
+  "update.py" : "https://raw.githubusercontent.com/burasate/BitPy/master/update.py",
+  "analysis.py" : "https://raw.githubusercontent.com/burasate/BitPy/master/analysis.py",
+  "analysis.py" : "https://raw.githubusercontent.com/burasate/BitPy/master/analysis.py",
+  "main.py" : "https://raw.githubusercontent.com/burasate/BitPy/master/analysis.py"
 }

@@ -69,7 +69,7 @@ def updateGSheetHistory(*_):
     df.drop_duplicates(['symbol','date','hour','minute'], keep='last', inplace=True)
     df.sort_index(inplace=True)
     #limit row
-    df = df.tail(8000)
+    df = df.tail(10000)
     # print(df)
 
     histPath = dataPath + '/cryptoHist.csv'
@@ -79,7 +79,7 @@ def updateGSheetHistory(*_):
     gSheet.updateFromCSV(histPath, 'History')
     print('upload history data finish')
 
-def createSymbolHistory(symbol,timeFrame = 'hour'):
+def createSymbolHistory(symbol,timeFrame = 'minute'):
     print('create price history ... {}'.format(symbol))
     df = pd.DataFrame(
         {
@@ -139,7 +139,6 @@ def loadAllHist(*_):
     for data in symbols:
         sym = data['symbol']
         createSymbolHistory(sym)
-
 
 if __name__ == '__main__':
     #updateGSheetHistory()

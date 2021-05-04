@@ -10,6 +10,19 @@ presetJson = json.load(open(presetPath))
 
 host = 'https://api.bitkub.com'
 
+def json_encode(data):
+	return json.dumps(data, separators=(',', ':'), sort_keys=True)
+
+def sign(idName,data):
+    user = getKeySecret(idName)
+    secret = bytes(user['secret'],'utf-8')
+
+    j = json_encode(data)
+    print('Signing payload: ' + j)
+
+    h = hmac.new(secret, msg=j.encode(), digestmod=hashlib.sha256)
+    return h.hexdigest()
+
 def getKeySecret(idName):
     data = {
         'key' : configJson[idName]['bk_apiKey'],
@@ -29,9 +42,33 @@ def getTicker(*_):
     data = response.json()
     return data
 
+def getBalance(idName):
+    user = getKeySecret(idName)
+
+    # check server time
+    response = requests.get(host + '/api/servertime')
+    ts = int(response.text)
+    print('Server time: ' + response.text)
+
+    # check balances
+    header = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'X-BTK-APIKEY': user['key'],
+    }
+    data = {
+        'ts': ts,
+    }
+    signature = sign(idName,data)
+    data['sig'] = signature
+
+    print('Payload with signature: ' + json_encode(data))
+    response = requests.post(host + '/api/market/balances', headers=header, data=json_encode(data))
+
+    print('Balances: ' + response.text)
+
 if __name__ == '__main__':
-    print(getTicker())
-    pass
+    getBalance('user1')
     #x = getKeySecret('user1')
     #print(x)
     #symbols = getSymbol()
