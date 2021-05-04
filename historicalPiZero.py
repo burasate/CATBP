@@ -63,7 +63,7 @@ else:
         try:
             updateGSheetHistory()
         except:
-            time.sleep(30)
+            time.sleep(10)
         else:
-            time.sleep(900)
+            time.sleep(180)
 

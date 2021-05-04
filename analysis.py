@@ -20,6 +20,7 @@ analysisHistPath = dataPath + '/analysis_hist'
 def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
     # Plot Indicator
     quote = os.path.splitext(os.path.basename(csvPath))[0]
+    quote = quote.replace('_',' ')
 
     #Load Preset
     ps_description = presetJson[preset]["description"]
@@ -394,7 +395,7 @@ if __name__ == '__main__' :
     #presetPath = dataPath + '/preset.json'
     #presetJson = json.load(open(presetPath))
 
-    getAnalysis(histPath + 'THB_DOGE' + '.csv', 'S4',saveImage=False,showImage=True)
+    getAnalysis(histPath + 'THB_ZIL' + '.csv', 'S4',saveImage=False,showImage=True)
     #getSignalAllPreset()
 
     """
