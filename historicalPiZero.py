@@ -56,14 +56,17 @@ def updateGSheetHistory(*_):
 
         gSheet.addRow('History',row)
 
-if __name__ == '__main__':
-    updateGSheetHistory()
-else:
+if not os.name == 'nt':
+    import update
+    update.updateConfig()
+    update.updatePreset()
+    update.updateAllFile()
+
     while True:
         try:
             updateGSheetHistory()
         except:
-            time.sleep(10)
+            time.sleep(15)
         else:
-            time.sleep(180)
+            time.sleep(300)
 
