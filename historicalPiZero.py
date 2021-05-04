@@ -69,4 +69,3 @@ if not os.name == 'nt':
             time.sleep(15)
         else:
             time.sleep(300)
-
