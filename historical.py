@@ -38,6 +38,7 @@ def updateGSheetHistory(*_):
     epoch = time.time()
     minute = int(dt.now().strftime('%M'))
     second = int(dt.now().strftime('%S'))
+    date_time = dt.now().strftime('%Y-%m-%d %H:%M:%S')
 
     #backup hist
     backupPath = dataPath + '/hist_backup/cryptoHist_{}.csv'.format(date.replace('-','_'))
@@ -57,7 +58,8 @@ def updateGSheetHistory(*_):
             'hour': hour,
             'minute': minute,
             'second': second,
-            'symbol': sym
+            'symbol': sym,
+            'dateTime': date_time
         }
         for colName in ticker[sym]:
             rowData[colName] = [ticker[sym][colName]]
@@ -69,7 +71,7 @@ def updateGSheetHistory(*_):
     df.drop_duplicates(['symbol','date','hour','minute'], keep='last', inplace=True)
     df.sort_index(inplace=True)
     #limit row
-    df = df.tail(10000)
+    df = df.tail(15000)
     # print(df)
 
     histPath = dataPath + '/cryptoHist.csv'
