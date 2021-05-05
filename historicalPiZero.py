@@ -42,7 +42,8 @@ def updateGSheetHistory(*_):
             'epoch': time.time(),
             'minute': int(dt.now().strftime('%M')),
             'second': int(dt.now().strftime('%S')),
-            'symbol' : sym
+            'symbol' : sym,
+            'dateTime' : dt.now().strftime('%Y-%m-%d %H:%M:%S')
         }
 
         for i in ticker[sym]:
