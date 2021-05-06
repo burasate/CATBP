@@ -12,7 +12,7 @@ presetPath = dataPath + '/preset.json'
 presetJson = json.load(open(presetPath))
 
 def getHistDataframe(*_):
-    print('reading ticker history from google sheet')
+    print('load history data from google sheet...')
     df = pd.DataFrame()
     sheetData = gSheet.getAllDataS('History')
 
@@ -61,6 +61,7 @@ def updateGSheetHistory(*_):
             'symbol': sym,
             'dateTime': date_time
         }
+
         for colName in ticker[sym]:
             rowData[colName] = [ticker[sym][colName]]
         df = df.append(
@@ -136,13 +137,13 @@ def createSymbolHistory(symbol,timeFrame = 'minute'):
     symbolPath = dataPath + '/hist/' + symbol + '.csv'
     df.to_csv(symbolPath,index=False)
 
-def loadAllHist(*_):
+def loadAllHist(timeFrame = 'minute'):
     symbols = kbApi.getSymbol()
     for data in symbols:
         sym = data['symbol']
-        createSymbolHistory(sym)
+        createSymbolHistory(sym,timeFrame)
 
 if __name__ == '__main__':
     #updateGSheetHistory()
     #createSymbolHistory('THB_DOGE')
-    loadAllHist()
+    loadAllHist(timeFrame='hour')

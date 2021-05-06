@@ -2,9 +2,6 @@
     "S1": {
         "preset": "S1",
         "description": "System S1 Day Trader",
-        "value": 100000000,
-        "priceMin": 1,
-        "priceMax": 200,
         "smaS": 5,
         "smaL": 20,
         "breakOutH": 20,
@@ -16,9 +13,6 @@
     "S2": {
         "preset": "S2",
         "description": "Slow Signal",
-        "value": 100000000,
-        "priceMin": 1,
-        "priceMax": 200,
         "smaS": 5,
         "smaL": 50,
         "breakOutH": 55,
@@ -30,9 +24,6 @@
     "S3": {
         "preset": "S3",
         "description": "BRS Custom Signal",
-        "value": 100000000,
-        "priceMin": 1,
-        "priceMax": 200,
         "smaS": 5,
         "smaL": 20,
         "breakOutH": 55,
@@ -44,9 +35,6 @@
     "S4": {
         "preset": "S4",
         "description": "Fast Signal for Take Profit",
-        "value": 60000000,
-        "priceMin": 1,
-        "priceMax": 200,
         "smaS": 5,
         "smaL": 15,
         "breakOutH": 20,
@@ -58,9 +46,6 @@
     "S5": {
         "preset": "S5",
         "description": "Day Trader 0-10 Baht",
-        "value": 60000000,
-        "priceMin": 0,
-        "priceMax": 10,
         "smaS": 3,
         "smaL": 7,
         "breakOutH": 5,
