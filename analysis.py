@@ -23,9 +23,6 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
 
     #Load Preset
     ps_description = presetJson[preset]["description"]
-    ps_value = presetJson[preset]["value"]
-    ps_priceMin = presetJson[preset]["priceMin"]
-    ps_priceMax = presetJson[preset]["priceMax"]
     ps_sma_s = presetJson[preset]["smaS"]
     ps_sma_l = presetJson[preset]["smaL"]
     ps_breakout_high = presetJson[preset]["breakOutH"]
@@ -284,8 +281,6 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
         axes[0].text(plotTrimMin+1, df['High'].max(),
                      'Preset Name: {}\n'.format(preset)+
                      'Preset Description : {}\n'.format(ps_description)+
-                     'Value greater than  : {}\n'.format(ps_value)+
-                     'Price : {} - {}\n'.format(ps_priceMin,ps_priceMax)+
                      'SMA : {}/{} Days\n'.format(ps_sma_s,ps_sma_l)+
                      'Breakout High : {} Days\n'.format(ps_breakout_high)+
                      'Breakout Low : {} Days\n'.format(ps_breakout_low)+
@@ -324,7 +319,7 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
     return df
 
 def getSignalAllPreset(*_):
-    rec_date = dt.date.today().isoformat()
+    rec_date = dt.datetime.now().isoformat()
     signal_df = pd.DataFrame()
     # Clear Directory
     imgPath = dataPath + '/analysis_img/'
@@ -347,8 +342,7 @@ def getSignalAllPreset(*_):
                 # Condition List
                 entry_condition_list = [df['SMA_S'][0] > df['SMA_L'][0], #0
                                         df['%K'][0] > df['%D'][0], #1
-                                        df['GL_Ratio'][0] > df['GL_Ratio_Slow'][0], #2
-                                        df['Volume_Break_H'][0] > df['Volume_Avg'][0] #3
+                                        df['GL_Ratio'][0] > df['GL_Ratio_Slow'][0] #2
                                         ]
 
                 exit_condition_list = [df['SMA_S'][0] < df['SMA_L'][0],
@@ -382,19 +376,20 @@ def getSignalAllPreset(*_):
                     print('Preset : {} | Exit : {}'.format(ps, file))
                     df['Signal'] = 'Exit'
                     signal_df = signal_df.append(df.iloc[0])
-                elif filter_condition and df['Buy_Score'][0] >= df['Buy_Score'].max()-1:
-                    signal_df = signal_df.append(df.iloc[0])
 
             except:
                 pass
 
-    signal_df = signal_df.sort_values(['Signal','Preset','Value_M','GL_Ratio','Buy_Score'], ascending=[True,True,False,False,False])
+    signal_df = signal_df.sort_values(['Signal','Preset','Value_M','GL_Ratio'], ascending=[True,True,False,False])
     csvPath = dataPath + os.sep + 'signal.csv'
+    if not os.path.exists(csvPath):
+        signal_df.to_csv(csvPath,index=False)
 
     # New Signal DataFrame
     new_signal_df = pd.read_csv(csvPath)
     new_signal_df = new_signal_df[new_signal_df['Rec_Date'] != rec_date]
     new_signal_df = new_signal_df.append(signal_df)
+    new_signal_df = new_signal_df.tail(500)
     new_signal_df.to_csv(csvPath,index=False)
 
     # Update G Sheet
@@ -411,7 +406,7 @@ if __name__ == '__main__' :
     #presetPath = dataPath + '/preset.json'
     #presetJson = json.load(open(presetPath))
 
-    #getAnalysis(histPath + 'THB_LINK' + '.csv', 'S4',saveImage=False,showImage=True)
+    #getAnalysis(histPath + 'THB_DOGE' + '.csv', 'S4',saveImage=False,showImage=True)
     getSignalAllPreset()
 
     """
