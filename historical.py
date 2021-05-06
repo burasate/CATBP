@@ -6,6 +6,7 @@ import gSheet
 
 rootPath = os.path.dirname(os.path.abspath(__file__))
 dataPath = rootPath+'/data'
+histPath = dataPath + '/hist'
 configPath = dataPath + '/config.json'
 configJson = json.load(open(configPath))
 presetPath = dataPath + '/preset.json'
@@ -68,18 +69,18 @@ def updateGSheetHistory(*_):
             pd.DataFrame(rowData), ignore_index=True
         )
 
-    # delet duplicate
+    # delete duplicate
     df.drop_duplicates(['symbol','date','hour','minute'], keep='last', inplace=True)
     df.sort_index(inplace=True)
     #limit row
-    df = df.tail(15000)
+    df = df.tail(10000)
     # print(df)
 
-    histPath = dataPath + '/cryptoHist.csv'
-    df.to_csv(histPath, index=False)
+    allHistPath = dataPath + '/cryptoHist.csv'
+    df.to_csv(allHistPath, index=False)
 
     print('uploading history data...')
-    gSheet.updateFromCSV(histPath, 'History')
+    gSheet.updateFromCSV(allHistPath, 'History')
     print('upload history data finish')
 
 def createSymbolHistory(symbol,timeFrame = 'minute'):
@@ -97,8 +98,8 @@ def createSymbolHistory(symbol,timeFrame = 'minute'):
         }
     )
 
-    histPath = histPath = dataPath + '/cryptoHist.csv'
-    histDF = pd.read_csv(histPath)
+    allHistPath = dataPath + '/cryptoHist.csv'
+    histDF = pd.read_csv(allHistPath)
     histDF = histDF[histDF['symbol'] == symbol]
 
     #set timeframe
@@ -123,7 +124,7 @@ def createSymbolHistory(symbol,timeFrame = 'minute'):
     histDF.reset_index(inplace=True)
 
     # assign df
-    df['Date'] = histDF['date']
+    df['Date'] = histDF['dateTime']
     df['Close'] = histDF['close'].round(2)
     df['adjClose'] = histDF['close'].round(2)
     df['Open'] = histDF['open'].round(2)
@@ -134,16 +135,22 @@ def createSymbolHistory(symbol,timeFrame = 'minute'):
 
     #revese index and save
     df = df.sort_index(ascending=False)
-    symbolPath = dataPath + '/hist/' + symbol + '.csv'
+    symbolPath = histPath + os.sep + symbol + '.csv'
     df.to_csv(symbolPath,index=False)
 
 def loadAllHist(timeFrame = 'minute'):
+    for f in os.listdir(histPath):
+        os.remove(histPath + os.sep + f)
+
+    ticker = kbApi.getTicker()
     symbols = kbApi.getSymbol()
     for data in symbols:
         sym = data['symbol']
+        if not sym in ticker:
+            continue
         createSymbolHistory(sym,timeFrame)
 
 if __name__ == '__main__':
-    #updateGSheetHistory()
+    updateGSheetHistory()
     #createSymbolHistory('THB_DOGE')
-    loadAllHist(timeFrame='minute')
+    loadAllHist(timeFrame='hour')

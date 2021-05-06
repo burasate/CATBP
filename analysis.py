@@ -6,6 +6,7 @@ import os
 import datetime as dt
 from shutil import copyfile
 import gSheet
+import kbApi
 
 rootPath = os.path.dirname(os.path.abspath(__file__))
 dataPath = rootPath+'/data'
@@ -16,10 +17,18 @@ presetPath = dataPath + '/preset.json'
 presetJson = json.load(open(presetPath))
 histFileList = os.listdir(histPath)
 analysisHistPath = dataPath + '/analysis_hist'
+symbols = kbApi.getSymbol()
 
 def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
     # Plot Indicator
     quote = os.path.splitext(os.path.basename(csvPath))[0]
+    info = ''
+    for data in symbols:
+        if data['symbol'] == quote:
+            info = data['info']
+            break
+
+    quote = quote.split('_')[-1]
 
     #Load Preset
     ps_description = presetJson[preset]["description"]
@@ -139,13 +148,13 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
         fig.patch.set_facecolor((.9, .9, .9))
         plt.rcParams['figure.facecolor'] = (.9, .9, .9)
         fig.patch.set_alpha(1)
-        fig.suptitle(quote,
+        fig.suptitle('{}  ( {} )\n{}'.format(quote,info,df['Date'][0]),
                   fontsize=15, color=pltColor['text'])
         plt.subplots_adjust(left=0.05, bottom=0.05, right=0.95, top=0.90, wspace=0.20, hspace=0.00)
 
         #Plot Setup
         plotTrimMin = 0
-        plotTrimMax = 120
+        plotTrimMax = 110
         axes[0].set_facecolor(pltColor['bg'])
         axes[0].set_xlim(plotTrimMin,plotTrimMax)
         #axes[0].grid(True, 'both', 'both',color = (.87,.87,.87))
@@ -268,12 +277,12 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
         axes[0].text(plotTrimMax-3, min(df['Low']), 'by Burasate.U', size=12, ha='right', va='top', color=(.5,.5,.5))
         close_l_percenttage = round(((df['Close'][0]-df['BreakOut_L'][0])/df['Close'][0])*100,2)
         axes[0].text(100, df['BreakOut_L'][0],
-                     '  ' + '{} (-{}%)'.format( df['BreakOut_L'][0],close_l_percenttage ),
+                     '  ' + '{} \n(-{}%)'.format( df['BreakOut_L'][0],close_l_percenttage ),
                      size=10, ha='left', va='center',
                      color=pltColor['text'])
         close_h_percenttage = round(((df['BreakOut_H'][0]-df['Close'][0])/df['Close'][0])*100,2)
         axes[0].text(100, df['BreakOut_H'][0],
-                     '  ' + '{} (+{}%)'.format( df['BreakOut_H'][0],close_h_percenttage ),
+                     '  ' + '{} \n(+{}%)'.format( df['BreakOut_H'][0],close_h_percenttage ),
                      size=10, ha='left', va='center',
                      color=pltColor['text'])
         #axes[0].text(100, df['BreakOut_M'][0], '  ' + str(df['BreakOut_M'][0]), size=10, ha='left', va='center',
@@ -281,10 +290,10 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
         axes[0].text(plotTrimMin+1, df['High'].max(),
                      'Preset Name: {}\n'.format(preset)+
                      'Preset Description : {}\n'.format(ps_description)+
-                     'SMA : {}/{} Days\n'.format(ps_sma_s,ps_sma_l)+
-                     'Breakout High : {} Days\n'.format(ps_breakout_high)+
-                     'Breakout Low : {} Days\n'.format(ps_breakout_low)+
-                     'STO Fast : {} Days\n'.format(ps_sto_fast)+
+                     'SMA : {}/{}\n'.format(ps_sma_s,ps_sma_l)+
+                     'Breakout High : {}\n'.format(ps_breakout_high)+
+                     'Breakout Low : {}\n'.format(ps_breakout_low)+
+                     'STO Fast : {}\n'.format(ps_sto_fast)+
                      'STO Slow : {}\n'.format(ps_sto_slow)
                  , size=10, ha='left', va='top', color=((.4, .4, .4)))
 
@@ -401,22 +410,13 @@ def getSignalAllPreset(*_):
     gSheet.updateFromCSV(gsheet_csvPath, 'SignalRecord')
 
 if __name__ == '__main__' :
-    #import update
-    #update.updatePreset()
-    #presetPath = dataPath + '/preset.json'
-    #presetJson = json.load(open(presetPath))
+    import update
+    update.updatePreset()
+    presetPath = dataPath + '/preset.json'
+    presetJson = json.load(open(presetPath))
 
-    #getAnalysis(histPath + 'THB_DOGE' + '.csv', 'S4',saveImage=False,showImage=True)
-    getSignalAllPreset()
-
-    """
-    # Backtesting...
-    for f in os.listdir(dataPath + '/backtesting_hist/'):
-        if f.__contains__('.BK'):
-            q = f.split('.')[0]
-            for ps in presetJson:
-                backTesting(q,ps)
-    """
+    getAnalysis(histPath + 'THB_BTC' + '.csv', 'S4',saveImage=False,showImage=True)
+    #getSignalAllPreset()
     pass
 
 

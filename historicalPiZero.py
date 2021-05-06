@@ -1,4 +1,4 @@
-import os,json,requests,time
+import os,json,requests,time,random
 from datetime import datetime as dt
 import kbApi
 import gSheet
@@ -28,6 +28,10 @@ def updateGSheetHistory(*_):
     ticker = kbApi.getTicker()
     symbols = kbApi.getSymbol()
     header = gSheet.getWorksheetColumnName('History')
+
+    isReverse = bool(random.randint(0, 1))
+    if isReverse:
+        symbols = symbols.reverse()
 
     os.system('cls||clear')
 
@@ -70,3 +74,5 @@ if not os.name == 'nt':
             time.sleep(15)
         else:
             time.sleep(300)
+
+

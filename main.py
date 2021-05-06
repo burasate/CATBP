@@ -13,3 +13,6 @@ if not os.name == 'nt':
 import historical
 historical.updateGSheetHistory()
 historical.loadAllHist()
+
+import analysis
+analysis.getSignalAllPreset()
