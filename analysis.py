@@ -53,15 +53,11 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
     flag = ''
     date = str(dt.date.today())
     df['Value_M'] = ((df['Volume']/1000000)*df['Close']).round(2)
-    day_n = 1
-    week_n = 5
-    month_n = 20
-    change_day = df_reverse['Close'].diff(day_n).sort_index(ascending=False)
-    change_week = df_reverse['Close'].diff(week_n).sort_index(ascending=False)
-    change_month = df_reverse['Close'].diff(month_n).sort_index(ascending=False)
-    df['Chang_D%'] = ((change_day/df['Close'][day_n])*100).round(2)
-    df['Chang_W%'] = ((change_week/df['Close'][week_n])*100).round(2)
-    df['Chang_M%'] = ((change_month/df['Close'][month_n])*100).round(2)
+    df['Change'] = df_reverse['Close'].diff()
+    df['Change'] = df['Change'].sort_index(ascending=True)
+    df['Change4'] = df_reverse['Close'].diff(4)
+    df['Change4'] = df['Change4'].sort_index(ascending=True)
+
 
     # slow stochastic
     low_min = df_reverse['Low'].rolling(ps_sto_fast).min()
@@ -114,7 +110,7 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
 
     # drawdown
     df['Drawdown%'] = 100 * ((df['BreakOut_H']-df['Low'])/df['BreakOut_H'])
-    df['Max_Drawdown%'] =  round(df['Drawdown%'].max(),2)
+    df['Max_Drawdown%'] =  round(df['Drawdown%'].max(),1)
     #df['Avg_Drawdown%'] =  round(df['Drawdown%'].mean(),2)
     #df['Min_Drawdown%'] =  round(df['Drawdown%'].min(),2)
     if ps_breakout_high > 30 :
@@ -199,7 +195,6 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
         #axes[0].plot(df['Day'], df['BreakOut_M'], linewidth=.7, color=pltColor['yellow'], linestyle=':')
         #axes[0].plot(df['Day'], df['BreakOut_MH'], linewidth=.7, color=pltColor['green'], linestyle='--',alpha=0.5)
         #axes[0].plot(df['Day'], df['BreakOut_ML'], linewidth=.7, color=pltColor['red'], linestyle='--',alpha=0.5)
-
 
         #Test Signal
         axes[0].plot(df[df['SMA_S']>df['SMA_L']][df['%K']>df['%D']][df['GL_Ratio']>df['GL_Ratio_Slow']]['Day'],
@@ -328,7 +323,7 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
     return df
 
 def getSignalAllPreset(*_):
-    rec_date = dt.datetime.now().isoformat()
+    rec_date = dt.datetime.today().isoformat()
     signal_df = pd.DataFrame()
     # Clear Directory
     imgPath = dataPath + '/analysis_img/'
@@ -340,6 +335,7 @@ def getSignalAllPreset(*_):
     for file in histFileList:
         quote = file.split('.')[0]
         count += 1
+        os.system('cls||clear')
         print('{}/{}  {}'.format(count,len(histFileList),quote))
         for ps in presetJson:
             try:
@@ -365,15 +361,14 @@ def getSignalAllPreset(*_):
                 entry_condition = (
                         entry_condition_list[0] and
                         entry_condition_list[1] and
-                        entry_condition_list[2] and
-                        entry_condition_list[3]
+                        entry_condition_list[2]
                 )
                 exit_condition = (
                         exit_condition_list[0] and
                         exit_condition_list[1]
                 )
 
-                os.system('cls||clear')
+
                 # Trade Entry
                 if filter_condition and entry_condition:
                     print('Preset : {} | Entry : {}'.format(ps,file))
@@ -415,8 +410,13 @@ if __name__ == '__main__' :
     presetPath = dataPath + '/preset.json'
     presetJson = json.load(open(presetPath))
 
-    getAnalysis(histPath + 'THB_BTC' + '.csv', 'S4',saveImage=False,showImage=True)
+    #getAnalysis(histPath + 'THB_KNC' + '.csv', 'P1',saveImage=False,showImage=True)
     #getSignalAllPreset()
+    """
+    for i in os.listdir(dataPath + '/hist'):
+        print(i)
+        getAnalysis(histPath + os.sep + i, 'P4', saveImage=True, showImage=False)
+    """
     pass
 
 

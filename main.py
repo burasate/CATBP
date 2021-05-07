@@ -12,7 +12,7 @@ if not os.name == 'nt':
 
 import historical
 historical.updateGSheetHistory()
-historical.loadAllHist()
+historical.loadAllHist(timeFrame='hour')
 
 import analysis
 analysis.getSignalAllPreset()

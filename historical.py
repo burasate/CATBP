@@ -12,18 +12,33 @@ configJson = json.load(open(configPath))
 presetPath = dataPath + '/preset.json'
 presetJson = json.load(open(presetPath))
 
+def isInternetConnect(*_):
+    url = 'http://google.com'
+    connectStatus = requests.get(url).status_code
+    if connectStatus == 200:
+        return True
+    else:
+        return False
+
 def getHistDataframe(*_):
-    print('load history data from google sheet...')
+    print('load history data from google sheet')
     df = pd.DataFrame()
     sheetData = gSheet.getAllDataS('History')
 
+    rowIndex = 0
     for row in sheetData:
+        rowIndex += 1
         rowData = {}
         for colName in row:
             rowData[colName] = [row[colName]]
-        df = df.append(
-            pd.DataFrame(rowData),ignore_index=True
-        )
+        if int(dt.now().second) in [0,15,30,45]:
+            percentage = (rowIndex / len(sheetData)) * 100
+            percentage = round(percentage,2)
+            os.system('cls||clear')
+            print('load history data from google sheet... {}%'.format(percentage))
+            time.sleep(1)
+        df = df.append(pd.DataFrame(rowData),ignore_index=True)
+
     df.sort_index(inplace=True)
     return df
 
@@ -73,18 +88,24 @@ def updateGSheetHistory(*_):
     df.drop_duplicates(['symbol','date','hour','minute'], keep='last', inplace=True)
     df.sort_index(inplace=True)
     #limit row
-    df = df.tail(10000)
+    df = df.tail(15000)
     # print(df)
 
     allHistPath = dataPath + '/cryptoHist.csv'
     df.to_csv(allHistPath, index=False)
 
-    print('uploading history data...')
-    gSheet.updateFromCSV(allHistPath, 'History')
-    print('upload history data finish')
+    while isInternetConnect():
+        try:
+            print('uploading history data...')
+            gSheet.updateFromCSV(allHistPath, 'History')
+            print('upload history data finish')
+        except: pass
+        if gSheet.getAllDataS('History') != []:
+            break
 
 def createSymbolHistory(symbol,timeFrame = 'minute'):
-    print('create price history ... {}'.format(symbol))
+    os.system('cls||clear')
+    print('create price history ... {}  time frame {}'.format(symbol,timeFrame))
     df = pd.DataFrame(
         {
             'Day' : [],
@@ -130,7 +151,7 @@ def createSymbolHistory(symbol,timeFrame = 'minute'):
     df['Open'] = histDF['open'].round(2)
     df['Low'] = histDF['low'].round(2)
     df['High'] = histDF['high'].round(2)
-    df['Volume'] = histDF['baseVolume'].round(0)
+    df['Volume'] = histDF['baseVolume'].diff(1).abs()
     df['Day'] = histDF.index
 
     #revese index and save
@@ -151,6 +172,6 @@ def loadAllHist(timeFrame = 'minute'):
         createSymbolHistory(sym,timeFrame)
 
 if __name__ == '__main__':
+    # createSymbolHistory('THB_DOGE')
     updateGSheetHistory()
-    #createSymbolHistory('THB_DOGE')
     loadAllHist(timeFrame='hour')
