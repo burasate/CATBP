@@ -21,25 +21,9 @@ def isInternetConnect(*_):
         return False
 
 def getHistDataframe(*_):
-    print('load history data from google sheet')
-    df = pd.DataFrame()
+    print('load history data from google sheet...')
     sheetData = gSheet.getAllDataS('History')
-
-    rowIndex = 0
-    for row in sheetData:
-        rowIndex += 1
-        rowData = {}
-        for colName in row:
-            rowData[colName] = [row[colName]]
-        if int(dt.now().second) in [0,15,30,45]:
-            percentage = (rowIndex / len(sheetData)) * 100
-            percentage = round(percentage,2)
-            os.system('cls||clear')
-            print('load history data from google sheet... {}%'.format(percentage))
-            time.sleep(1)
-        df = df.append(pd.DataFrame(rowData),ignore_index=True)
-
-    df.sort_index(inplace=True)
+    df = pd.DataFrame.from_records(sheetData)
     return df
 
 def updateGSheetHistory(*_):
@@ -88,7 +72,7 @@ def updateGSheetHistory(*_):
     df.drop_duplicates(['symbol','date','hour','minute'], keep='last', inplace=True)
     df.sort_index(inplace=True)
     #limit row
-    df = df.tail(15000)
+    df = df.tail(20000)
     # print(df)
 
     allHistPath = dataPath + '/cryptoHist.csv'
@@ -173,5 +157,9 @@ def loadAllHist(timeFrame = 'minute'):
 
 if __name__ == '__main__':
     # createSymbolHistory('THB_DOGE')
-    updateGSheetHistory()
-    loadAllHist(timeFrame='hour')
+    #updateGSheetHistory()
+    #loadAllHist(timeFrame='hour')
+
+    sheetData = gSheet.getAllDataS('History')
+    df = pd.DataFrame.from_records(sheetData)
+    print(df)
