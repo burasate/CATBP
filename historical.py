@@ -159,7 +159,4 @@ if __name__ == '__main__':
     # createSymbolHistory('THB_DOGE')
     #updateGSheetHistory()
     #loadAllHist(timeFrame='hour')
-
-    sheetData = gSheet.getAllDataS('History')
-    df = pd.DataFrame.from_records(sheetData)
-    print(df)
+    pass
