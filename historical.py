@@ -72,7 +72,7 @@ def updateGSheetHistory(*_):
     df.drop_duplicates(['symbol','date','hour','minute'], keep='last', inplace=True)
     df.sort_index(inplace=True)
     #limit row
-    df = df.tail(20000)
+    df = df.tail(30000)
     # print(df)
 
     allHistPath = dataPath + '/cryptoHist.csv'

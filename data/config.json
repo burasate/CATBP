@@ -4,9 +4,65 @@
         "description": "Kaofang",
         "email": "burasedborvon@gmail.com",
         "active": 1,
-        "preset": "S4",
-        "lineToken": "Fq2uIz8AnqmCS2J9eA6ttmVhY1dfDdPp7lzAlsrDc44",
+        "preset": "P1",
+        "system": "S1",
+        "lineToken": "8EDsv2qrc9En20VoqaZpVHwzRSrrmQ5IkLbPhgDEpAT",
         "bk_apiKey": "fe4200d37b56b6d63b28e1533a0a48ef",
         "bk_apiSecret": "07e0df8ad34bd2ae9f2d152b03b1e7ca"
+    },
+    "bot1": {
+        "idName": "bot1",
+        "description": "",
+        "email": "",
+        "active": 0,
+        "preset": "P1",
+        "system": "S1",
+        "lineToken": "",
+        "bk_apiKey": "",
+        "bk_apiSecret": ""
+    },
+    "bot2": {
+        "idName": "bot2",
+        "description": "",
+        "email": "",
+        "active": 0,
+        "preset": "P2",
+        "system": "S1",
+        "lineToken": "",
+        "bk_apiKey": "",
+        "bk_apiSecret": ""
+    },
+    "bot3": {
+        "idName": "bot3",
+        "description": "",
+        "email": "",
+        "active": 0,
+        "preset": "P3",
+        "system": "S1",
+        "lineToken": "",
+        "bk_apiKey": "",
+        "bk_apiSecret": ""
+    },
+    "bot4": {
+        "idName": "bot4",
+        "description": "",
+        "email": "",
+        "active": 0,
+        "preset": "P4",
+        "system": "S1",
+        "lineToken": "",
+        "bk_apiKey": "",
+        "bk_apiSecret": ""
+    },
+    "bot5": {
+        "idName": "bot5",
+        "description": "",
+        "email": "",
+        "active": 0,
+        "preset": "P5",
+        "system": "S1",
+        "lineToken": "",
+        "bk_apiKey": "",
+        "bk_apiSecret": ""
     }
 }

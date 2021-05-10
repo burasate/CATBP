@@ -9,3 +9,8 @@ __pycache__/gSheet.cpython-37.pyc
 data/preset.json
 *.png
 data/preset.json
+data/config.json
+
+
+data/config.json
+data/preset.json

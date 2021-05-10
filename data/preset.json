@@ -35,8 +35,8 @@
     "P4": {
         "preset": "P4",
         "description": "",
-        "smaS": 5,
-        "smaL": 15,
+        "smaS": 2,
+        "smaL": 6,
         "breakOutH": 20,
         "breakOutL": 7,
         "stoFast": 10,

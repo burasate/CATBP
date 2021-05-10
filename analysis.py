@@ -55,9 +55,10 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
     df['Value_M'] = ((df['Volume']/1000000)*df['Close']).round(2)
     df['Change'] = df_reverse['Close'].diff()
     df['Change'] = df['Change'].sort_index(ascending=True)
-    df['Change4'] = df_reverse['Close'].diff(4)
-    df['Change4'] = df['Change4'].sort_index(ascending=True)
-
+    change_4hr = df_reverse['Close'].diff(4)
+    change_4hr = change_4hr.sort_index(ascending=True)
+    df['Change4HR%'] = ( change_4hr/df['Close'].shift(-3) ) * 100
+    df['Change4HR%'] = df['Change4HR%'].round(2)
 
     # slow stochastic
     low_min = df_reverse['Low'].rolling(ps_sto_fast).min()
@@ -70,7 +71,7 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
 
     # volume
     volume_sma_s = df_reverse['Volume'].rolling(2).mean()
-    volume_break_h = df_reverse['Volume'].rolling(2).max()
+    volume_break_h = df_reverse['Volume'].rolling(4).max()
     volume_sma_l = volume_sma_s.rolling(20).mean()
     df['Volume_SMA_S'] = volume_sma_s.sort_index(ascending=True)
     df['Volume_SMA_L'] = volume_sma_l.sort_index(ascending=True)
@@ -341,7 +342,7 @@ def getSignalAllPreset(*_):
             try:
                 df = getAnalysis(histPath+os.sep+file, ps,saveImage=False,showImage=False)
                 df['Preset'] = ps
-                df['Quote'] = quote
+                df['Symbol'] = quote
                 df['Rec_Date'] = rec_date
 
                 # Condition List
@@ -406,12 +407,12 @@ def getSignalAllPreset(*_):
         gSheet.updateFromCSV(gsheet_csvPath, 'SignalRecord')
 
 if __name__ == '__main__' :
-    import update
-    update.updatePreset()
-    presetPath = dataPath + '/preset.json'
-    presetJson = json.load(open(presetPath))
+    #import update
+    #update.updatePreset()
+    #presetPath = dataPath + '/preset.json'
+    #presetJson = json.load(open(presetPath))
 
-    #getAnalysis(histPath + 'THB_KNC' + '.csv', 'P1',saveImage=False,showImage=True)
+    getAnalysis(histPath + 'THB_KNC' + '.csv', 'P4',saveImage=False,showImage=True)
     #getSignalAllPreset()
     """
     for i in os.listdir(dataPath + '/hist'):

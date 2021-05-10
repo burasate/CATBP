@@ -10,6 +10,7 @@ configJson = json.load(open(configPath))
 presetPath = dataPath + '/preset.json'
 presetJson = json.load(open(presetPath))
 
+
 def getHistDataframe(*_):
     df = pd.DataFrame()
     sheetData = gSheet.getAllDataS('History')

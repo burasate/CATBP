@@ -8,6 +8,8 @@ configPath = dataPath + '/config.json'
 configJson = json.load(open(configPath))
 presetPath = dataPath + '/preset.json'
 presetJson = json.load(open(presetPath))
+systemPath = dataPath + '/system.json'
+systemJson = json.load(open(systemPath))
 
 updateListURL = 'https://raw.githubusercontent.com/burasate/BitPy/master/update.json'
 while True:
@@ -55,8 +57,20 @@ def updatePreset(*_):
 
     json.dump(dataS, open(presetPath, 'w'), indent=4)
 
+def updateSystem(*_):
+    print('updating system...')
+    dataSheet = gSheet.getAllDataS('System')
+    #print(configSheet)
+
+    dataS = {}
+    for row in dataSheet:
+        dataS[row['system']] = row
+    print(dataS)
+
+    json.dump(dataS, open(systemPath, 'w'), indent=4)
 
 if __name__ == '__main__':
     updateConfig()
     updatePreset()
+    updateSystem()
     #updateAllFile()

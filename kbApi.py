@@ -1,5 +1,6 @@
 import json,hashlib,os,hmac,requests
 import pprint
+import pandas as pd
 
 rootPath = os.path.dirname(os.path.abspath(__file__))
 dataPath = rootPath+'/data'
@@ -67,8 +68,52 @@ def getBalance(idName):
 
     print('Balances: ' + response.text)
 
+def getBids(symbol,limit=30,dataframe=True):
+    data = {'sym' : symbol,
+            'lmt' : limit
+            }
+    response = requests.get(host + '/api/market/bids',data)
+    resultData = response.json()
+    dataList = []
+    for row in resultData['result']:
+        dataList.append(
+            {
+                'id' : row[0],
+                'timestamp' : row[1],
+                'volume' : row[2],
+                'rate' : row[3],
+                'amount' : row[4]
+             }
+        )
+    if dataframe:
+        return pd.DataFrame.from_records(dataList)
+    else:
+        return dataList
+
+def getAsks(symbol,limit=30,dataframe=True):
+    data = {'sym' : symbol,
+            'lmt' : limit
+            }
+    response = requests.get(host + '/api/market/asks',data)
+    resultData = response.json()
+    dataList = []
+    for row in resultData['result']:
+        dataList.append(
+            {
+                'id' : row[0],
+                'timestamp' : row[1],
+                'volume' : row[2],
+                'rate' : row[3],
+                'amount' : row[4]
+             }
+        )
+    if dataframe:
+        return pd.DataFrame.from_records(dataList)
+    else:
+        return dataList
+
 if __name__ == '__main__':
     getBalance('user1')
-    #x = getKeySecret('user1')
+    #x = getAsks('THB_DOGE',limit=10)
     #print(x)
     #symbols = getSymbol()
