@@ -9,7 +9,8 @@ configPath = dataPath + '/config.json'
 configJson = json.load(open(configPath))
 presetPath = dataPath + '/preset.json'
 presetJson = json.load(open(presetPath))
-
+systemPath = dataPath + '/system.json'
+systemJson = json.load(open(systemPath))
 
 def getHistDataframe(*_):
     df = pd.DataFrame()
