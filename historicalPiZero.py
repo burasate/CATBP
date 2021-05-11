@@ -4,12 +4,20 @@ import kbApi
 import gSheet
 
 rootPath = os.path.dirname(os.path.abspath(__file__))
-dataPath = rootPath+'/data'
+dataPath = rootPath + '/data'
 configPath = dataPath + '/config.json'
-configJson = json.load(open(configPath))
 presetPath = dataPath + '/preset.json'
-presetJson = json.load(open(presetPath))
 systemPath = dataPath + '/system.json'
+
+if not os.path.exists(configPath):
+    json.dump({}, open(configPath, 'x'), indent=4)
+if not os.path.exists(presetPath):
+    json.dump({}, open(presetPath, 'x'), indent=4)
+if not os.path.exists(systemPath):
+    json.dump({}, open(systemPath, 'x'), indent=4)
+
+configJson = json.load(open(configPath))
+presetJson = json.load(open(presetPath))
 systemJson = json.load(open(systemPath))
 
 def getHistDataframe(*_):
