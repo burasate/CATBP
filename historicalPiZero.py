@@ -3,14 +3,6 @@ from datetime import datetime as dt
 import kbApi
 import gSheet
 
-if not os.name == 'nt':
-    time.sleep(60)
-    import update
-    update.updateConfig()
-    update.updatePreset()
-    update.updateSystem()
-    update.updateAllFile()
-
 rootPath = os.path.dirname(os.path.abspath(__file__))
 dataPath = rootPath+'/data'
 configPath = dataPath + '/config.json'
@@ -72,6 +64,14 @@ def updateGSheetHistory(*_):
         gSheet.addRow('History',row)
 
 if not os.name == 'nt':
+    time.sleep(60)
+    import update
+
+    update.updateConfig()
+    update.updatePreset()
+    update.updateSystem()
+    update.updateAllFile()
+
     while True:
         try:
             updateGSheetHistory()
