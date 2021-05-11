@@ -44,6 +44,8 @@ def updateConfig(*_):
         dataS[row['idName']] = row
     print(dataS)
 
+    if not os.path.exists(configPath):
+        json.dump({}, open(configPath, 'x'), indent=4)
     json.dump(dataS, open(configPath, 'w'), indent=4)
 
 def updatePreset(*_):
@@ -55,6 +57,8 @@ def updatePreset(*_):
         dataS[row['preset']] = row
     print(dataS)
 
+    if not os.path.exists(presetPath):
+        json.dump({}, open(presetPath, 'x'), indent=4)
     json.dump(dataS, open(presetPath, 'w'), indent=4)
 
 def updateSystem(*_):
@@ -67,6 +71,8 @@ def updateSystem(*_):
         dataS[row['system']] = row
     print(dataS)
 
+    if not os.path.exists(systemPath):
+        json.dump({}, open(systemPath, 'x'), indent=4)
     json.dump(dataS, open(systemPath, 'w'), indent=4)
 
 if __name__ == '__main__':
