@@ -72,7 +72,7 @@ def updateGSheetHistory(*_):
     df.drop_duplicates(['symbol','date','hour','minute'], keep='last', inplace=True)
     df.sort_index(inplace=True)
     #limit row
-    df = df.tail(30000)
+    df = df.tail(32000)
     # print(df)
 
     allHistPath = dataPath + '/cryptoHist.csv'
@@ -156,7 +156,7 @@ def loadAllHist(timeFrame = 'minute'):
         createSymbolHistory(sym,timeFrame)
 
 if __name__ == '__main__':
-    # createSymbolHistory('THB_DOGE')
+    #createSymbolHistory('THB_DOGE')
     #updateGSheetHistory()
     #loadAllHist(timeFrame='hour')
     pass
