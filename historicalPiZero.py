@@ -67,6 +67,7 @@ if not os.name == 'nt':
     import update
     update.updateConfig()
     update.updatePreset()
+    update.updateSystem()
     update.updateAllFile()
 
     while True:
