@@ -75,10 +75,11 @@ if not os.name == 'nt':
     time.sleep(60)
     import update
 
-    update.updateConfig()
-    update.updatePreset()
-    update.updateSystem()
-    update.updateAllFile()
+    while True:
+        update.updateConfig()
+        update.updatePreset()
+        update.updateSystem()
+        update.updateAllFile()
 
     while True:
         try:
