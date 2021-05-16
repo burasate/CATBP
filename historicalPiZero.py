@@ -74,12 +74,10 @@ def updateGSheetHistory(*_):
 if not os.name == 'nt':
     time.sleep(60)
     import update
-
-    while True:
-        update.updateAllFile()
-        update.updateConfig()
-        update.updatePreset()
-        update.updateSystem()
+    update.updateAllFile()
+    update.updateConfig()
+    update.updatePreset()
+    update.updateSystem()
 
     while True:
         try:

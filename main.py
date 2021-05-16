@@ -11,7 +11,7 @@ if not os.name == 'nt':
     update.updateConfig()
     update.updatePreset()
     update.updateSystem()
-    
+
 import historical
 historical.updateGSheetHistory()
 historical.loadAllHist(timeFrame='hour')
