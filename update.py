@@ -14,11 +14,11 @@ if not os.path.exists(presetPath):
     json.dump({}, open(presetPath, 'x'), indent=4)
 if not os.path.exists(systemPath):
     json.dump({}, open(systemPath, 'x'), indent=4)
-"""
 
-#configJson = json.load(open(configPath))
-#presetJson = json.load(open(presetPath))
-#systemJson = json.load(open(systemPath))
+configJson = json.load(open(configPath))
+presetJson = json.load(open(presetPath))
+systemJson = json.load(open(systemPath))
+"""
 
 updateListURL = 'https://raw.githubusercontent.com/burasate/BitPy/master/update.json'
 while True:
