@@ -4,26 +4,14 @@ from oauth2client.service_account import ServiceAccountCredentials
 rootPath = os.path.dirname(os.path.abspath(__file__))
 dataPath = rootPath+'/data'
 jsonKeyPath = dataPath + '/gSheet.json'
-sheetName = 'BitkubPy'
+sheetName = 'BitPy'
 
 def connect(*_):
     scope = ['https://spreadsheets.google.com/feeds',
              'https://www.googleapis.com/auth/drive']
-
     credential = ServiceAccountCredentials.from_json_keyfile_name(jsonKeyPath, scope)
     gc = gspread.authorize(credential)
     return gc
-
-def loadConfigData(idName):
-    print('Loading config data from database....')
-    sheet = connect().open(sheetName).worksheet('Config')
-    configS = sheet.get_all_records()
-    for r in configS :
-        if r['idName'] == idName:
-            print('config is loaded')
-            return r
-    print ('Can not found ID Name')
-    return None
 
 def getWorksheetColumnName(workSheet):
     sheet = connect().open(sheetName).worksheet(workSheet)
