@@ -7,11 +7,11 @@ print('BitPy')
 if not os.name == 'nt':
     time.sleep(60)
     import update
+    update.updateAllFile()
     update.updateConfig()
     update.updatePreset()
     update.updateSystem()
-    update.updateAllFile()
-
+    
 import historical
 historical.updateGSheetHistory()
 historical.loadAllHist(timeFrame='hour')

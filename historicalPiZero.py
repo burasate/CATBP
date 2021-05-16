@@ -76,10 +76,10 @@ if not os.name == 'nt':
     import update
 
     while True:
+        update.updateAllFile()
         update.updateConfig()
         update.updatePreset()
         update.updateSystem()
-        update.updateAllFile()
 
     while True:
         try:
