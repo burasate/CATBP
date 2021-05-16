@@ -90,4 +90,6 @@ def sortFisrtColumn(workSheet):
 if __name__ == '__main__':
     import pprint
     #setValue('test',findKey='episode',findValue=2,key='cut_duration',value=20)
+    x=getAllDataS('Config')
+    print(x)
     pass
