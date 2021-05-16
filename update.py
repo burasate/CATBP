@@ -7,17 +7,18 @@ dataPath = rootPath+'/data'
 configPath = dataPath + '/config.json'
 presetPath = dataPath + '/preset.json'
 systemPath = dataPath + '/system.json'
-
+"""
 if not os.path.exists(configPath):
     json.dump({}, open(configPath, 'x'), indent=4)
 if not os.path.exists(presetPath):
     json.dump({}, open(presetPath, 'x'), indent=4)
 if not os.path.exists(systemPath):
     json.dump({}, open(systemPath, 'x'), indent=4)
+"""
 
-configJson = json.load(open(configPath))
-presetJson = json.load(open(presetPath))
-systemJson = json.load(open(systemPath))
+#configJson = json.load(open(configPath))
+#presetJson = json.load(open(presetPath))
+#systemJson = json.load(open(systemPath))
 
 updateListURL = 'https://raw.githubusercontent.com/burasate/BitPy/master/update.json'
 while True:
@@ -75,8 +76,6 @@ def updateSystem(*_):
         dataS[row['system']] = row
     print(dataS)
 
-    if not os.path.exists(systemPath):
-        json.dump({}, open(systemPath, 'x'), indent=4)
     json.dump(dataS, open(systemPath, 'w'), indent=4)
 
 if __name__ == '__main__':
