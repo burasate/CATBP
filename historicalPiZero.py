@@ -64,7 +64,7 @@ def updateGSheetHistory(*_):
         gSheet.addRow('History',row)
 
 if not os.name == 'nt':
-    time.sleep(60)
+    time.sleep(80)
     import update
     update.updateAllFile()
     update.updateConfig()
