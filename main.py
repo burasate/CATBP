@@ -3,9 +3,10 @@ import time,os
 rootPath = os.path.dirname(os.path.abspath(__file__))
 
 print('BitPy')
+time.sleep(15)
 import update
 if not os.name == 'nt':
-    time.sleep(60)
+    time.sleep(45)
     update.updateAllFile()
 
 while True:
