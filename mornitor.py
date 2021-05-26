@@ -95,7 +95,7 @@ def MornitoringUser(idName):
             print(text)
             lineNotify.sendNotifyMassage(token, text)
             morn_df = morn_df.drop(
-                morn_df[( morn_df['User'] == idName ) & ( morn_df['Symbol'] == row['Symbol'] )]
+                morn_df[( morn_df['User'] == idName ) & ( morn_df['Symbol'] == row['Symbol'] )].index
             )
     #Save Dataframe
     morn_df.to_csv(mornitorFilePath, index=False)
@@ -116,4 +116,7 @@ def AllUser(*_):
             break
 
 if __name__ == '__main__' :
-    MornitoringUser('user1')
+    #MornitoringUser('user1')
+    df = pd.read_csv(dataPath + '/mornitor.csv')
+    df = df.drop(df[( df['User'] == 'user1' ) & ( df['Symbol'] == 'THB_ssUB' )].index)
+    print(df)
