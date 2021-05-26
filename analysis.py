@@ -391,7 +391,6 @@ def getSignalAllPreset(*_):
                     exit_condition_list[1]
                 )
 
-
                 # Trade Entry
                 if filter_condition and entry_condition:
                     print('Preset : {} | Entry : {}'.format(ps,file))

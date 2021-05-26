@@ -9,14 +9,22 @@ if not os.name == 'nt':
     time.sleep(60)
     update.updateAllFile()
 
-update.updateConfig()
-update.updatePreset()
-update.updateSystem()
+while True:
+    try:
+        update.updateConfig()
+        update.updatePreset()
+        update.updateSystem()
 
+        import historical
+        historical.updateGSheetHistory()
+        historical.loadAllHist(timeFrame='hour')
 
-import historical
-historical.updateGSheetHistory()
-historical.loadAllHist(timeFrame='hour')
+        import analysis
+        analysis.getSignalAllPreset()
 
-import analysis
-analysis.getSignalAllPreset()
+        import mornitor
+        mornitor.AllUser()
+    except Exception as e:
+        print(e)
+    finally:
+        time.sleep(30)

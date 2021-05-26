@@ -84,12 +84,13 @@ def updateGSheetHistory(*_):
             gSheet.updateFromCSV(allHistPath, 'History')
             print('upload history data finish')
         except: pass
+        time.sleep(10)
         if gSheet.getAllDataS('History') != []:
             break
 
 def createSymbolHistory(symbol,timeFrame = 'minute'):
     os.system('cls||clear')
-    print('create price history ... {}  time frame {}'.format(symbol,timeFrame))
+    print('create price history ... {}  time frame {}'.format(symbol,timeFrame.upper()))
     df = pd.DataFrame(
         {
             'Day' : [],

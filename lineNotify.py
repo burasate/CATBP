@@ -9,8 +9,6 @@ configPath = dataPath + '/config.json'
 configJson = json.load(open(configPath))
 presetPath = dataPath + '/preset.json'
 presetJson = json.load(open(presetPath))
-quotePath = dataPath + '/quote.json'
-quoteJson = json.load(open(quotePath))
 histFileList = os.listdir(histPath)
 imgPath = dataPath+'/analysis_img/'
 ImgFiles = os.listdir(imgPath)
@@ -104,5 +102,5 @@ if __name__=='__main__':
     #update.updatePreset()
     #presetPath = dataPath + '/preset.json'
     #presetJson = json.load(open(presetPath))
-    signalReportToUser()
+    #signalReportToUser()
     pass

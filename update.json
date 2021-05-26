@@ -5,5 +5,6 @@
   "update.py" : "https://raw.githubusercontent.com/burasate/BitPy/master/update.py",
   "analysis.py" : "https://raw.githubusercontent.com/burasate/BitPy/master/analysis.py",
   "main.py" : "https://raw.githubusercontent.com/burasate/BitPy/master/main.py",
-  "historicalPiZero.py" : "https://raw.githubusercontent.com/burasate/BitPy/master/historicalPiZero.py"
+  "historicalPiZero.py" : "https://raw.githubusercontent.com/burasate/BitPy/master/historicalPiZero.py",
+  "mornitor.py" : "https://raw.githubusercontent.com/burasate/BitPy/master/mornitor.py"
 }
