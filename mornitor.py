@@ -68,7 +68,7 @@ def MornitoringUser(idName):
     for i in range(df['Symbol'].count()):
         row = df.iloc[i]
         if not row['Symbol'] in morn_df['Symbol'].tolist():
-            text = '△  Buy  {}  at  {}'.format(row['Symbol'],row['Buy'])
+            text = '△  Buy  {}    {}'.format(row['Symbol'],row['Buy'])
             quote = row['Symbol'].split('_')[-1]
             imgFilePath = imgPath + os.sep + '{}_{}.png'.format(preset,quote)
             print(text)
@@ -89,7 +89,7 @@ def MornitoringUser(idName):
         ]
     for i in range(morn_df['Symbol'].count()):
         row = morn_df.iloc[i]
-        text = '△  Sell  {}  at  {}'.format(row['Symbol'], row['Market'])
+        text = '▽  Sell  {}   {}'.format(row['Symbol'], row['Market'])
         sell_condition = (row['Symbol'] in sell_df['Symbol'].to_list()) or (row['Market'] < row['BreakOut_L'])
         if sell_condition:
             print(text)
