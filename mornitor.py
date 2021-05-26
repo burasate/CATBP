@@ -89,6 +89,7 @@ def MornitoringUser(idName):
         (signal_df['Signal'] == 'Exit') &
         (signal_df['Preset'] == preset)
         ]
+    print('Exit {}'.format(sell_df['Symbol'].to_list()))
     sellList = []
     for i in range(morn_df['Symbol'].count()):
         row = morn_df.iloc[i]
