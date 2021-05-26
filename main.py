@@ -4,13 +4,15 @@ rootPath = os.path.dirname(os.path.abspath(__file__))
 
 print('BitPy')
 
+import update
 if not os.name == 'nt':
     time.sleep(60)
-    import update
     update.updateAllFile()
-    update.updateConfig()
-    update.updatePreset()
-    update.updateSystem()
+
+update.updateConfig()
+update.updatePreset()
+update.updateSystem()
+
 
 import historical
 historical.updateGSheetHistory()

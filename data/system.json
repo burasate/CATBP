@@ -1,0 +1,92 @@
+{
+    "S1": {
+        "system": "S1",
+        "description": "Test System",
+        "methodBuy": "signal",
+        "methodSell": "signal",
+        "symbolCount": 5,
+        "splitSize": 3,
+        "percentageComission": 0.25
+    },
+    "S2": {
+        "system": "S2",
+        "description": "",
+        "methodBuy": "signal",
+        "methodSell": "signal",
+        "symbolCount": "",
+        "splitSize": "",
+        "percentageComission": 0.25
+    },
+    "S3": {
+        "system": "S3",
+        "description": "",
+        "methodBuy": "signal",
+        "methodSell": "signal",
+        "symbolCount": "",
+        "splitSize": "",
+        "percentageComission": 0.25
+    },
+    "S4": {
+        "system": "S4",
+        "description": "",
+        "methodBuy": "signal",
+        "methodSell": "signal",
+        "symbolCount": "",
+        "splitSize": "",
+        "percentageComission": 0.25
+    },
+    "S5": {
+        "system": "S5",
+        "description": "",
+        "methodBuy": "signal",
+        "methodSell": "signal",
+        "symbolCount": "",
+        "splitSize": "",
+        "percentageComission": 0.25
+    },
+    "S6": {
+        "system": "S6",
+        "description": "",
+        "methodBuy": "signal",
+        "methodSell": "signal",
+        "symbolCount": "",
+        "splitSize": "",
+        "percentageComission": 0.25
+    },
+    "S7": {
+        "system": "S7",
+        "description": "",
+        "methodBuy": "signal",
+        "methodSell": "signal",
+        "symbolCount": "",
+        "splitSize": "",
+        "percentageComission": 0.25
+    },
+    "S8": {
+        "system": "S8",
+        "description": "",
+        "methodBuy": "signal",
+        "methodSell": "signal",
+        "symbolCount": "",
+        "splitSize": "",
+        "percentageComission": 0.25
+    },
+    "S9": {
+        "system": "S9",
+        "description": "",
+        "methodBuy": "signal",
+        "methodSell": "signal",
+        "symbolCount": "",
+        "splitSize": "",
+        "percentageComission": 0.25
+    },
+    "S10": {
+        "system": "S10",
+        "description": "",
+        "methodBuy": "signal",
+        "methodSell": "signal",
+        "symbolCount": "",
+        "splitSize": "",
+        "percentageComission": 0.25
+    }
+}

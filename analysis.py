@@ -71,7 +71,7 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
 
     # volume
     volume_sma_s = df_reverse['Volume'].rolling(2).mean()
-    volume_break_h = df_reverse['Volume'].rolling(4).max()
+    volume_break_h = df_reverse['Volume'].rolling(ps_breakout_low).max()
     volume_sma_l = volume_sma_s.rolling(20).mean()
     df['Volume_SMA_S'] = volume_sma_s.sort_index(ascending=True)
     df['Volume_SMA_L'] = volume_sma_l.sort_index(ascending=True)
@@ -150,8 +150,19 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
         plt.subplots_adjust(left=0.05, bottom=0.05, right=0.95, top=0.90, wspace=0.20, hspace=0.00)
 
         #Plot Setup
-        plotTrimMin = 0
+        plotTrimMin = 52
         plotTrimMax = 110
+        xTicks = [52,76,88,96,100]
+        xTicksLabel = ['48H','24H','12H','4H','0H']
+        plt.xticks(xTicks,xTicksLabel)
+        for i in xTicks:
+            axes[0].axvline(x=i, linewidth=.7, color=pltColor['text'], linestyle='--', alpha=0.2)
+            axes[1].axvline(x=i, linewidth=.7, color=pltColor['text'], linestyle='--', alpha=0.2)
+            axes[2].axvline(x=i, linewidth=.7, color=pltColor['text'], linestyle='--', alpha=0.2)
+            axes[3].axvline(x=i, linewidth=.7, color=pltColor['text'], linestyle='--', alpha=0.2)
+            axes[4].axvline(x=i, linewidth=.7, color=pltColor['text'], linestyle='--', alpha=0.2)
+            axes[5].axvline(x=i, linewidth=.7, color=pltColor['text'], linestyle='--', alpha=0.2)
+
         axes[0].set_facecolor(pltColor['bg'])
         axes[0].set_xlim(plotTrimMin,plotTrimMax)
         #axes[0].grid(True, 'both', 'both',color = (.87,.87,.87))
@@ -197,14 +208,6 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
         #axes[0].plot(df['Day'], df['BreakOut_MH'], linewidth=.7, color=pltColor['green'], linestyle='--',alpha=0.5)
         #axes[0].plot(df['Day'], df['BreakOut_ML'], linewidth=.7, color=pltColor['red'], linestyle='--',alpha=0.5)
 
-        #Test Signal
-        axes[0].plot(df[df['SMA_S']>df['SMA_L']][df['%K']>df['%D']][df['GL_Ratio']>df['GL_Ratio_Slow']]['Day'],
-                     df[df['SMA_S']>df['SMA_L']][df['%K']>df['%D']][df['GL_Ratio']>df['GL_Ratio_Slow']]['Low'],
-                     linewidth=0, color=pltColor['green'], linestyle='-', marker='^', markersize=4)
-        axes[0].plot(df[df['SMA_S'] < df['SMA_L']][df['GL_Ratio'] < df['GL_Ratio_Slow']]['Day'],
-                     df[df['SMA_S'] < df['SMA_L']][df['GL_Ratio'] < df['GL_Ratio_Slow']]['High'],
-                     linewidth=0, color=pltColor['red'], linestyle='-', marker='v', markersize=4)
-
         #axes[0].plot([100, 120], [df['BreakOut_H'][0], df['BreakOut_H'][0]], linewidth=.7, color=pltColor['green'], linestyle='-',alpha = 1)
         #axes[0].plot([100, 120], [df['BreakOut_L'][0], df['BreakOut_L'][0]], linewidth=.7, color=pltColor['red'], linestyle='-',alpha = 1)
         #axes[0].plot([100, 120], [df['BreakOut_M'][0], df['BreakOut_M'][0]], linewidth=.7, color=pltColor['yellow'], linestyle=':',alpha = 1)
@@ -213,8 +216,27 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
         axes[0].plot(df['Day'][0], clh[0], color=(.5,.5,.5), linewidth=1, marker='o', markersize=5)
         axes[0].plot(df['Day'], h_plt, color=(0.25, 0.25, 0.25), linewidth=.4, linestyle=':', marker='', markersize=.5)
         axes[0].plot(df['Day'], l_plt, color=(0.25, 0.25, 0.25), linewidth=.4, linestyle=':', marker='', markersize=.5)
-        axes[0].plot(df['Day'], clh_np, linewidth=.5, color=(0.25, 0.25, 0.25), linestyle=':')
+        #axes[0].plot(df['Day'], clh_np, linewidth=.5, color=(0.25, 0.25, 0.25), linestyle=':')
 
+        # Test Signal
+        buyMark = df[(df['SMA_S'] > df['SMA_L']) &
+                     (df['%K'] > df['%D']) &
+                     (df['GL_Ratio'] > df['GL_Ratio_Slow']) &
+                     (df['Volume_Break_H'][0] >= df['Volume_Break_H'][1])
+                     ]
+        sellMark = df[(df['SMA_S'] < df['SMA_L']) &
+                      (df['%K'] < df['%D']) &
+                      (df['GL_Ratio'] < df['GL_Ratio_Slow']) &
+                      (df['Volume_Break_H'][0] >= df['Volume_Break_H'][1])
+                      ]
+        axes[0].plot(buyMark['Day'],
+                     buyMark['Close'],
+                     linewidth=0, color=pltColor['green'], linestyle='-', marker='o', markersize=4)
+        axes[0].plot(sellMark['Day'],
+                     sellMark['Close'],
+                     linewidth=0, color=pltColor['red'], linestyle='-', marker='o', markersize=4)
+
+        #STO Plot
         axes[5].fill_between(df['Day'], y1=df['%K'], y2=df['%D'],
                              where=df['%K'] >= df['%D'], linewidth=1, color=(.5, .5, .5),
                              linestyle='-', alpha=0.2)
@@ -272,12 +294,12 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
         # Text
         axes[0].text(plotTrimMax-3, min(df['Low']), 'by Burasate.U', size=12, ha='right', va='top', color=(.5,.5,.5))
         close_l_percenttage = round(((df['Close'][0]-df['BreakOut_L'][0])/df['Close'][0])*100,2)
-        axes[0].text(100, df['BreakOut_L'][0],
+        axes[0].text(100+1, df['BreakOut_L'][0],
                      '  ' + '{} \n(-{}%)'.format( df['BreakOut_L'][0],close_l_percenttage ),
                      size=10, ha='left', va='center',
                      color=pltColor['text'])
         close_h_percenttage = round(((df['BreakOut_H'][0]-df['Close'][0])/df['Close'][0])*100,2)
-        axes[0].text(100, df['BreakOut_H'][0],
+        axes[0].text(100+1, df['BreakOut_H'][0],
                      '  ' + '{} \n(+{}%)'.format( df['BreakOut_H'][0],close_h_percenttage ),
                      size=10, ha='left', va='center',
                      color=pltColor['text'])
@@ -357,16 +379,16 @@ def getSignalAllPreset(*_):
 
                 # Condition Setting
                 filter_condition = (
-                        df['Close'][0] > df['Close'].mean()
+                    df['Volume_Break_H'][0] >= df['Volume_Break_H'][1]
                 )
                 entry_condition = (
-                        entry_condition_list[0] and
-                        entry_condition_list[1] and
-                        entry_condition_list[2]
+                    entry_condition_list[0] and
+                    entry_condition_list[1] and
+                    entry_condition_list[2]
                 )
                 exit_condition = (
-                        exit_condition_list[0] and
-                        exit_condition_list[1]
+                    exit_condition_list[0] and
+                    exit_condition_list[1]
                 )
 
 
@@ -394,7 +416,7 @@ def getSignalAllPreset(*_):
     new_signal_df = pd.read_csv(csvPath)
     new_signal_df = new_signal_df[new_signal_df['Rec_Date'] != rec_date]
     new_signal_df = new_signal_df.append(signal_df)
-    new_signal_df = new_signal_df.tail(500)
+    new_signal_df = new_signal_df.tail(5000)
     new_signal_df.to_csv(csvPath,index=False)
 
     if not os.name == 'nt':
