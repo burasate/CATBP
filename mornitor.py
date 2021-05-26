@@ -103,7 +103,11 @@ def MornitoringUser(idName):
 def AllUser(*_):
     mornitorFilePath = dataPath + '/mornitor.csv'
     for user in configJson:
-        MornitoringUser(user)
+        try:
+            MornitoringUser(user)
+        except Exception as e:
+            print(e)
+            continue
     while isInternetConnect:
         try:
             print('uploading mornitoring data...')
