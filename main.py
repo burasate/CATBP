@@ -26,4 +26,4 @@ while True:
     except Exception as e:
         print(e)
     finally:
-        time.sleep(60*30)
+        time.sleep(60*5)
