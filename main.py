@@ -3,7 +3,6 @@ import time,os
 rootPath = os.path.dirname(os.path.abspath(__file__))
 
 print('BitPy')
-
 import update
 if not os.name == 'nt':
     time.sleep(60)
