@@ -80,8 +80,10 @@ def MornitoringUser(idName):
     morn_df['Profit%'] = ((morn_df['Market'] - morn_df['Buy']) / morn_df['Buy']) * 100
     morn_df['Profit%'] = morn_df['Profit%'].round(2)
     morn_df.drop_duplicates(['User','Symbol'],keep='last',inplace=True)
-    morn_df.reset_index(inplace=True)
+    #morn_df.reset_index(inplace=True)
+    morn_df.to_csv(mornitorFilePath, index=False)
 
+    morn_df = pd.read_csv(mornitorFilePath)
     #Sell Notify
     sell_df = signal_df[
         (signal_df['Signal'] == 'Exit') &
@@ -95,9 +97,8 @@ def MornitoringUser(idName):
             print(text)
             lineNotify.sendNotifyMassage(token, text)
             morn_df = morn_df.drop(
-                df[( df['User'] == idName ) & ( df['Symbol'] == row['Symbol'] )].index
+                morn_df[( morn_df['User'] == idName ) & ( morn_df['Symbol'] == morn_df['Symbol'] )].index
             )
-    #Save Dataframe
     morn_df.to_csv(mornitorFilePath, index=False)
 
 def AllUser(*_):
