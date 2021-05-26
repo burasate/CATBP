@@ -42,8 +42,7 @@ def MornitoringUser(idName):
     df = df[
         ( df['Rec_Date'] == df['Rec_Date'].max() ) &
         ( df['Signal'] == 'Entry' ) &
-        ( df['Preset'] == preset ) &
-        ( df['Change4HR%'] >= 0.0 ) #&
+        ( df['Preset'] == preset )
     ]
     df = df.sort_values(['Change4HR%','Value_M'], ascending=[False,False])
     df = df.head(5)
@@ -96,7 +95,7 @@ def MornitoringUser(idName):
             print(text)
             lineNotify.sendNotifyMassage(token, text)
             morn_df = morn_df.drop(
-                morn_df[( morn_df['User'] == idName ) & ( morn_df['Symbol'] == row['Symbol'] )].index
+                morn_df[( morn_df['User'] == idName ) & ( morn_df['Symbol'] == row['Symbol'] )]
             )
     #Save Dataframe
     morn_df.to_csv(mornitorFilePath, index=False)
