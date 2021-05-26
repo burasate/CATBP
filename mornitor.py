@@ -95,7 +95,7 @@ def MornitoringUser(idName):
             print(text)
             lineNotify.sendNotifyMassage(token, text)
             morn_df = morn_df.drop(
-                morn_df[( morn_df['User'] == idName ) & ( morn_df['Symbol'] == row['Symbol'] )].index
+                df[( df['User'] == idName ) & ( df['Symbol'] == row['Symbol'] )].index
             )
     #Save Dataframe
     morn_df.to_csv(mornitorFilePath, index=False)
