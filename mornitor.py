@@ -89,6 +89,7 @@ def MornitoringUser(idName):
         (signal_df['Signal'] == 'Exit') &
         (signal_df['Preset'] == preset)
         ]
+    sellList = []
     for i in range(morn_df['Symbol'].count()):
         row = morn_df.iloc[i]
         text = '▽  Sell  {}   {}'.format(row['Symbol'], row['Market'])
@@ -96,9 +97,16 @@ def MornitoringUser(idName):
         if sell_condition:
             print(text)
             lineNotify.sendNotifyMassage(token, text)
-            morn_df = morn_df.drop(
-                morn_df[( morn_df['User'] == idName ) & ( morn_df['Symbol'] == morn_df['Symbol'] )].index
+            sellList.append(
+                {
+                    'User': row['User'],
+                    'Symbol' : row['Symbol']
+                 }
             )
+    for i in sellList:
+        morn_df = morn_df.drop(
+            morn_df[( morn_df['User'] == i['User'] ) & ( morn_df['Symbol'] == i['Symbol'] )].index
+        )
     morn_df.to_csv(mornitorFilePath, index=False)
 
 def AllUser(*_):
