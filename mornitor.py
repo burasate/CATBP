@@ -116,7 +116,13 @@ def MornitoringUser(idName):
     morn_df.drop_duplicates(['User','Symbol'],keep='last',inplace=True)
     morn_df.to_csv(mornitorFilePath, index=False)
 
+    #reload mornitor
     morn_df = pd.read_csv(mornitorFilePath)
+    morn_df = morn_df.sort_values(['User','Profit%'], ascending=[True,False])
+    holdList = morn_df[
+        (morn_df['User'] == idName) &
+        (morn_df['Profit%'] >= 0.0)
+    ].head(size)['Symbol'].tolist()
 
     #Sell Notify
     sell_df = signal_df[
@@ -127,8 +133,11 @@ def MornitoringUser(idName):
     for i in range(morn_df['Symbol'].count()):
         row = morn_df.iloc[i]
         text = '▽  Sell  {}   {}'.format(row['Symbol'], row['Market'])
-        sell_condition = (row['Market'] < row['BreakOut_L']) # or (row['Symbol'] in sell_df['Symbol'].to_list())
-        if sell_condition and bool():
+        sell_condition = (
+                (row['Market'] < row['BreakOut_L']) or
+                (len(holdList) > 5 and not row['Symbol'] in holdList)
+                          )
+        if sell_condition:
             print(text)
             lineNotify.sendNotifyMassage(token, text)
             sellList.append(
@@ -190,10 +199,15 @@ def AllUser(*_):
             break
 
 if __name__ == '__main__' :
-    pass
     #Reset()
     #MornitoringUser('CryptoBot')
     #AllUser()
-    #df = pd.read_csv(dataPath + '/mornitor.csv')
-    #df = df.drop(df[( df['User'] == 'user1' ) & ( df['Symbol'] == 'THB_ssUB' )].index)
-    #print(df)
+    morn_df = pd.read_csv(dataPath + '/mornitor.csv')
+    morn_df = morn_df.sort_values(['User', 'Profit%'], ascending=[True, False])
+    holdList = morn_df[
+        (morn_df['User'] == 'CryptoBot') &
+        (morn_df['Profit%'] >= 0.0)
+        ].head(5)['Symbol'].tolist()
+    print(holdList)
+
+    pass
