@@ -31,6 +31,9 @@ def isInternetConnect(*_):
 
 def MornitoringUser(idName):
     print('{}  Monitoring...'.format(idName))
+    isActive = bool(configJson[idName]['active'])
+    if isActive:
+        return None
     preset = configJson[idName]['preset']
     system = configJson[idName]['system']
     token = configJson[idName]['lineToken']
@@ -44,9 +47,11 @@ def MornitoringUser(idName):
         ( df['Signal'] == 'Entry' ) &
         ( df['Preset'] == preset )
     ]
-    df = df.sort_values(['Change4HR%','Value_M'], ascending=[False,False])
+    df['Change4HR%_Abs'] = df['Change4HR'].abs()
+    df = df.sort_values(['Change4HR%_Abs','Value_M'], ascending=[True,False])
     df = df.head(5)
     df.reset_index(inplace=True)
+    print(df)
 
     df['User'] = idName
     #df['Buy'] = df.groupby(['Symbol','Preset']).transform('first')['Close']
@@ -95,7 +100,7 @@ def MornitoringUser(idName):
         row = morn_df.iloc[i]
         text = '▽  Sell  {}   {}'.format(row['Symbol'], row['Market'])
         sell_condition = (row['Market'] < row['BreakOut_L']) # or (row['Symbol'] in sell_df['Symbol'].to_list())
-        if sell_condition:
+        if sell_condition and bool():
             print(text)
             lineNotify.sendNotifyMassage(token, text)
             sellList.append(
