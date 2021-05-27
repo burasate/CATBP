@@ -191,6 +191,7 @@ def AllUser(*_):
             break
 
 if __name__ == '__main__' :
+    pass
     #Reset()
     #MornitoringUser('CryptoBot')
     #AllUser()
