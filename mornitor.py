@@ -104,7 +104,7 @@ def MornitoringUser(idName):
             imgFilePath = imgPath + os.sep + '{}_{}.png'.format(preset,quote)
             print(text)
             print(imgFilePath)
-            #lineNotify.sendNotifyImageMsg(token, imgFilePath, text)
+            lineNotify.sendNotifyImageMsg(token, imgFilePath, text)
 
     morn_df = morn_df.append(df)
     morn_df['Buy'] = morn_df.groupby(['User','Symbol']).transform('first')['Buy']
@@ -131,7 +131,7 @@ def MornitoringUser(idName):
         sell_condition = (row['Market'] < row['BreakOut_L']) # or (row['Symbol'] in sell_df['Symbol'].to_list())
         if sell_condition and bool():
             print(text)
-            #lineNotify.sendNotifyMassage(token, text)
+            lineNotify.sendNotifyMassage(token, text)
             sellList.append(
                 {
                     'User': row['User'],
