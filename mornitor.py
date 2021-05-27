@@ -37,6 +37,7 @@ def MornitoringUser(idName):
     preset = configJson[idName]['preset']
     system = configJson[idName]['system']
     token = configJson[idName]['lineToken']
+    size = int(systemJson[system]['size'])
 
     signal_df = pd.read_csv(dataPath+'/signal.csv')
     signal_df = signal_df[signal_df['Rec_Date'] == signal_df['Rec_Date'].max()]
