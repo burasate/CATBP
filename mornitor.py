@@ -122,7 +122,7 @@ def MornitoringUser(idName):
     holdList = morn_df[
         (morn_df['User'] == idName) &
         (morn_df['Profit%'] >= 0.0)
-    ].head(size)['Symbol'].tolist()
+    ].head(size+2)['Symbol'].tolist()
 
     #Sell Notify
     sell_df = signal_df[
