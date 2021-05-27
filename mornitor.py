@@ -94,7 +94,7 @@ def MornitoringUser(idName):
     for i in range(morn_df['Symbol'].count()):
         row = morn_df.iloc[i]
         text = '▽  Sell  {}   {}'.format(row['Symbol'], row['Market'])
-        sell_condition = (row['Symbol'] in sell_df['Symbol'].to_list()) or (row['Market'] < row['BreakOut_L'])
+        sell_condition = (row['Market'] < row['BreakOut_L']) # or (row['Symbol'] in sell_df['Symbol'].to_list())
         if sell_condition:
             print(text)
             lineNotify.sendNotifyMassage(token, text)
