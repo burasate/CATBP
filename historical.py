@@ -38,7 +38,7 @@ def updateGSheetHistory(limit = 25000):
     epoch = time.time()
     minute = int(dt.now().strftime('%M'))
     second = int(dt.now().strftime('%S'))
-    date_time = dt.now().strftime('%Y-%m-%d %H:%M:%S')
+    date_time = str(dt.now().strftime('%Y-%m-%d %H:%M:%S'))
 
 
     #backup hist

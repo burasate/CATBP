@@ -27,7 +27,6 @@ def sendNotifyImageMsg (token,imagePath,text):
     r = requests.post(url, headers=headers ,data = {'message':'\n'+text}, files = {'imageFile':open(imagePath,'rb')})
     print (r.text)
 
-
 def signalReportToUser(*_):
     import datetime as dt
     date = dt.date.today().strftime('%d/%m/%Y')
