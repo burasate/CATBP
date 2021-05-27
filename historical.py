@@ -26,7 +26,7 @@ def getHistDataframe(*_):
     df = pd.DataFrame.from_records(sheetData)
     return df
 
-def updateGSheetHistory(*_):
+def updateGSheetHistory(limit = 25000):
     ticker = kbApi.getTicker()
     symbols = kbApi.getSymbol()
 
@@ -81,7 +81,7 @@ def updateGSheetHistory(*_):
     df.drop_duplicates(['symbol','date','hour','minute'], keep='last', inplace=True)
     df.sort_index(inplace=True)
     #limit row
-    df = df.tail(45000)
+    df = df.tail(limit)
     # print(df)
 
     allHistPath = dataPath + '/cryptoHist.csv'
