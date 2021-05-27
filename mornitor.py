@@ -51,7 +51,6 @@ def Reset(*_):
     print('User Reset')
 
 def MornitoringUser(idName):
-    Reset()
     isActive = bool(configJson[idName]['active'])
     if isActive == False:
         return None

@@ -23,6 +23,7 @@ while True:
         analysis.getSignalAllPreset()
 
         import mornitor
+        mornitor.Reset()
         mornitor.AllUser()
     except Exception as e:
         print(e)
