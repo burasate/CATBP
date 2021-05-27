@@ -30,6 +30,7 @@ def updateFromCSV(csvPath, workSheet,newline=''):
 
     try:
         sheet.clear()
+        print('update data to {} please don\'t exit!'.format(workSheet))
         sheet.update(tableList,value_input_option='USER_ENTERED')
     except:
         raise IOError('Update Sheet Error')
