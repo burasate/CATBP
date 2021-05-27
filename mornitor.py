@@ -179,7 +179,6 @@ def AllUser(*_):
         except Exception as e:
             print(e)
             continue
-    return None
     while isInternetConnect:
         try:
             print('uploading mornitoring data...')
@@ -193,7 +192,7 @@ def AllUser(*_):
 
 if __name__ == '__main__' :
     #Reset()
-    MornitoringUser('CryptoBot')
+    #MornitoringUser('CryptoBot')
     #AllUser()
     #df = pd.read_csv(dataPath + '/mornitor.csv')
     #df = df.drop(df[( df['User'] == 'user1' ) & ( df['Symbol'] == 'THB_ssUB' )].index)
