@@ -76,6 +76,7 @@ def updateGSheetHistory(*_):
     # print(df)
 
     allHistPath = dataPath + '/cryptoHist.csv'
+    df = df[[list(rowData)]]
     df.to_csv(allHistPath, index=False)
 
     while isInternetConnect():
