@@ -40,9 +40,18 @@ def updateGSheetHistory(*_):
     second = int(dt.now().strftime('%S'))
     date_time = dt.now().strftime('%Y-%m-%d %H:%M:%S')
 
+
     #backup hist
     backupPath = dataPath + '/hist_backup/cryptoHist_{}.csv'.format(date.replace('-','_'))
     df.to_csv(backupPath, index=False)
+
+    # append backup
+    for f in os.listdir(dataPath + '/hist_backup')[:3]:
+        filePath = dataPath + '/hist_backup/{}'.format(f)
+        print(filePath)
+        df = df.append(
+            pd.read_csv(filePath)
+        )
 
     os.system('cls||clear')
     for data in symbols:
