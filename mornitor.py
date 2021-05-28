@@ -60,7 +60,6 @@ def MornitoringUser(idName):
     print(now)
     print(reportHourDuration)
     print(configJson[idName]['lastReport'])
-    return None
     preset = configJson[idName]['preset']
     system = configJson[idName]['system']
     token = configJson[idName]['lineToken']
