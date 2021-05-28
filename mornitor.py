@@ -54,9 +54,13 @@ def MornitoringUser(idName):
     isActive = bool(configJson[idName]['active'])
     if isActive == False:
         return None
-    print('-------\n[ {} ]  Monitoring\n-------'.format(idName))
-    now = time.time()
-    reportHourDuration = ((now - float(configJson[idName]['lastReport']))/60)/60
+    print('---------------------\n[ {} ]  Monitoring\n---------------------'.format(idName))
+    now = round(time.time())
+    reportHourDuration = float(((now - configJson[idName]['lastReport'])/60)/60)
+    print(now)
+    print(reportHourDuration)
+    print(configJson[idName]['lastReport'])
+    return None
     preset = configJson[idName]['preset']
     system = configJson[idName]['system']
     token = configJson[idName]['lineToken']
@@ -112,9 +116,8 @@ def MornitoringUser(idName):
             imgFilePath = imgPath + os.sep + '{}_{}.png'.format(preset,quote)
             print(text)
             print(imgFilePath)
-            line = lineNotify.sendNotifyImageMsg(token, imgFilePath, text)
-            if type(line)== dict and line['message'] == 'ok':
-                morn_df = morn_df.append(df)
+            #lineNotify.sendNotifyImageMsg(token, imgFilePath, text)
+            morn_df = morn_df.append(row)
 
     #morn_df = morn_df.append(df)
     morn_df['Buy'] = morn_df.groupby(['User','Symbol']).transform('first')['Buy']
@@ -151,14 +154,13 @@ def MornitoringUser(idName):
                           )
         if sell_condition:
             print(text)
-            line = lineNotify.sendNotifyMassage(token, text)
-            if type(line)== dict and line['message'] == 'ok':
-                sellList.append(
-                    {
-                        'User': row['User'],
-                        'Symbol' : row['Symbol']
-                     }
-                )
+            #lineNotify.sendNotifyMassage(token, text)
+            sellList.append(
+                {
+                    'User': row['User'],
+                    'Symbol' : row['Symbol']
+                 }
+            )
     for i in sellList:
         morn_df = morn_df.drop(
             morn_df[( morn_df['User'] == i['User'] ) & ( morn_df['Symbol'] == i['Symbol'] )].index
@@ -212,9 +214,15 @@ def AllUser(*_):
             break
 
 if __name__ == '__main__' :
+    import update
+    update.updateConfig()
+    configJson = json.load(open(configPath))
+
     #Reset()
     #MornitoringUser('CryptoBot')
+    MornitoringUser('user1')
     #AllUser()
+    """
     morn_df = pd.read_csv(dataPath + '/mornitor.csv')
     morn_df = morn_df.sort_values(['User', 'Profit%'], ascending=[True, False])
     holdList = morn_df[
@@ -222,5 +230,6 @@ if __name__ == '__main__' :
         (morn_df['Profit%'] >= 0.0)
         ].head(5)['Symbol'].tolist()
     print(holdList)
+    """
 
     pass
