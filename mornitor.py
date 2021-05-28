@@ -67,15 +67,15 @@ def MornitoringUser(idName):
     signal_df = signal_df[signal_df['Rec_Date'] == signal_df['Rec_Date'].max()]
 
     df = signal_df
-    #df['Change4HR%_Abs'] = df['Change4HR%'].abs()
+    df['Change4HR%_Abs'] = df['Change4HR%'].abs()
     df = df[
         ( df['Rec_Date'] == df['Rec_Date'].max() ) &
         ( df['Signal'] == 'Entry' ) &
         ( df['Preset'] == preset )
     ]
-    #df = df.sort_values(['Change4HR%_Abs','Value_M'], ascending=[True,False])
-    df = df.sort_values(['Change4HR%','Value_M'], ascending=[False,False])
-    df = df.head(size)
+    df = df.sort_values(['Change4HR%_Abs','Value_M'], ascending=[True,False])
+    #df = df.sort_values(['Change4HR%','Value_M'], ascending=[False,False])
+    df = df.head(1)
     df.reset_index(inplace=True)
     #print(df[['Symbol','Change4HR%_Abs']])
 
