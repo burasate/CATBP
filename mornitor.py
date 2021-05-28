@@ -42,8 +42,7 @@ def Reset(*_):
             deleteList.append(user)
             gSheet.setValue('Config',findKey='idName',findValue=user,key='reset',value=0)
             gSheet.setValue('Config', findKey='idName', findValue=user, key='lastReport', value=time.time())
-            #configJson[user]['reset'] = 0
-            #json.dump(configJson, open(configPath, 'w'), indent=4)
+            lineNotify.sendNotifyMassage(configJson[user]['lineToken'],'[ Reset Portfoilo ]')
 
     for user in deleteList:
         df = df[df['User'] != user]
@@ -104,16 +103,16 @@ def MornitoringUser(idName):
     print('{} Portfolio have {}'.format(idName,portfolioList))
     for i in range(df['Symbol'].count()):
         row = df.iloc[i]
-        print(row['Symbol'])
-        print( not row['Symbol'] in portfolioList )
-        if (not row['Symbol'] in portfolioList) and (len(portfolioList) <= size):
+        if (not row['Symbol'] in portfolioList) and (len(portfolioList) < size):
             text = '△  Buy  {}    {}'.format(row['Symbol'],row['Buy'])
             quote = row['Symbol'].split('_')[-1]
             imgFilePath = imgPath + os.sep + '{}_{}.png'.format(preset,quote)
             print(text)
             print(imgFilePath)
-            #lineNotify.sendNotifyImageMsg(token, imgFilePath, text)
+            lineNotify.sendNotifyImageMsg(token, imgFilePath, text)
             morn_df = morn_df.append(row)
+        elif len(portfolioList) >= size:
+            print('Can\'t Buy More\nportfolio is full')
 
     # Calculate in Column
     morn_df['Buy'] = morn_df.groupby(['User','Symbol']).transform('first')['Buy']
@@ -132,7 +131,7 @@ def MornitoringUser(idName):
     holdList = morn_df[
         (morn_df['User'] == idName) &
         (morn_df['Profit%'] > 0.0)
-    ].head(size+2)['Symbol'].tolist()
+    ].head(size)['Symbol'].tolist()
 
     # Sell Notify
     sell_df = signal_df[
@@ -148,7 +147,7 @@ def MornitoringUser(idName):
                 )
         if sell_condition:
             print(text)
-            #lineNotify.sendNotifyMassage(token, text)
+            lineNotify.sendNotifyMassage(token, text)
             sellList.append(
                 {
                     'User': row['User'],
@@ -165,7 +164,7 @@ def MornitoringUser(idName):
     report_df = report_df.sort_values(['Profit%'], ascending=[False])
     report_df = report_df.head(size)
 
-    #portfolio report
+    #Portfolio report
     if reportHourDuration >= float(configJson[idName]['reportEveryHour']) and report_df['Symbol'].count() != 0:
         gSheet.setValue('Config', findKey='idName', findValue=idName, key='lastReport', value=time.time())
         text = '[Holding]\n' +\
@@ -173,9 +172,8 @@ def MornitoringUser(idName):
                 'Profit {}%'.format( report_df['Profit%'].sum() )
         print(text)
         lineNotify.sendNotifyMassage(token, text)
-        #lineNotify.sendNotifyMassage(token, str(reportHourDuration))
 
-    #take profit all
+    #Take profit all
     if report_df['Profit%'].sum() >= profitTarget:
         gSheet.setValue('Config', findKey='idName', findValue=idName, key='reset', value=1)
         configJson[idName]['reset'] = 1
@@ -214,7 +212,7 @@ if __name__ == '__main__' :
 
     #Reset()
     #MornitoringUser('CryptoBot')
-    MornitoringUser('user1')
+    #MornitoringUser('user1')
     #AllUser()
     """
     morn_df = pd.read_csv(dataPath + '/mornitor.csv')

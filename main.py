@@ -16,10 +16,10 @@ while True:
         update.updatePreset()
         update.updateSystem()
 
-        #import historical
-        #importlib.reload(historical)
-        #historical.updateGSheetHistory()
-        #historical.loadAllHist(timeFrame='hour')
+        import historical
+        importlib.reload(historical)
+        historical.updateGSheetHistory()
+        historical.loadAllHist(timeFrame='hour')
 
         import analysis
         importlib.reload(analysis)
@@ -27,13 +27,13 @@ while True:
 
         import mornitor
         importlib.reload(mornitor)
-        mornitor.Reset()
         mornitor.AllUser()
+        mornitor.Reset()
     except Exception as e:
-        print(e)
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+        print(exc_type, fname, exc_tb.tb_lineno)
     finally:
         #time.sleep(60*5)
         time.sleep(60*1)
         pass
-    if not os.name == 'nt':
-        update.updateAllFile()
