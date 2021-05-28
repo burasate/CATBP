@@ -104,8 +104,9 @@ def MornitoringUser(idName):
             imgFilePath = imgPath + os.sep + '{}_{}.png'.format(preset,quote)
             print(text)
             print(imgFilePath)
-            lineNotify.sendNotifyImageMsg(token, imgFilePath, text)
-            morn_df = morn_df.append(row)
+            line = lineNotify.sendNotifyImageMsg(token, imgFilePath, text)
+            if type(line)== dict and int(line['status']) == 200:
+                morn_df = morn_df.append(row)
 
     #morn_df = morn_df.append(df)
     morn_df['Buy'] = morn_df.groupby(['User','Symbol']).transform('first')['Buy']
@@ -141,13 +142,14 @@ def MornitoringUser(idName):
                           )
         if sell_condition:
             print(text)
-            lineNotify.sendNotifyMassage(token, text)
-            sellList.append(
-                {
-                    'User': row['User'],
-                    'Symbol' : row['Symbol']
-                 }
-            )
+            line = lineNotify.sendNotifyMassage(token, text)
+            if type(line)== dict and int(line['status']) == 200:
+                sellList.append(
+                    {
+                        'User': row['User'],
+                        'Symbol' : row['Symbol']
+                     }
+                )
     for i in sellList:
         morn_df = morn_df.drop(
             morn_df[( morn_df['User'] == i['User'] ) & ( morn_df['Symbol'] == i['Symbol'] )].index
@@ -166,7 +168,7 @@ def MornitoringUser(idName):
                 'Profit {}%'.format( report_df['Profit%'].sum() )
         print(text)
         lineNotify.sendNotifyMassage(token, text)
-        lineNotify.sendNotifyMassage(token, str(reportHourDuration))
+        #lineNotify.sendNotifyMassage(token, str(reportHourDuration))
 
     #take profit all
     if report_df['Profit%'].sum() >= profitTarget:
