@@ -27,8 +27,8 @@ while True:
 
         import mornitor
         importlib.reload(mornitor)
-        mornitor.Reset()
         mornitor.AllUser()
+        mornitor.Reset()
     except Exception as e:
         exc_type, exc_obj, exc_tb = sys.exc_info()
         fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]

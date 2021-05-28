@@ -52,7 +52,8 @@ def Reset(*_):
 
 def MornitoringUser(idName):
     isActive = bool(configJson[idName]['active'])
-    if isActive == False:
+    isReset = bool(configJson[user]['reset'])
+    if isActive == False and isReset:
         return None
     print('---------------------\n[ {} ]  Monitoring\n---------------------'.format(idName))
     now = round(time.time())
