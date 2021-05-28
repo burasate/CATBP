@@ -30,6 +30,7 @@ def isInternetConnect(*_):
         return False
 
 def Reset(*_):
+    print('---------------------\nReset\n---------------------')
     mornitorFilePath = dataPath + '/mornitor.csv'
     if not os.path.exists(mornitorFilePath):
         return None
