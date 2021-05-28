@@ -16,14 +16,14 @@ while True:
         update.updatePreset()
         update.updateSystem()
 
-        import historical
-        importlib.reload(historical)
-        historical.updateGSheetHistory()
-        historical.loadAllHist(timeFrame='hour')
+        #import historical
+        #importlib.reload(historical)
+        #historical.updateGSheetHistory()
+        #historical.loadAllHist(timeFrame='hour')
 
-        import analysis
-        importlib.reload(analysis)
-        analysis.getSignalAllPreset()
+        #import analysis
+        #importlib.reload(analysis)
+        #analysis.getSignalAllPreset()
 
         import mornitor
         importlib.reload(mornitor)
