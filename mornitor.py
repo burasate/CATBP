@@ -87,7 +87,7 @@ def MornitoringUser(idName):
 
     colSelect = ['User','Symbol','Signal','Buy','Market','Profit%','Max_Drawdown%','Change4HR%','Value_M','BreakOut_H','BreakOut_L']
     df = df[colSelect]
-    #print('Entry {}'.format(df['Symbol'].to_list()))
+    print('Entry {}'.format(df['Symbol'].to_list()))
 
     mornitorFilePath = dataPath + '/mornitor.csv'
     if not os.path.exists(mornitorFilePath):
