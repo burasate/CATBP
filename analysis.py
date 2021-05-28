@@ -416,7 +416,7 @@ def getSignalAllPreset(*_):
     new_signal_df = pd.read_csv(csvPath)
     new_signal_df = new_signal_df[new_signal_df['Rec_Date'] != rec_date]
     new_signal_df = new_signal_df.append(signal_df)
-    new_signal_df = new_signal_df.sort_values(['Date'], ascending=[True])
+    new_signal_df = new_signal_df.sort_values(['Rec_Date','Signal'], ascending=[True,True])
     new_signal_df = new_signal_df.tail(5000)
     new_signal_df.to_csv(csvPath,index=False)
 
