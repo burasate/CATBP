@@ -100,7 +100,7 @@ def MornitoringUser(idName):
     #Buy Notify
     print('buy condition check')
     print(range(df['Symbol'].count()))
-    portfolioList = morn_df[morn_df['User'==idName]]['Symbol'].tolist()
+    portfolioList = morn_df[morn_df['User']==idName]['Symbol'].tolist()
     print(portfolioList)
     for i in range(df['Symbol'].count()):
         row = df.iloc[i]
