@@ -74,7 +74,7 @@ def MornitoringUser(idName):
         ( df['Preset'] == preset )
     ]
     df = df.sort_values(['Change4HR%_Abs','Value_M'], ascending=[True,False])
-    df = df.head(1)
+    df = df.head(2)
     df.reset_index(inplace=True)
     #print(df[['Symbol','Change4HR%_Abs']])
 
@@ -164,6 +164,7 @@ def MornitoringUser(idName):
                 'Profit {}%'.format( report_df['Profit%'].sum() )
         print(text)
         lineNotify.sendNotifyMassage(token, text)
+        lineNotify.sendNotifyMassage(token, str(reportHourDuration))
 
     #take profit all
     if report_df['Profit%'].sum() >= profitTarget:
@@ -174,7 +175,6 @@ def MornitoringUser(idName):
                'Now Profit {}%'.format(report_df['Profit%'].sum())
         print(text)
         lineNotify.sendNotifyMassage(token, text)
-
 
     morn_df.to_csv(mornitorFilePath, index=False)
 
