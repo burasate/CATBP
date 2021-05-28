@@ -52,7 +52,7 @@ def Reset(*_):
 
 def MornitoringUser(idName):
     isActive = bool(configJson[idName]['active'])
-    isReset = bool(configJson[user]['reset'])
+    isReset = bool(configJson[idName]['reset'])
     if isActive == False and isReset:
         return None
     print('---------------------\n[ {} ]  Monitoring\n---------------------'.format(idName))
@@ -198,18 +198,18 @@ def AllUser(*_):
         except Exception as e:
             print(e)
             continue
-    while True:
-        if isInternetConnect == False:
-            continue
+    while isInternetConnect:
         try:
-            print('uploading mornitoring data...')
+            print('Uploading mornitoring data...')
             gSheet.updateFromCSV(mornitorFilePath, 'Mornitor')
-            print('upload mornitoring data finish')
+            print('Upload mornitoring data finish')
         except:
             pass
-        time.sleep(10)
-        if gSheet.getAllDataS('Mornitor') != []:
+        else:
             break
+        #time.sleep(10)
+        #if gSheet.getAllDataS('Mornitor') != []:
+            #break
 
 if __name__ == '__main__' :
     import update
@@ -218,7 +218,7 @@ if __name__ == '__main__' :
 
     #Reset()
     #MornitoringUser('CryptoBot')
-    #MornitoringUser('user1')
+    MornitoringUser('user1')
     #AllUser()
     """
     morn_df = pd.read_csv(dataPath + '/mornitor.csv')
