@@ -57,9 +57,7 @@ def MornitoringUser(idName):
     print('---------------------\n[ {} ]  Monitoring\n---------------------'.format(idName))
     now = round(time.time())
     reportHourDuration = round( float(((now - configJson[idName]['lastReport'])/60)/60),2 )
-    print(now)
-    print('{}'.)
-    print(configJson[idName]['lastReport'])
+    print('Last Report  {} Hour Ago / Report Every {}H'.format(reportHourDuration,configJson[idName]['lastReport']))
     preset = configJson[idName]['preset']
     system = configJson[idName]['system']
     token = configJson[idName]['lineToken']
@@ -69,6 +67,7 @@ def MornitoringUser(idName):
     signal_df = pd.read_csv(dataPath+'/signal.csv')
     signal_df = signal_df[signal_df['Rec_Date'] == signal_df['Rec_Date'].max()]
 
+    # Select Entry
     df = signal_df
     df['Change4HR%_Abs'] = df['Change4HR%'].abs()
     df = df[
@@ -78,10 +77,10 @@ def MornitoringUser(idName):
     ]
     df = df.sort_values(['Change4HR%_Abs','Value_M'], ascending=[True,False])
     #df = df.sort_values(['Change4HR%','Value_M'], ascending=[False,False])
-    df = df.head(1)
+    df = df.head(1) # Select Count
     df.reset_index(inplace=True)
-    #print(df[['Symbol','Change4HR%_Abs']])
 
+    # New Column
     df['User'] = idName
     df['Buy'] = df['Close']
     df['Market'] = df['Close']
@@ -91,25 +90,23 @@ def MornitoringUser(idName):
     colSelect = ['User','Symbol','Signal','Buy','Market','Profit%','Max_Drawdown%','Change4HR%','Value_M','BreakOut_H','BreakOut_L']
     df = df[colSelect]
     print(df[['Symbol','Signal','Change4HR%']])
-    print('Entry {}'.format(df['Symbol'].to_list()))
+    print('Select Entry {}'.format(df['Symbol'].to_list()))
 
-    #mornitor data frame
+    # Mornitor data frame
     mornitorFilePath = dataPath + '/mornitor.csv'
     if not os.path.exists(mornitorFilePath):
         morn_df = pd.DataFrame(columns=colSelect)
         morn_df.to_csv(mornitorFilePath,index=False)
     morn_df = pd.read_csv(mornitorFilePath)
 
-    #Buy Notify
-    print('buy condition check')
-    print(range(df['Symbol'].count()))
+    # Buy Notify
     portfolioList = morn_df[morn_df['User']==idName]['Symbol'].tolist()
-    print(portfolioList)
+    print('{} Portfolio have {}'.format(idName,portfolioList))
     for i in range(df['Symbol'].count()):
         row = df.iloc[i]
         print(row['Symbol'])
         print( not row['Symbol'] in portfolioList )
-        if not row['Symbol'] in portfolioList:
+        if (not row['Symbol'] in portfolioList) and (len(portfolioList) <= size):
             text = '△  Buy  {}    {}'.format(row['Symbol'],row['Buy'])
             quote = row['Symbol'].split('_')[-1]
             imgFilePath = imgPath + os.sep + '{}_{}.png'.format(preset,quote)
@@ -118,7 +115,7 @@ def MornitoringUser(idName):
             #lineNotify.sendNotifyImageMsg(token, imgFilePath, text)
             morn_df = morn_df.append(row)
 
-    #morn_df = morn_df.append(df)
+    # Calculate in Column
     morn_df['Buy'] = morn_df.groupby(['User','Symbol']).transform('first')['Buy']
     morn_df['Profit%'] = ((morn_df['Market'] - morn_df['Buy']) / morn_df['Buy']) * 100
     morn_df['Profit%'] = morn_df['Profit%'].round(2)
@@ -129,7 +126,7 @@ def MornitoringUser(idName):
     morn_df.drop_duplicates(['User','Symbol'],keep='last',inplace=True)
     morn_df.to_csv(mornitorFilePath, index=False)
 
-    #reload mornitor
+    # Reload mornitor again
     morn_df = pd.read_csv(mornitorFilePath)
     morn_df = morn_df.sort_values(['User','Profit%'], ascending=[True,False])
     holdList = morn_df[
@@ -137,8 +134,7 @@ def MornitoringUser(idName):
         (morn_df['Profit%'] > 0.0)
     ].head(size+2)['Symbol'].tolist()
 
-    #Sell Notify
-    print('sell condition check')
+    # Sell Notify
     sell_df = signal_df[
         (signal_df['Signal'] == 'Exit') &
         (signal_df['Preset'] == preset)
@@ -148,9 +144,8 @@ def MornitoringUser(idName):
         row = morn_df.iloc[i]
         text = '▽  Sell  {}   {}'.format(row['Symbol'], row['Market'])
         sell_condition = (
-                (row['Market'] < row['BreakOut_L']) or
-                (len(holdList) > 5 and not row['Symbol'] in holdList)
-                          )
+                (row['Market'] < row['BreakOut_L'])
+                )
         if sell_condition:
             print(text)
             #lineNotify.sendNotifyMassage(token, text)
@@ -165,7 +160,7 @@ def MornitoringUser(idName):
             morn_df[( morn_df['User'] == i['User'] ) & ( morn_df['Symbol'] == i['Symbol'] )].index
         )
 
-    #report
+    #Report
     report_df = morn_df[morn_df['User'] == idName]
     report_df = report_df.sort_values(['Profit%'], ascending=[False])
     report_df = report_df.head(size)
