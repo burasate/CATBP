@@ -113,7 +113,7 @@ def MornitoringUser(idName):
             print(text)
             print(imgFilePath)
             line = lineNotify.sendNotifyImageMsg(token, imgFilePath, text)
-            if type(line)== dict and int(line['status']) == 200:
+            if type(line)== dict and line['message'] == 'ok':
                 morn_df = morn_df.append(df)
 
     #morn_df = morn_df.append(df)
@@ -152,7 +152,7 @@ def MornitoringUser(idName):
         if sell_condition:
             print(text)
             line = lineNotify.sendNotifyMassage(token, text)
-            if type(line)== dict and int(line['status']) == 200:
+            if type(line)== dict and line['message'] == 'ok':
                 sellList.append(
                     {
                         'User': row['User'],
