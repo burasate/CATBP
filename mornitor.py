@@ -101,7 +101,7 @@ def MornitoringUser(idName):
     for i in range(df['Symbol'].count()):
         row = df.iloc[i]
         print(row['Symbol'])
-        print(morn_df['Symbol'].tolist())
+        print( not row['Symbol'] in morn_df['Symbol'].tolist() )
         if not row['Symbol'] in morn_df['Symbol'].tolist():
             text = '△  Buy  {}    {}'.format(row['Symbol'],row['Buy'])
             quote = row['Symbol'].split('_')[-1]
