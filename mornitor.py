@@ -56,9 +56,9 @@ def MornitoringUser(idName):
         return None
     print('---------------------\n[ {} ]  Monitoring\n---------------------'.format(idName))
     now = round(time.time())
-    reportHourDuration = float(((now - configJson[idName]['lastReport'])/60)/60)
+    reportHourDuration = round( float(((now - configJson[idName]['lastReport'])/60)/60),2 )
     print(now)
-    print(reportHourDuration)
+    print('{}'.)
     print(configJson[idName]['lastReport'])
     preset = configJson[idName]['preset']
     system = configJson[idName]['system']

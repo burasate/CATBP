@@ -350,7 +350,7 @@ def getSignalAllPreset(*_):
     rec_date = dt.datetime.now().strftime('%Y-%m-%d %H:00:00')
     if int( dt.datetime.now().strftime('%M') ) >= 30:
         rec_date = dt.datetime.now().strftime('%Y-%m-%d %H:30:00')
-    
+
     signal_df = pd.DataFrame()
     # Clear Directory
     imgPath = dataPath + '/analysis_img/'
