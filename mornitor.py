@@ -105,7 +105,7 @@ def MornitoringUser(idName):
             print(text)
             print(imgFilePath)
             lineNotify.sendNotifyImageMsg(token, imgFilePath, text)
-			#morn_df = morn_df.append(row)
+            morn_df = morn_df.append(row)
 
     #morn_df = morn_df.append(df)
     morn_df['Buy'] = morn_df.groupby(['User','Symbol']).transform('first')['Buy']
