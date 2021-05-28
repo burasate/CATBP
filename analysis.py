@@ -346,7 +346,8 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
     return df
 
 def getSignalAllPreset(*_):
-    rec_date = dt.datetime.today().isoformat()
+    #rec_date = dt.datetime.today().isoformat()
+    rec_date = dt.datetime.now().strftime('%Y-%m-%d %H:00:00')
     signal_df = pd.DataFrame()
     # Clear Directory
     imgPath = dataPath + '/analysis_img/'
