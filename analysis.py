@@ -406,6 +406,8 @@ def getSignalAllPreset(*_):
                     print('Preset : {} | Exit : {}'.format(ps, file))
                     df['Signal'] = 'Exit'
                     signal_df = signal_df.append(df.iloc[0])
+                else:
+                    signal_df = signal_df.append(df.iloc[0])
 
             except:
                 pass

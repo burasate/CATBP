@@ -118,6 +118,13 @@ def MornitoringUser(idName):
         elif len(portfolioList) >= size:
             print('Can\'t Buy More\nportfolio is full')
 
+    # Ticker ( Update Last Price as 'Market' )
+    ticker = kbApi.getTicker()
+    for sym in ticker:
+        if not sym in morn_df['Symbol'].unique().tolist():
+            continue
+        morn_df.loc[morn_df['Symbol'] == sym, 'Market'] = ticker[sym]['last']
+
     # Calculate in Column
     morn_df['Buy'] = morn_df.groupby(['User','Symbol']).transform('first')['Buy']
     morn_df['Profit%'] = ((morn_df['Market'] - morn_df['Buy']) / morn_df['Buy']) * 100
@@ -229,5 +236,11 @@ if __name__ == '__main__' :
         ].head(5)['Symbol'].tolist()
     print(holdList)
     """
+    signal_df = pd.read_csv(dataPath + '/signal.csv')
+    #print( signal_df.loc[signal_df[signal_df['Symbol'] == 'THB_sLTC'].index]['Close'].tolist()[-1] )
+    print( signal_df[signal_df['Symbol'] == 'THB_LTC'].index )
+    print(signal_df.loc[signal_df[signal_df['Symbol'] == 'THB_sLTC'].index]['Close'].count())
+    ticker = kbApi.getTicker()
+    #print(ticker[Symbol]['last'])
 
     pass
