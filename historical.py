@@ -46,6 +46,9 @@ def updateGSheetHistory(limit = 35000):
     df.to_csv(backupPath, index=False)
 
     # append backup
+    backupList = os.listdir(dataPath + '/hist_backup')
+    if len(backupList) > 10:
+        backupList = backupList[-10:]
     for f in os.listdir(dataPath + '/hist_backup'):
         filePath = dataPath + '/hist_backup/{}'.format(f)
         print(filePath)

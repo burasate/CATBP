@@ -219,13 +219,13 @@ def AllUser(*_):
             #break
 
 if __name__ == '__main__' :
-    import update
-    update.updateConfig()
-    configJson = json.load(open(configPath))
+    #import update
+    #update.updateConfig()
+    #configJson = json.load(open(configPath))
 
     #Reset()
     #MornitoringUser('CryptoBot')
-    MornitoringUser('user1')
+    #MornitoringUser('user1')
     #AllUser()
     """
     morn_df = pd.read_csv(dataPath + '/mornitor.csv')
@@ -242,5 +242,6 @@ if __name__ == '__main__' :
     print(signal_df.loc[signal_df[signal_df['Symbol'] == 'THB_sLTC'].index]['Close'].count())
     ticker = kbApi.getTicker()
     #print(ticker[Symbol]['last'])
+    x = [1,2,3]
 
     pass
