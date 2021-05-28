@@ -417,17 +417,14 @@ def getSignalAllPreset(*_):
     new_signal_df = new_signal_df[new_signal_df['Rec_Date'] != rec_date]
     new_signal_df = new_signal_df.append(signal_df)
     new_signal_df = new_signal_df.sort_values(['Date','Rec_Date','Signal'], ascending=[True,True,True])
-    new_signal_df.drop_duplicates(['Rec_Date','Preset','Symbol'],keep='last', inplace=True)
+    new_signal_df.drop_duplicates(['Rec_Date','Preset','Symbol'],keep='last', inplace=True, ignore_index=False)
     new_signal_df = new_signal_df.tail(5000)
     new_signal_df.to_csv(csvPath,index=False)
 
     if not os.name == 'nt':
         # Update G Sheet
-        #gsheet_df = signal_df.sort_values(['Buy_Score','Preset'],ascending=[False,True])
         gsheet_csvPath = dataPath + os.sep + 'signal_gsheet.csv'
-        #gsheet_df[['Rec_Date','Preset','Quote','Buy_Score']].to_csv(gsheet_csvPath,index=False)
-        gsheet_df = new_signal_df.drop_duplicates(subset=['Date', 'Quote', 'Preset'], keep='last', inplace=False, ignore_index=False)
-        gsheet_df.to_csv(gsheet_csvPath, index=False)
+        new_signal_df.to_csv(gsheet_csvPath, index=False)
         gSheet.updateFromCSV(gsheet_csvPath, 'SignalRecord')
 
 if __name__ == '__main__' :
@@ -436,8 +433,8 @@ if __name__ == '__main__' :
     #presetPath = dataPath + '/preset.json'
     #presetJson = json.load(open(presetPath))
 
-    getAnalysis(histPath + 'THB_KNC' + '.csv', 'P4',saveImage=False,showImage=True)
-    #getSignalAllPreset()
+    #getAnalysis(histPath + 'THB_KNC' + '.csv', 'P4',saveImage=False,showImage=True)
+    getSignalAllPreset()
     """
     for i in os.listdir(dataPath + '/hist'):
         print(i)
