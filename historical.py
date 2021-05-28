@@ -42,11 +42,11 @@ def updateGSheetHistory(limit = 35000):
 
 
     #backup hist
-    backupPath = dataPath + '/hist_backup/cryptoHist_{}.csv'.format(date.replace('-','_'))
+    backupPath = dataPath + '/hist_backup/cryptoHist_{}_{}.csv'.format(date.replace('-','_'),hour)
     df.to_csv(backupPath, index=False)
 
     # append backup
-    for f in os.listdir(dataPath + '/hist_backup')[:3]:
+    for f in os.listdir(dataPath + '/hist_backup'):
         filePath = dataPath + '/hist_backup/{}'.format(f)
         print(filePath)
         df = df.append(
