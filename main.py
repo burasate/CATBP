@@ -32,5 +32,8 @@ while True:
     except Exception as e:
         print(e)
     finally:
-        time.sleep(60*5)
+        #time.sleep(60*5)
+        time.sleep(60*1)
         pass
+    if not os.name == 'nt':
+        update.updateAllFile()

@@ -54,7 +54,7 @@ def MornitoringUser(idName):
     isActive = bool(configJson[idName]['active'])
     if isActive == False:
         return None
-    print('{}  Monitoring...'.format(idName))
+    print('-------\n[ {} ]  Monitoring\n-------'.format(idName))
     now = time.time()
     reportHourDuration = ((now - float(configJson[idName]['lastReport']))/60)/60
     preset = configJson[idName]['preset']
