@@ -348,6 +348,9 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
 def getSignalAllPreset(*_):
     #rec_date = dt.datetime.today().isoformat()
     rec_date = dt.datetime.now().strftime('%Y-%m-%d %H:00:00')
+    if int( dt.datetime.now().strftime('%M') ) >= 30:
+        rec_date = dt.datetime.now().strftime('%Y-%m-%d %H:30:00')
+    
     signal_df = pd.DataFrame()
     # Clear Directory
     imgPath = dataPath + '/analysis_img/'
@@ -412,7 +415,7 @@ def getSignalAllPreset(*_):
     if not os.path.exists(csvPath):
         signal_df.to_csv(csvPath,index=False)
 
-    # New Signal DataFrame
+    # New Signal DataFrame (All Signal Record)
     new_signal_df = pd.read_csv(csvPath)
     new_signal_df = new_signal_df[new_signal_df['Rec_Date'] != rec_date]
     new_signal_df = new_signal_df.append(signal_df)
