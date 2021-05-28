@@ -1,4 +1,5 @@
 import time,os
+import importlib
 
 rootPath = os.path.dirname(os.path.abspath(__file__))
 
@@ -16,13 +17,16 @@ while True:
         update.updateSystem()
 
         import historical
+        importlib.reload(historical)
         historical.updateGSheetHistory()
         historical.loadAllHist(timeFrame='hour')
 
         import analysis
+        importlib.reload(analysis)
         analysis.getSignalAllPreset()
 
         import mornitor
+        importlib.reload(mornitor)
         mornitor.Reset()
         mornitor.AllUser()
     except Exception as e:
