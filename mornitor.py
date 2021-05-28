@@ -78,7 +78,7 @@ def MornitoringUser(idName):
     ]
     df = df.sort_values(['Change4HR%_Abs','Value_M'], ascending=[True,False])
     #df = df.sort_values(['Change4HR%','Value_M'], ascending=[False,False])
-    df = df.head(1) # Select Count
+    df = df.head(size) # Select Count
     df.reset_index(inplace=True)
 
     # New Column
@@ -100,9 +100,11 @@ def MornitoringUser(idName):
         morn_df.to_csv(mornitorFilePath,index=False)
     morn_df = pd.read_csv(mornitorFilePath)
 
+    #Portfolio
+    portfolioList = morn_df[morn_df['User'] == idName]['Symbol'].tolist()
+    print('{} Portfolio have {}'.format(idName, portfolioList))
+
     # Buy Notify
-    portfolioList = morn_df[morn_df['User']==idName]['Symbol'].tolist()
-    print('{} Portfolio have {}'.format(idName,portfolioList))
     for i in range(df['Symbol'].count()):
         row = df.iloc[i]
         if (not row['Symbol'] in portfolioList) and (len(portfolioList) < size):
@@ -169,7 +171,7 @@ def MornitoringUser(idName):
     #Portfolio report
     if reportHourDuration >= float(configJson[idName]['reportEveryHour']) and report_df['Symbol'].count() != 0:
         gSheet.setValue('Config', findKey='idName', findValue=idName, key='lastReport', value=time.time())
-        text = '[ Holding ]\n' +\
+        text = '[ Report ]\n' +\
                 '{}\n'.format( ' , '.join(report_df['Symbol'].tolist()) ) +\
                 'Profit {}%'.format( report_df['Profit%'].sum() )
         print(text)
@@ -196,14 +198,16 @@ def AllUser(*_):
         except Exception as e:
             print(e)
             continue
-    while isInternetConnect:
+    while True:
+        if isInternetConnect == False:
+            continue
         try:
             print('uploading mornitoring data...')
             gSheet.updateFromCSV(mornitorFilePath, 'Mornitor')
             print('upload mornitoring data finish')
         except:
             pass
-        time.sleep(5)
+        time.sleep(10)
         if gSheet.getAllDataS('Mornitor') != []:
             break
 
