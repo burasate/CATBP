@@ -95,6 +95,7 @@ def MornitoringUser(idName):
         morn_df = pd.DataFrame(columns=colSelect)
         morn_df.to_csv(mornitorFilePath,index=False)
     morn_df = pd.read_csv(mornitorFilePath)
+    print(morn_df[['User','Symbol']])
 
     #Buy Notify
     print('buy condition check')
