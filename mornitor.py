@@ -99,12 +99,13 @@ def MornitoringUser(idName):
     #Buy Notify
     print('buy condition check')
     print(range(df['Symbol'].count()))
-    print(morn_df['Symbol'].tolist())
+    portfolioList = morn_df[morn_df['User'==idName]]['Symbol'].tolist()
+    print(portfolioList)
     for i in range(df['Symbol'].count()):
         row = df.iloc[i]
         print(row['Symbol'])
-        print( not row['Symbol'] in morn_df['Symbol'].tolist() )
-        if not row['Symbol'] in morn_df['Symbol'].tolist():
+        print( not row['Symbol'] in portfolioList )
+        if not row['Symbol'] in portfolioList:
             text = '△  Buy  {}    {}'.format(row['Symbol'],row['Buy'])
             quote = row['Symbol'].split('_')[-1]
             imgFilePath = imgPath + os.sep + '{}_{}.png'.format(preset,quote)
