@@ -21,9 +21,9 @@ while True:
         #historical.updateGSheetHistory()
         #historical.loadAllHist(timeFrame='hour')
 
-        #import analysis
-        #importlib.reload(analysis)
-        #analysis.getSignalAllPreset()
+        import analysis
+        importlib.reload(analysis)
+        analysis.getSignalAllPreset()
 
         import mornitor
         importlib.reload(mornitor)
