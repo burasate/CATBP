@@ -96,8 +96,12 @@ def MornitoringUser(idName):
     morn_df = pd.read_csv(mornitorFilePath)
 
     #Buy Notify
+    print('buy condition check')
+    print(range(df['Symbol'].count())
     for i in range(df['Symbol'].count()):
         row = df.iloc[i]
+        print(row['Symbol'])
+        print(morn_df['Symbol'].tolist())
         if not row['Symbol'] in morn_df['Symbol'].tolist():
             text = '△  Buy  {}    {}'.format(row['Symbol'],row['Buy'])
             quote = row['Symbol'].split('_')[-1]
@@ -128,6 +132,7 @@ def MornitoringUser(idName):
     ].head(size+2)['Symbol'].tolist()
 
     #Sell Notify
+    print('sell condition check')
     sell_df = signal_df[
         (signal_df['Signal'] == 'Exit') &
         (signal_df['Preset'] == preset)
