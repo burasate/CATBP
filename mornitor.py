@@ -67,14 +67,15 @@ def MornitoringUser(idName):
     signal_df = signal_df[signal_df['Rec_Date'] == signal_df['Rec_Date'].max()]
 
     df = signal_df
-    df['Change4HR%_Abs'] = df['Change4HR%'].abs()
+    #df['Change4HR%_Abs'] = df['Change4HR%'].abs()
     df = df[
         ( df['Rec_Date'] == df['Rec_Date'].max() ) &
         ( df['Signal'] == 'Entry' ) &
         ( df['Preset'] == preset )
     ]
-    df = df.sort_values(['Change4HR%_Abs','Value_M'], ascending=[True,False])
-    df = df.head(2)
+    #df = df.sort_values(['Change4HR%_Abs','Value_M'], ascending=[True,False])
+    df = df.sort_values(['Change4HR%','Value_M'], ascending=[False,False])
+    df = df.head(size)
     df.reset_index(inplace=True)
     #print(df[['Symbol','Change4HR%_Abs']])
 
@@ -104,8 +105,9 @@ def MornitoringUser(idName):
             print(text)
             print(imgFilePath)
             lineNotify.sendNotifyImageMsg(token, imgFilePath, text)
+			morn_df = morn_df.append(row)
 
-    morn_df = morn_df.append(df)
+    #morn_df = morn_df.append(df)
     morn_df['Buy'] = morn_df.groupby(['User','Symbol']).transform('first')['Buy']
     morn_df['Profit%'] = ((morn_df['Market'] - morn_df['Buy']) / morn_df['Buy']) * 100
     morn_df['Profit%'] = morn_df['Profit%'].round(2)
