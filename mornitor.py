@@ -172,7 +172,7 @@ def MornitoringUser(idName):
     report_df = report_df.head(size)
 
     #portfolio report
-    if reportHourDuration >= float(configJson[idName]['reportEveryHour']):
+    if reportHourDuration >= float(configJson[idName]['reportEveryHour']) and report_df['Symbol'].count() != 0:
         gSheet.setValue('Config', findKey='idName', findValue=idName, key='lastReport', value=time.time())
         text = '[Holding]\n' +\
                 '{}\n'.format( ' , '.join(report_df['Symbol'].tolist()) ) +\
