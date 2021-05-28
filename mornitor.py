@@ -104,7 +104,7 @@ def MornitoringUser(idName):
     for i in range(df['Symbol'].count()):
         row = df.iloc[i]
         if (not row['Symbol'] in portfolioList) and (len(portfolioList) < size):
-            text = '△  Buy  {}    {}'.format(row['Symbol'],row['Buy'])
+            text = '[ Buy ]\n  {}    {}'.format(row['Symbol'],row['Buy'])
             quote = row['Symbol'].split('_')[-1]
             imgFilePath = imgPath + os.sep + '{}_{}.png'.format(preset,quote)
             print(text)
@@ -141,7 +141,7 @@ def MornitoringUser(idName):
     sellList = []
     for i in range(morn_df['Symbol'].count()):
         row = morn_df.iloc[i]
-        text = '▽  Sell  {}   {}'.format(row['Symbol'], row['Market'])
+        text = '[ Sell ]\n  {}   {}'.format(row['Symbol'], row['Market'])
         sell_condition = (
                 (row['Market'] < row['BreakOut_L'])
                 )
@@ -167,7 +167,7 @@ def MornitoringUser(idName):
     #Portfolio report
     if reportHourDuration >= float(configJson[idName]['reportEveryHour']) and report_df['Symbol'].count() != 0:
         gSheet.setValue('Config', findKey='idName', findValue=idName, key='lastReport', value=time.time())
-        text = '[Holding]\n' +\
+        text = '[ Holding ]\n' +\
                 '{}\n'.format( ' , '.join(report_df['Symbol'].tolist()) ) +\
                 'Profit {}%'.format( report_df['Profit%'].sum() )
         print(text)
@@ -177,7 +177,7 @@ def MornitoringUser(idName):
     if report_df['Profit%'].sum() >= profitTarget:
         gSheet.setValue('Config', findKey='idName', findValue=idName, key='reset', value=1)
         configJson[idName]['reset'] = 1
-        text = '[Take Profit]:\n' + \
+        text = '[ Take Profit ]\n' + \
                'Target Profit {}%\n'.format(profitTarget) + \
                'Now Profit {}%'.format(report_df['Profit%'].sum())
         print(text)
