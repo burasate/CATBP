@@ -42,7 +42,6 @@ def updateGSheetHistory(limit = 35000):
     second = int(dt.now().strftime('%S'))
     date_time = str(dt.now().strftime('%Y-%m-%d %H:%M:%S'))
 
-
     #backup hist
     backupPath = dataPath + '/hist_backup/cryptoHist_{}_{}.csv'.format(date.replace('-','_'),0)
     if hour >= 8 and hour <= 16 :
@@ -90,6 +89,7 @@ def updateGSheetHistory(limit = 35000):
 
     # delete duplicate
     df.drop_duplicates(['symbol','date','hour','minute'], keep='last', inplace=True)
+    df.sort_values(['dateTime'],ascending=[True])
     df.sort_index(inplace=True)
     #limit row
     df = df.tail(limit)
