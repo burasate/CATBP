@@ -7,7 +7,7 @@ print('BitPy')
 time.sleep(15)
 import update
 if not os.name == 'nt':
-    time.sleep(45)
+    time.sleep(15)
     update.updateAllFile()
 
 while True:
