@@ -23,6 +23,8 @@ def isInternetConnect(*_):
 def getHistDataframe(*_):
     print('load history data from google sheet...')
     sheetData = gSheet.getAllDataS('History')
+    if sheetData == []:
+        gSheet.updateFromCSV(allHistPath, 'History')
     df = pd.DataFrame.from_records(sheetData)
     return df
 
@@ -42,16 +44,23 @@ def updateGSheetHistory(limit = 35000):
 
 
     #backup hist
-    backupPath = dataPath + '/hist_backup/cryptoHist_{}_{}.csv'.format(date.replace('-','_'),hour)
+    backupPath = dataPath + '/hist_backup/cryptoHist_{}_{}.csv'.format(date.replace('-','_'),0)
+    if hour >= 8 and hour <= 16 :
+        backupPath = dataPath + '/hist_backup/cryptoHist_{}_{}.csv'.format(date.replace('-', '_'), 1)
+    elif: hour > 16 :
+        backupPath = dataPath + '/hist_backup/cryptoHist_{}_{}.csv'.format(date.replace('-', '_'), 2)
+
+
     df.to_csv(backupPath, index=False)
 
     # append backup
     backupList = os.listdir(dataPath + '/hist_backup')
+    backupList.sort()
     if len(backupList) > 10:
         backupList = backupList[-10:]
-    for f in os.listdir(dataPath + '/hist_backup'):
+    for f in backupList:
         filePath = dataPath + '/hist_backup/{}'.format(f)
-        print(filePath)
+        print('Read [ {} ]'.format(filePath))
         df = df.append(
             pd.read_csv(filePath)
         )
@@ -90,7 +99,7 @@ def updateGSheetHistory(limit = 35000):
     allHistPath = dataPath + '/cryptoHist.csv'
     df = df[list(rowData)]
     df.to_csv(allHistPath, index=False)
-
+    
     while isInternetConnect():
         try:
             print('uploading history data...')
