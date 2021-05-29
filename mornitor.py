@@ -127,8 +127,10 @@ def MornitoringUser(idName):
         if not sym in morn_df['Symbol'].unique().tolist():
             continue
         morn_df.loc[morn_df['Symbol'] == sym, 'Market'] = ticker[sym]['last']
+    print('Update Market Price')
 
     # Calculate in Column
+    print('Profit Calculating')
     morn_df['Buy'] = morn_df.groupby(['User','Symbol']).transform('first')['Buy']
     morn_df['Profit%'] = ((morn_df['Market'] - morn_df['Buy']) / morn_df['Buy']) * 100
     morn_df['Profit%'] = morn_df['Profit%'].round(2)
