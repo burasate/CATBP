@@ -213,7 +213,7 @@ def AllUser(*_):
         except Exception as e:
             print('Error To Record : {}  then skip'.format(e))
             continue
-    while isInternetConnect:
+    while isInternetConnect and not os.name == 'nt':
         try:
             print('Uploading mornitoring data...')
             gSheet.updateFromCSV(mornitorFilePath, 'Mornitor')
@@ -222,7 +222,7 @@ def AllUser(*_):
             pass
         else:
             break
-        #time.sleep(10)
+        time.sleep(10)
         #if gSheet.getAllDataS('Mornitor') != []:
             #break
 
@@ -233,8 +233,8 @@ if __name__ == '__main__' :
 
     #Reset()
     #MornitoringUser('CryptoBot')
-    MornitoringUser('user1')
-    #AllUser()
+    #MornitoringUser('user1')
+    AllUser()
     """
     morn_df = pd.read_csv(dataPath + '/mornitor.csv')
     morn_df = morn_df.sort_values(['User', 'Profit%'], ascending=[True, False])
