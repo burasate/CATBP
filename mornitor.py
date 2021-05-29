@@ -203,6 +203,7 @@ def AllUser(*_):
     os.system('cls||clear')
     mornitorFilePath = dataPath + '/mornitor.csv'
     for user in configJson:
+        MornitoringUser(user)
         try:
             MornitoringUser(user)
         except Exception as e:
