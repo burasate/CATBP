@@ -116,6 +116,7 @@ def MornitoringUser(idName):
                 print(imgFilePath)
                 lineNotify.sendNotifyImageMsg(token, imgFilePath, text)
                 morn_df = morn_df.append(row)
+                portfolioList.append(row['Symbol'])
         elif len(portfolioList) >= size:
             print('Can\'t Buy More\nportfolio is full')
 
