@@ -96,6 +96,7 @@ def updateGSheetHistory(limit = 35000):
     df.dropna(subset=['epoch'],inplace=True)
     df['epoch'] = pd.to_numeric(df['epoch'], errors='coerce')
     df['dateTime'] = df['dateTime'].astype(str)
+    df = df[df['dateTime'] != 'nan']
     df.sort_values(['epoch'], ascending=[True])
     df.sort_index(inplace=True)
     #limit row
