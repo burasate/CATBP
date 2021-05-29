@@ -119,6 +119,7 @@ def MornitoringUser(idName):
                 portfolioList.append(row['Symbol'])
         elif len(portfolioList) >= size:
             print('Can\'t Buy More\nportfolio is full')
+            break
 
     # Ticker ( Update Last Price as 'Market' )
     ticker = kbApi.getTicker()
