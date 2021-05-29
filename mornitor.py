@@ -58,12 +58,12 @@ def MornitoringUser(idName):
     print('---------------------\n[ {} ]  Monitoring\n---------------------'.format(idName))
     now = round(time.time())
     reportHourDuration = round( float(((now - configJson[idName]['lastReport'])/60)/60),2 )
-    print('Last Report  {} Hour Ago / Report Every {}H'.format(reportHourDuration,configJson[idName]['lastReport']))
     preset = configJson[idName]['preset']
     system = configJson[idName]['system']
     token = configJson[idName]['lineToken']
     size = int(systemJson[system]['size'])
     profitTarget = float(systemJson[system]['percentageProfitTarget'])
+    print('Last Report  {} Hour Ago / Report Every {}H'.format(reportHourDuration, profitTarget))
 
     signal_df = pd.read_csv(dataPath+'/signal.csv')
     signal_df = signal_df[signal_df['Rec_Date'] == signal_df['Rec_Date'].max()]
@@ -241,7 +241,4 @@ if __name__ == '__main__' :
     print( signal_df[signal_df['Symbol'] == 'THB_LTC'].index )
     print(signal_df.loc[signal_df[signal_df['Symbol'] == 'THB_sLTC'].index]['Close'].count())
     ticker = kbApi.getTicker()
-    #print(ticker[Symbol]['last'])
-    x = [1,2,3]
-
     pass
