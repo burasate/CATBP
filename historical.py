@@ -25,8 +25,11 @@ def getHistDataframe(*_):
     sheetData = gSheet.getAllDataS('History')
     print('row count {}'.format(len(sheetData)))
     if sheetData == []:
+        allHistPath = dataPath + '/cryptoHist.csv'
         gSheet.updateFromCSV(allHistPath, 'History')
-    df = pd.DataFrame.from_records(sheetData)
+        df = pd.read_csv(allHistPath)
+    else:
+        df = pd.DataFrame.from_records(sheetData)
     return df
 
 def updateGSheetHistory(limit = 35000):
