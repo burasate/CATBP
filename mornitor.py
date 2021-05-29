@@ -107,6 +107,7 @@ def MornitoringUser(idName):
     # Buy Notify
     for i in range(df['Symbol'].count()):
         row = df.iloc[i]
+        print(row)
         if len(portfolioList) < size:
             if not row['Symbol'] in portfolioList:
                 text = '[ Buy ]\n  {}    {}'.format(row['Symbol'],row['Buy'])
@@ -220,13 +221,13 @@ def AllUser(*_):
             #break
 
 if __name__ == '__main__' :
-    #import update
-    #update.updateConfig()
-    #configJson = json.load(open(configPath))
+    import update
+    update.updateConfig()
+    configJson = json.load(open(configPath))
 
     #Reset()
     #MornitoringUser('CryptoBot')
-    #MornitoringUser('user1')
+    MornitoringUser('user1')
     #AllUser()
     """
     morn_df = pd.read_csv(dataPath + '/mornitor.csv')
@@ -237,9 +238,4 @@ if __name__ == '__main__' :
         ].head(5)['Symbol'].tolist()
     print(holdList)
     """
-    signal_df = pd.read_csv(dataPath + '/signal.csv')
-    #print( signal_df.loc[signal_df[signal_df['Symbol'] == 'THB_sLTC'].index]['Close'].tolist()[-1] )
-    print( signal_df[signal_df['Symbol'] == 'THB_LTC'].index )
-    print(signal_df.loc[signal_df[signal_df['Symbol'] == 'THB_sLTC'].index]['Close'].count())
-    ticker = kbApi.getTicker()
     pass
