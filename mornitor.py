@@ -121,7 +121,7 @@ def MornitoringUser(idName):
             print('Can\'t Buy More\nportfolio is full')
             break
     morn_df = morn_df[colSelect]
-    morn_df.reset_index(inplace=True)
+    morn_df.reset_index(drop=True, inplace=True)
 
     # Ticker ( Update Last Price as 'Market' )
     ticker = kbApi.getTicker()
