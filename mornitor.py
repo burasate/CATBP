@@ -115,14 +115,14 @@ def MornitoringUser(idName):
                 print(text)
                 print(imgFilePath)
                 lineNotify.sendNotifyImageMsg(token, imgFilePath, text)
-                morn_df = morn_df.append(row)
+                morn_df = morn_df.append(row,ignore_index=True)
                 portfolioList.append(row['Symbol'])
         elif len(portfolioList) >= size:
             print('Can\'t Buy More\nportfolio is full')
             break
     morn_df = morn_df[colSelect]
-    morn_df.reset_index(drop=True, inplace=True)
-    morn_df = morn_df.drop(['index'], axis=1)
+    #morn_df.reset_index(drop=True, inplace=True)
+    #morn_df = morn_df.drop(['index'], axis=1)
 
     # Ticker ( Update Last Price as 'Market' )
     ticker = kbApi.getTicker()
@@ -202,6 +202,7 @@ def MornitoringUser(idName):
         lineNotify.sendNotifyMassage(token, text)
 
     morn_df.to_csv(mornitorFilePath, index=False)
+    print('Finish')
 
 def AllUser(*_):
     os.system('cls||clear')
