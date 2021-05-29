@@ -47,9 +47,8 @@ def updateGSheetHistory(limit = 35000):
     backupPath = dataPath + '/hist_backup/cryptoHist_{}_{}.csv'.format(date.replace('-','_'),0)
     if hour >= 8 and hour <= 16 :
         backupPath = dataPath + '/hist_backup/cryptoHist_{}_{}.csv'.format(date.replace('-', '_'), 1)
-    elif: hour > 16 :
+    elif hour > 16 :
         backupPath = dataPath + '/hist_backup/cryptoHist_{}_{}.csv'.format(date.replace('-', '_'), 2)
-
 
     df.to_csv(backupPath, index=False)
 
@@ -99,7 +98,7 @@ def updateGSheetHistory(limit = 35000):
     allHistPath = dataPath + '/cryptoHist.csv'
     df = df[list(rowData)]
     df.to_csv(allHistPath, index=False)
-    
+
     while isInternetConnect():
         try:
             print('uploading history data...')
