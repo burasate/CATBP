@@ -107,14 +107,15 @@ def MornitoringUser(idName):
     # Buy Notify
     for i in range(df['Symbol'].count()):
         row = df.iloc[i]
-        if (not row['Symbol'] in portfolioList) and (len(portfolioList) < size):
-            text = '[ Buy ]\n  {}    {}'.format(row['Symbol'],row['Buy'])
-            quote = row['Symbol'].split('_')[-1]
-            imgFilePath = imgPath + os.sep + '{}_{}.png'.format(preset,quote)
-            print(text)
-            print(imgFilePath)
-            lineNotify.sendNotifyImageMsg(token, imgFilePath, text)
-            morn_df = morn_df.append(row)
+        if len(portfolioList) < size:
+            if not row['Symbol'] in portfolioList:
+                text = '[ Buy ]\n  {}    {}'.format(row['Symbol'],row['Buy'])
+                quote = row['Symbol'].split('_')[-1]
+                imgFilePath = imgPath + os.sep + '{}_{}.png'.format(preset,quote)
+                print(text)
+                print(imgFilePath)
+                lineNotify.sendNotifyImageMsg(token, imgFilePath, text)
+                morn_df = morn_df.append(row)
         elif len(portfolioList) >= size:
             print('Can\'t Buy More\nportfolio is full')
 
