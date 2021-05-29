@@ -107,7 +107,6 @@ def MornitoringUser(idName):
     # Buy Notify
     for i in range(df['Symbol'].count()):
         row = df.iloc[i]
-        print(row)
         if len(portfolioList) < size:
             if not row['Symbol'] in portfolioList:
                 text = '[ Buy ]\n  {}    {}'.format(row['Symbol'],row['Buy'])
