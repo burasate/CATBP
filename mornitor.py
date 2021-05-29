@@ -120,6 +120,7 @@ def MornitoringUser(idName):
         elif len(portfolioList) >= size:
             print('Can\'t Buy More\nportfolio is full')
             break
+    morn_df.reset_index(inplace=True)
 
     # Ticker ( Update Last Price as 'Market' )
     ticker = kbApi.getTicker()
@@ -207,7 +208,7 @@ def AllUser(*_):
         try:
             MornitoringUser(user)
         except Exception as e:
-            print(e)
+            print('Error To Record : {}  then skip'.format(e))
             continue
     while isInternetConnect:
         try:
