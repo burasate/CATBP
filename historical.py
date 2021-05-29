@@ -60,7 +60,7 @@ def updateGSheetHistory(limit = 35000):
         filePath = dataPath + '/hist_backup/{}'.format(f)
         print('Read [ {} ]'.format(filePath))
         df = df.append(
-            pd.read_csv(filePath)
+            pd.read_csv(filePath).sort_values(['dateTime'],ascending=[True]).tail(5000)
         )
 
     os.system('cls||clear')
