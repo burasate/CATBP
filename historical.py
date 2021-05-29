@@ -38,7 +38,7 @@ def updateGSheetHistory(limit = 35000):
 
     date = dt.now().strftime('%Y-%m-%d')
     hour = int(dt.now().strftime('%H'))
-    epoch = time.time()
+    epoch = float(time.time())
     minute = int(dt.now().strftime('%M'))
     second = int(dt.now().strftime('%S'))
     date_time = str(dt.now().strftime('%Y-%m-%d %H:%M:%S'))
@@ -89,11 +89,12 @@ def updateGSheetHistory(limit = 35000):
 
     # delete duplicate
     df.drop_duplicates(['symbol','date','hour','minute'], keep='last', inplace=True)
-    df.sort_values(['dateTime'],ascending=[True])
+    df.dropna(subset=['epoch'],inplace=True)
+    df['epoch'] = pd.to_numeric(df['epoch'], errors='coerce')
+    df.sort_values(['epoch'], ascending=[True])
     df.sort_index(inplace=True)
     #limit row
     df = df.tail(limit)
-    #print(df['date'])
 
     allHistPath = dataPath + '/cryptoHist.csv'
     df = df[list(rowData)]
