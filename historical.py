@@ -97,12 +97,12 @@ def updateGSheetHistory(limit = 35000):
 
     allHistPath = dataPath + '/cryptoHist.csv'
     df = df[list(rowData)]
-    df.to_csv(allHistPath, index=False)
+    #df.to_csv(allHistPath, index=False)
 
     while isInternetConnect():
         try:
             print('uploading history data...')
-            gSheet.updateFromCSV(allHistPath, 'History')
+            #gSheet.updateFromCSV(allHistPath, 'History')
             print('upload history data finish')
         except: pass
         time.sleep(10)
