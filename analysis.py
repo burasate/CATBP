@@ -153,7 +153,13 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
         plotTrimMin = 52
         plotTrimMax = 110
         xTicks = [52,76,88,96,100]
-        xTicksLabel = ['48H','24H','12H','4H','0H']
+        xTicksLabel = [
+            '48H\n{}'.format(df.loc['Date',1]),
+            '24H\n{}'.format(df.loc['Date',1]),
+            '12H\n{}'.format(df.loc['Date',1]),
+            '4H\n{}'.format(df.loc['Date',1]),
+            '0H\n{}'.format(df.loc['Date',1])
+        ]
         plt.xticks(xTicks,xTicksLabel)
         for i in xTicks:
             axes[0].axvline(x=i, linewidth=.7, color=pltColor['text'], linestyle='--', alpha=0.2)
@@ -438,7 +444,7 @@ if __name__ == '__main__' :
     #presetPath = dataPath + '/preset.json'
     #presetJson = json.load(open(presetPath))
 
-    getAnalysis(histPath + 'THB_KUB' + '.csv', 'P4',saveImage=False,showImage=True)
+    getAnalysis(histPath + 'THB_ADA' + '.csv', 'P4',saveImage=False,showImage=True)
     #getSignalAllPreset()
     """
     for i in os.listdir(dataPath + '/hist'):

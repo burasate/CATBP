@@ -60,7 +60,7 @@ def updateGSheetHistory(limit = 35000):
         filePath = dataPath + '/hist_backup/{}'.format(f)
         print('Read [ {} ]'.format(filePath))
         df = df.append(
-            pd.read_csv(filePath).sort_values(['dateTime'],ascending=[True]).tail(5000)
+            pd.read_csv(filePath).sort_values(['epoch'],ascending=[True]).tail(5000)
         )
 
     os.system('cls||clear')
@@ -102,7 +102,7 @@ def updateGSheetHistory(limit = 35000):
     while isInternetConnect():
         try:
             print('uploading history data...')
-            #gSheet.updateFromCSV(allHistPath, 'History')
+            gSheet.updateFromCSV(allHistPath, 'History')
             print('upload history data finish')
         except: pass
         time.sleep(10)
