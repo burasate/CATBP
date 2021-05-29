@@ -153,13 +153,7 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
         plotTrimMin = 52
         plotTrimMax = 110
         xTicks = [52,76,88,96,100]
-        xTicksLabel = [
-            '48H\n{}'.format(df.loc['Date',1]),
-            '24H\n{}'.format(df.loc['Date',1]),
-            '12H\n{}'.format(df.loc['Date',1]),
-            '4H\n{}'.format(df.loc['Date',1]),
-            '0H\n{}'.format(df.loc['Date',1])
-        ]
+        xTicksLabel = ['48H','24H','12H','4H','0H']
         plt.xticks(xTicks,xTicksLabel)
         for i in xTicks:
             axes[0].axvline(x=i, linewidth=.7, color=pltColor['text'], linestyle='--', alpha=0.2)

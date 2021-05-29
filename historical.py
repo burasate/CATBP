@@ -23,6 +23,7 @@ def isInternetConnect(*_):
 def getHistDataframe(*_):
     print('load history data from google sheet...')
     sheetData = gSheet.getAllDataS('History')
+    print('row count {}'.format(len(sheetData)))
     if sheetData == []:
         gSheet.updateFromCSV(allHistPath, 'History')
     df = pd.DataFrame.from_records(sheetData)
@@ -48,7 +49,6 @@ def updateGSheetHistory(limit = 35000):
         backupPath = dataPath + '/hist_backup/cryptoHist_{}_{}.csv'.format(date.replace('-', '_'), 1)
     elif hour > 16 :
         backupPath = dataPath + '/hist_backup/cryptoHist_{}_{}.csv'.format(date.replace('-', '_'), 2)
-
     df.to_csv(backupPath, index=False)
 
     # append backup
@@ -60,7 +60,7 @@ def updateGSheetHistory(limit = 35000):
         filePath = dataPath + '/hist_backup/{}'.format(f)
         print('Read [ {} ]'.format(filePath))
         df = df.append(
-            pd.read_csv(filePath).sort_values(['epoch'],ascending=[True]).tail(5000)
+            pd.read_csv(filePath).sort_values(['dateTime'],ascending=[True]).tail(5000), ignore_index=True
         )
 
     os.system('cls||clear')
@@ -93,11 +93,11 @@ def updateGSheetHistory(limit = 35000):
     df.sort_index(inplace=True)
     #limit row
     df = df.tail(limit)
-    # print(df)
+    #print(df['date'])
 
     allHistPath = dataPath + '/cryptoHist.csv'
     df = df[list(rowData)]
-    #df.to_csv(allHistPath, index=False)
+    df.to_csv(allHistPath, index=False)
 
     while isInternetConnect():
         try:
@@ -179,6 +179,6 @@ def loadAllHist(timeFrame = 'minute'):
 
 if __name__ == '__main__':
     #createSymbolHistory('THB_DOGE')
-    #updateGSheetHistory()
+    updateGSheetHistory()
     #loadAllHist(timeFrame='hour')
     pass
