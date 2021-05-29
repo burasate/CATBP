@@ -1,8 +1,8 @@
 import time,os
 import importlib
-
 rootPath = os.path.dirname(os.path.abspath(__file__))
 
+os.system('cls||clear')
 print('BitPy')
 time.sleep(15)
 import update
@@ -19,7 +19,8 @@ while True:
         import historical
         importlib.reload(historical)
         historical.updateGSheetHistory()
-        historical.loadAllHist(timeFrame='hour')
+        #historical.loadAllHist(timeFrame='hour')
+        historical.loadAllHist()
 
         import analysis
         importlib.reload(analysis)

@@ -63,7 +63,7 @@ def MornitoringUser(idName):
     token = configJson[idName]['lineToken']
     size = int(systemJson[system]['size'])
     profitTarget = float(systemJson[system]['percentageProfitTarget'])
-    print('Last Report  {} Hour Ago / Report Every {}H'.format(reportHourDuration, profitTarget))
+    print('Last Report  {} Hour Ago / Report Every {}H'.format(reportHourDuration, configJson[idName]['reportEveryHour']))
 
     signal_df = pd.read_csv(dataPath+'/signal.csv')
     signal_df = signal_df[signal_df['Rec_Date'] == signal_df['Rec_Date'].max()]
