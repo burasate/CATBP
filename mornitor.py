@@ -107,7 +107,7 @@ def MornitoringUser(idName):
     # Buy Notify
     for i in range(df['Symbol'].count()):
         row = df.iloc[i]
-        buy_condition (
+        buy_condition =  (
             (len(portfolioList) < size) and  #Port is not full
             (not row['Symbol'] in portfolioList) and # Not Symbol in Port
             (row['Close'] > row['BreakOut_L']) # Price Not Equal Break Low
