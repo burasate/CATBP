@@ -1,11 +1,11 @@
 import pandas as pd
-import json
-import os
+import numpy as np
+import json,os,time
 import datetime as dt
 import gSheet
 import kbApi
 import lineNotify
-import time
+
 
 rootPath = os.path.dirname(os.path.abspath(__file__))
 dataPath = rootPath+'/data'
@@ -100,6 +100,11 @@ def MornitoringUser(idName):
         morn_df.to_csv(mornitorFilePath,index=False)
     morn_df = pd.read_csv(mornitorFilePath)
 
+    # Checking Column
+    for c in colSelect:
+        if not c in morn_df.columns.tolist():
+            morn_df[c] = None
+
     #Portfolio
     portfolioList = morn_df[morn_df['User'] == idName]['Symbol'].tolist()
     print('{} Portfolio have {}'.format(idName, portfolioList))
@@ -110,7 +115,7 @@ def MornitoringUser(idName):
         buy_condition =  (
             (len(portfolioList) < size) and  #Port is not full
             (not row['Symbol'] in portfolioList) and # Not Symbol in Port
-            (row['Close'] > row['BreakOut_L']) # Price Not Equal Break Low
+            (row['Buy'] > row['BreakOut_L']) # Price Not Equal Break Low
         )
         if buy_condition: # Buy Condition
             text = '[ Buy ]\n  {}    {}'.format(row['Symbol'],row['Buy'])
@@ -127,7 +132,7 @@ def MornitoringUser(idName):
         # Update Break out When Entry Symbol in Port Exist
         if row['Symbol'] in portfolioList:
             morn_df = morn_df.append(row, ignore_index=True)
-            print('[{}] updated preset indicator'.format(row['Symbol']))
+            print('updated preset indicator ( {} )'.format(row['Symbol']))
     morn_df = morn_df[colSelect]
 
     # Ticker ( Update Last Price as 'Market' )
@@ -144,7 +149,7 @@ def MornitoringUser(idName):
     morn_df['Profit%'] = ((morn_df['Market'] - morn_df['Buy']) / morn_df['Buy']) * 100
     morn_df['Profit%'] = morn_df['Profit%'].round(2)
     morn_df.loc[morn_df['Profit%'] < 0.0, 'Max_Drawdown%'] = morn_df['Profit%'].abs()
-    morn_df['Max_Drawdown%'] = morn_df.groupby(['User', 'Symbol']).transform('max')['Max_Drawdown%']
+    morn_df['Max_Drawdown%'] = morn_df.groupby(['User', 'Symbol'])['Max_Drawdown%'].transform('max')
     morn_df.drop_duplicates(['User','Symbol'],keep='last',inplace=True)
     morn_df.to_csv(mornitorFilePath, index=False)
 
@@ -207,17 +212,21 @@ def MornitoringUser(idName):
         lineNotify.sendNotifyMassage(token, text)
 
     morn_df.to_csv(mornitorFilePath, index=False)
-    print('Finish')
+    print('{} Update Finished'.format(idName))
 
 def AllUser(*_):
     os.system('cls||clear')
     mornitorFilePath = dataPath + '/mornitor.csv'
     for user in configJson:
-        try:
+        if os.name == 'nt':
+            print('[For Dev Testing...]')
             MornitoringUser(user)
-        except Exception as e:
-            print('Error To Record : {}  then skip'.format(e))
-            continue
+        else:
+            try:
+                MornitoringUser(user)
+            except Exception as e:
+                print('Error To Record : {}  then skip'.format(e))
+                continue
     while isInternetConnect and not os.name == 'nt':
         try:
             print('Uploading mornitoring data...')
