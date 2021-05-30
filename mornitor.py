@@ -70,14 +70,15 @@ def MornitoringUser(idName):
 
     # Select Entry
     df = signal_df
-    df['Change4HR%_Abs'] = df['Change4HR%'].abs()
+    #df['Change4HR%_Abs'] = df['Change4HR%'].abs()
     df = df[
         ( df['Rec_Date'] == df['Rec_Date'].max() ) &
         ( df['Signal'] == 'Entry' ) &
-        ( df['Preset'] == preset )
+        ( df['Preset'] == preset ) &
+        ( df['Change4HR%'] >= 0 )
     ]
-    df = df.sort_values(['Change4HR%_Abs','Value_M'], ascending=[True,False])
-    #df = df.sort_values(['Change4HR%','Value_M'], ascending=[False,False])
+    #df = df.sort_values(['Change4HR%_Abs','Value_M'], ascending=[True,False])
+    df = df.sort_values(['Change4HR%','Value_M'], ascending=[False,False])
     df = df.head(size) # Select Count
     df.reset_index(inplace=True)
 
@@ -118,7 +119,7 @@ def MornitoringUser(idName):
             (row['Buy'] > row['BreakOut_L']) # Price Not Equal Break Low
         )
         if buy_condition: # Buy Condition
-            text = '[ Buy ]\n  {}    {}'.format(row['Symbol'],row['Buy'])
+            text = '[ Buy ]\n{}    {}'.format(row['Symbol'],row['Buy'])
             quote = row['Symbol'].split('_')[-1]
             imgFilePath = imgPath + os.sep + '{}_{}.png'.format(preset,quote)
             print(text)
@@ -162,6 +163,7 @@ def MornitoringUser(idName):
     ].head(size)['Symbol'].tolist()
 
     # Sell Notify
+    #==============================
     sell_df = signal_df[
         (signal_df['Signal'] == 'Exit') &
         (signal_df['Preset'] == preset)
@@ -169,7 +171,7 @@ def MornitoringUser(idName):
     sellList = []
     for i in range(morn_df['Symbol'].count()):
         row = morn_df.iloc[i]
-        text = '[ Sell ]\n  {}   {}'.format(row['Symbol'], row['Market'])
+        text = '[ Sell ]\n{}   {}'.format(row['Symbol'], row['Market'])
         sell_condition = (
                 (row['Market'] < row['BreakOut_L'])
                 )
@@ -186,6 +188,7 @@ def MornitoringUser(idName):
         morn_df = morn_df.drop(
             morn_df[( morn_df['User'] == i['User'] ) & ( morn_df['Symbol'] == i['Symbol'] )].index
         )
+    # ==============================
 
     #Report
     report_df = morn_df[morn_df['User'] == idName]
