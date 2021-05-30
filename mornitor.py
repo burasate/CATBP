@@ -88,7 +88,7 @@ def MornitoringUser(idName):
     df['Profit%'] = ( ( df['Market'] - df['Buy'] ) / df['Buy'] ) * 100
     df['Max_Drawdown%'] =  0.0
 
-    colSelect = ['User','Symbol','Signal','Buy','Market','Profit%','Max_Drawdown%','Change4HR%','Value_M','BreakOut_H','BreakOut_L']
+    colSelect = ['User','Symbol','Signal','Buy','Market','Profit%','Max_Drawdown%','Change4HR%','Value_M','BreakOut_H','BreakOut_L','Rec_Date']
     df = df[colSelect]
     print(df[['Symbol','Signal','Change4HR%']])
     print('Select Entry {}'.format(df['Symbol'].to_list()))
