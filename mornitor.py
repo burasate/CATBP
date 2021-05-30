@@ -70,16 +70,16 @@ def MornitoringUser(idName):
 
     # Select Entry
     df = signal_df
-    #df['Change4HR%_Abs'] = df['Change4HR%'].abs()
+    df['Change4HR%_Abs'] = df['Change4HR%'].abs()
     df = df[
         ( df['Rec_Date'] == df['Rec_Date'].max() ) &
         ( df['Signal'] == 'Entry' ) &
         ( df['Preset'] == preset ) &
         ( df['Change4HR%'] >= 0 )
     ]
-    #df = df.sort_values(['Change4HR%_Abs','Value_M'], ascending=[True,False])
-    df = df.sort_values(['Change4HR%','Value_M'], ascending=[False,False])
-    df = df.head(size) # Select Count
+    df = df.sort_values(['Change4HR%_Abs','Value_M'], ascending=[True,False])
+    #df = df.sort_values(['Change4HR%','Value_M'], ascending=[False,False])
+    df = df.head(int(round(size/2,0))) # Select Count
     df.reset_index(inplace=True)
 
     # New Column
@@ -245,9 +245,9 @@ def AllUser(*_):
             #break
 
 if __name__ == '__main__' :
-    import update
-    update.updateConfig()
-    configJson = json.load(open(configPath))
+    #import update
+    #update.updateConfig()
+    #configJson = json.load(open(configPath))
 
     #Reset()
     #MornitoringUser('CryptoBot')
