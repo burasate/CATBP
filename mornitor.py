@@ -79,7 +79,7 @@ def MornitoringUser(idName):
     ]
     df = df.sort_values(['Change4HR%_Abs','Value_M'], ascending=[True,False])
     #df = df.sort_values(['Change4HR%','Value_M'], ascending=[False,False])
-    df = df.head(int(round(size/2,0))) # Select Count
+    df = df.head(size) # Select Count
     df.reset_index(inplace=True)
 
     # New Column
