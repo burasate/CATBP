@@ -107,8 +107,8 @@ def MornitoringUser(idName):
     # Buy Notify
     for i in range(df['Symbol'].count()):
         row = df.iloc[i]
-        if len(portfolioList) < size:
-            if not row['Symbol'] in portfolioList:
+        if len(portfolioList) < size: #Port is not full
+            if not row['Symbol'] in portfolioList:  # Not Symbol in Port
                 text = '[ Buy ]\n  {}    {}'.format(row['Symbol'],row['Buy'])
                 quote = row['Symbol'].split('_')[-1]
                 imgFilePath = imgPath + os.sep + '{}_{}.png'.format(preset,quote)
@@ -120,6 +120,8 @@ def MornitoringUser(idName):
         elif len(portfolioList) >= size:
             print('Can\'t Buy More\nportfolio is full')
             break
+        if row['Symbol'] in portfolioList:  # Update Break out
+            morn_df = morn_df.append(row, ignore_index=True)
     morn_df = morn_df[colSelect]
 
     # Ticker ( Update Last Price as 'Market' )
