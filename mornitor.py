@@ -107,21 +107,27 @@ def MornitoringUser(idName):
     # Buy Notify
     for i in range(df['Symbol'].count()):
         row = df.iloc[i]
-        if len(portfolioList) < size: #Port is not full
-            if not row['Symbol'] in portfolioList:  # Not Symbol in Port
-                text = '[ Buy ]\n  {}    {}'.format(row['Symbol'],row['Buy'])
-                quote = row['Symbol'].split('_')[-1]
-                imgFilePath = imgPath + os.sep + '{}_{}.png'.format(preset,quote)
-                print(text)
-                print(imgFilePath)
-                lineNotify.sendNotifyImageMsg(token, imgFilePath, text)
-                morn_df = morn_df.append(row,ignore_index=True)
-                portfolioList.append(row['Symbol'])
-        elif len(portfolioList) >= size:
+        buy_condition (
+            (len(portfolioList) < size) and  #Port is not full
+            (not row['Symbol'] in portfolioList) and # Not Symbol in Port
+            (row['Close'] > row['BreakOut_L']) # Price Not Equal Break Low
+        )
+        if buy_condition: # Buy Condition
+            text = '[ Buy ]\n  {}    {}'.format(row['Symbol'],row['Buy'])
+            quote = row['Symbol'].split('_')[-1]
+            imgFilePath = imgPath + os.sep + '{}_{}.png'.format(preset,quote)
+            print(text)
+            print(imgFilePath)
+            lineNotify.sendNotifyImageMsg(token, imgFilePath, text)
+            morn_df = morn_df.append(row,ignore_index=True)
+            portfolioList.append(row['Symbol'])
+        elif len(portfolioList) >= size: # Port is Full
             print('Can\'t Buy More\nportfolio is full')
             break
-        if row['Symbol'] in portfolioList:  # Update Break out
+        # Update Break out When Entry Symbol in Port Exist
+        if row['Symbol'] in portfolioList:
             morn_df = morn_df.append(row, ignore_index=True)
+            print('[{}] updated preset indicator'.format(row['Symbol']))
     morn_df = morn_df[colSelect]
 
     # Ticker ( Update Last Price as 'Market' )
