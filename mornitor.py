@@ -37,13 +37,22 @@ def Reset(*_):
     df = pd.read_csv(mornitorFilePath)
     deleteList = []
     for user in df['User'].unique().tolist():
+        systemName = configJson[user]['system']
         if not user in list(configJson):
             deleteList.append(user)
         elif bool(configJson[user]['reset']):
             deleteList.append(user)
             gSheet.setValue('Config',findKey='idName',findValue=user,key='reset',value=0)
             gSheet.setValue('Config', findKey='idName', findValue=user, key='lastReport', value=time.time())
-            lineNotify.sendNotifyMassage(configJson[user]['lineToken'],'[ Reset Portfoilo ]')
+            text = '[ Reset Portfoilo ]\n' +\
+                   'User ID : {} \n'.format(user) +\
+                   'Preset ID : {} \n'.format(configJson[user]['preset']) +\
+                   'System ID : {} \n'.format(systemName) +\
+                   'Size : {} \n'.format(systemJson[systemName]['size']) +\
+                   'Take Profit By : {} \n'.format(systemJson[systemName]['takeProfitBy']) +\
+                   'Target Profit : {}%'.format(systemJson[systemName]['percentageProfitTarget'])
+            lineNotify.sendNotifyMassage(configJson[user]['lineToken'],text)
+            print(text)
 
     for user in deleteList:
         df = df[df['User'] != user]
@@ -75,12 +84,14 @@ def MornitoringUser(idName,sendNotify=True):
         ( df['Rec_Date'] == df['Rec_Date'].max() ) &
         ( df['Signal'] == 'Entry' ) &
         ( df['Preset'] == preset ) &
-        ( df['Change4HR%'] >= 0 )
+        ( df['Change4HR%'] >= 0 ) &
+        ( df['Close'] < df['BreakOut_M'] )
     ]
     df = df.sort_values(['Change4HR%_Abs','Value_M'], ascending=[True,False])
     #df = df.sort_values(['Change4HR%','Value_M'], ascending=[False,False])
     df = df.head(size) # Select Count
     df.reset_index(inplace=True)
+    print(df)
 
     # New Column
     df['User'] = idName
@@ -257,10 +268,10 @@ def AllUser(*_):
 
 if __name__ == '__main__' :
     import update
-    update.updateConfig()
-    configJson = json.load(open(configPath))
-    update.updateSystem()
-    systemJson = json.load(open(systemPath))
+    #update.updateConfig()
+    #configJson = json.load(open(configPath))
+    #update.updateSystem()
+    #systemJson = json.load(open(systemPath))
 
     #Reset()
     #MornitoringUser('CryptoBot')
