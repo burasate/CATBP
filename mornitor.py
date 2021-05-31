@@ -91,7 +91,7 @@ def MornitoringUser(idName,sendNotify=True):
     #df = df.sort_values(['Change4HR%','Value_M'], ascending=[False,False])
     df = df.head(size) # Select Count
     df.reset_index(inplace=True)
-    print(df)
+    #print(df) # Signal Checking
 
     # New Column
     df['User'] = idName
