@@ -50,7 +50,7 @@ def Reset(*_):
     df.to_csv(mornitorFilePath,index=False)
     print('User Reset')
 
-def MornitoringUser(idName):
+def MornitoringUser(idName,sendNotify=True):
     isActive = bool(configJson[idName]['active'])
     isReset = bool(configJson[idName]['reset'])
     if isActive == False or isReset:
@@ -63,7 +63,7 @@ def MornitoringUser(idName):
     token = configJson[idName]['lineToken']
     size = int(systemJson[system]['size'])
     profitTarget = float(systemJson[system]['percentageProfitTarget'])
-    print('Last Report  {} Hour Ago / Report Every {}H'.format(reportHourDuration, configJson[idName]['reportEveryHour']))
+    print('Last Report  {} Hour Ago / Report Every {} H'.format(reportHourDuration, configJson[idName]['reportEveryHour']))
 
     signal_df = pd.read_csv(dataPath+'/signal.csv')
     signal_df = signal_df[signal_df['Rec_Date'] == signal_df['Rec_Date'].max()]
@@ -91,7 +91,7 @@ def MornitoringUser(idName):
 
     colSelect = ['User','Symbol','Signal','Buy','Market','Profit%','Max_Drawdown%','Change4HR%','Value_M','BreakOut_H','BreakOut_L','Rec_Date']
     df = df[colSelect]
-    print(df[['Symbol','Signal','Change4HR%']])
+    #print(df[['Symbol','Signal','Change4HR%']])
     print('Select Entry {}'.format(df['Symbol'].to_list()))
 
     # Mornitor data frame
@@ -111,6 +111,7 @@ def MornitoringUser(idName):
     print('{} Portfolio have {}'.format(idName, portfolioList))
 
     # Buy Notify
+    # ==============================
     for i in range(df['Symbol'].count()):
         row = df.iloc[i]
         buy_condition =  (
@@ -119,12 +120,13 @@ def MornitoringUser(idName):
             (row['Buy'] > row['BreakOut_L']) # Price Not Equal Break Low
         )
         if buy_condition: # Buy Condition
-            text = '[ Buy ]\n{}    {}'.format(row['Symbol'],row['Buy'])
+            text = '[ Buy ] {}\n{} Bath'.format(row['Symbol'],row['Buy'])
             quote = row['Symbol'].split('_')[-1]
             imgFilePath = imgPath + os.sep + '{}_{}.png'.format(preset,quote)
             print(text)
             print(imgFilePath)
-            lineNotify.sendNotifyImageMsg(token, imgFilePath, text)
+            if sendNotify:
+                lineNotify.sendNotifyImageMsg(token, imgFilePath, text)
             morn_df = morn_df.append(row,ignore_index=True)
             portfolioList.append(row['Symbol'])
         elif len(portfolioList) >= size: # Port is Full
@@ -135,6 +137,7 @@ def MornitoringUser(idName):
             morn_df = morn_df.append(row, ignore_index=True)
             print('updated preset indicator ( {} )'.format(row['Symbol']))
     morn_df = morn_df[colSelect]
+    # ==============================
 
     # Ticker ( Update Last Price as 'Market' )
     ticker = kbApi.getTicker()
@@ -145,12 +148,12 @@ def MornitoringUser(idName):
     print('Update Market Price')
 
     # Calculate in Column
-    print('Profit Calculating')
+    print('Profit Calculating...')
     morn_df['Buy'] = morn_df.groupby(['User','Symbol']).transform('first')['Buy']
     morn_df['Profit%'] = ((morn_df['Market'] - morn_df['Buy']) / morn_df['Buy']) * 100
     morn_df['Profit%'] = morn_df['Profit%'].round(2)
     morn_df.loc[morn_df['Profit%'] < 0.0, 'Max_Drawdown%'] = morn_df['Profit%'].abs()
-    morn_df.loc[morn_df['Profit%'] > 0.0, 'Max_Drawdown%'] = 0.0
+    morn_df.loc[(morn_df['Profit%'] > 0.0) & (morn_df['Max_Drawdown%'] == 0.0), 'Max_Drawdown%'] = 0.0
     morn_df['Max_Drawdown%'] = morn_df.groupby(['User', 'Symbol'])['Max_Drawdown%'].transform('max')
     morn_df.drop_duplicates(['User','Symbol'],keep='last',inplace=True)
     morn_df.to_csv(mornitorFilePath, index=False)
@@ -164,7 +167,7 @@ def MornitoringUser(idName):
     ].head(size)['Symbol'].tolist()
 
     # Sell Notify
-    #==============================
+    # ==============================
     sell_df = signal_df[
         (signal_df['Signal'] == 'Exit') &
         (signal_df['Preset'] == preset)
@@ -172,13 +175,15 @@ def MornitoringUser(idName):
     sellList = []
     for i in range(morn_df['Symbol'].count()):
         row = morn_df.iloc[i]
-        text = '[ Sell ]\n{}   {}'.format(row['Symbol'], row['Market'])
+        text = '[ Sell ] {}\n{} Bath'.format(row['Symbol'], row['Market'])
         sell_condition = (
-                (row['Market'] < row['BreakOut_L'])
+                ( row['Market'] < row['BreakOut_L'] ) &
+                ( row['User'] == idName )
                 )
         if sell_condition:
             print(text)
-            lineNotify.sendNotifyMassage(token, text)
+            if sendNotify:
+                lineNotify.sendNotifyMassage(token, text)
             sellList.append(
                 {
                     'User': row['User'],
@@ -194,26 +199,32 @@ def MornitoringUser(idName):
     #Report
     report_df = morn_df[morn_df['User'] == idName]
     report_df = report_df.sort_values(['Profit%'], ascending=[False])
-    report_df = report_df.head(size)
 
     #Portfolio report
     if report_df['Symbol'].count() != 0 and reportHourDuration >= configJson[idName]['reportEveryHour']:
         gSheet.setValue('Config', findKey='idName', findValue=idName, key='lastReport', value=time.time())
         text = '[ Report ]\n' +\
                 '{}\n'.format( ' , '.join(report_df['Symbol'].tolist()) ) +\
-                'Profit {}%'.format( report_df['Profit%'].sum() )
+                'Profit Sum {}%\n'.format(report_df['Profit%'].sum().round(2)) + \
+               'Profit Average {}%'.format(report_df['Profit%'].mean().round(2))
         print(text)
-        lineNotify.sendNotifyMassage(token, text)
+        if sendNotify:
+            lineNotify.sendNotifyMassage(token, text)
 
     #Take profit all
+    profit_condition = report_df['Profit%'].mean() >= profitTarget
+    if systemJson[system]['takeProfitBy'] == 'Sum':
+        profit_condition = report_df['Profit%'].sum() >= profitTarget
     if report_df['Profit%'].sum() >= profitTarget:
         gSheet.setValue('Config', findKey='idName', findValue=idName, key='reset', value=1)
         configJson[idName]['reset'] = 1
         text = '[ Take Profit ]\n' + \
                'Target Profit {}%\n'.format(profitTarget) + \
-               'Now Profit {}%'.format(report_df['Profit%'].sum())
+               'Profit Sum {}%\n'.format(report_df['Profit%'].sum().round(2)) + \
+               'Profit Average {}%'.format(report_df['Profit%'].mean().round(2))
         print(text)
-        lineNotify.sendNotifyMassage(token, text)
+        if sendNotify:
+            lineNotify.sendNotifyMassage(token, text)
 
     morn_df.to_csv(mornitorFilePath, index=False)
     print('{} Update Finished'.format(idName))
@@ -224,7 +235,7 @@ def AllUser(*_):
     for user in configJson:
         if os.name == 'nt':
             print('[For Dev Testing...]')
-            MornitoringUser(user)
+            MornitoringUser(user,sendNotify=False)
         else:
             try:
                 MornitoringUser(user)
@@ -245,9 +256,11 @@ def AllUser(*_):
             #break
 
 if __name__ == '__main__' :
-    #import update
-    #update.updateConfig()
-    #configJson = json.load(open(configPath))
+    import update
+    update.updateConfig()
+    configJson = json.load(open(configPath))
+    update.updateSystem()
+    systemJson = json.load(open(systemPath))
 
     #Reset()
     #MornitoringUser('CryptoBot')

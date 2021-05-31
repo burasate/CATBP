@@ -43,6 +43,9 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
     # Read Data Frame
     df = pd.read_csv(csvPath)
 
+    #Fix Day Axis
+    df['Day'] = df['Day'] + (100 - df['Day'][0])
+
     clh = df['Close']
     h_plt = df['High']
     l_plt = df['Low']
@@ -150,7 +153,8 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
         plt.subplots_adjust(left=0.05, bottom=0.05, right=0.95, top=0.90, wspace=0.20, hspace=0.00)
 
         #Plot Setup
-        plotTrimMin = 52
+        #plotTrimMin = 52
+        plotTrimMin = df['Day'].tail(1).tolist()[0]
         plotTrimMax = 110
         xTicks = [52,76,88,96,100]
         xTicksLabel = ['48H','24H','12H','4H','0H']
@@ -256,8 +260,7 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
         #axes[2].plot(df['Day'], df['Volume_SMA_S'], linewidth=1, color=(.5, .5, .5), linestyle='-')
         #axes[2].plot(df['Day'], df['Volume_SMA_L'], linewidth=.5, color=(.5, .5, .5), linestyle='-')
         axes[2].plot(df['Day'], df['Volume_Break_H'], linewidth=1, color=(.5, .5, .5), linestyle='-')
-        axes[2].plot([0, 120], [df['Volume_Avg'][0],df['Volume_Avg'][0]], linewidth=.7, color=pltColor['red'],
-                     linestyle='--')
+        #axes[2].plot([0, 120], [df['Volume_Avg'][0],df['Volume_Avg'][0]], linewidth=.7, color=pltColor['red'],linestyle='--')
         axes[2].plot(df['Day'][0], df['Volume_Break_H'][0], color=(.5, .5, .5), linewidth=1, marker='o', markersize=5)
 
         #axes[3].fill_between(df['Day'], df['GL_Ratio'], linewidth=1, color=(.5, .5, .5), linestyle='-',alpha=0.2)
@@ -265,8 +268,7 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
         axes[3].plot(df['Day'], df['GL_Ratio'], linewidth=.7, color=(.5, .5, .5), linestyle='-')
         axes[3].plot(df['Day'], df['GL_Ratio_Slow'], linewidth=.7, color=(.5,.5,.5), linestyle=':')
         axes[3].plot(df['Day'][0], df['GL_Ratio'][0], color=(.5, .5, .5), linewidth=1, marker='o', markersize=5)
-        axes[3].plot([0, 120], [1, 1], linewidth=.7, color=pltColor['red'],
-                     linestyle='--')
+        #axes[3].plot([0, 120], [1, 1], linewidth=.7, color=pltColor['red'],linestyle='--')
 
         axes[4].fill_between(df['Day'], y1=df['SMA_S'], y2=df['SMA_L'], where=df['SMA_S']>=df['SMA_L'], linewidth=1, color=(.5, .5, .5), linestyle='-', alpha=0.2)
         axes[4].plot(df['Day'], df['SMA_S'], linewidth=1, color=(.5, .5, .5), linestyle='-')
@@ -274,14 +276,13 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
         axes[4].plot(df['Day'][0], df['SMA_S'][0], color=(.5, .5, .5), linewidth=1, marker='o', markersize=5)
         axes[4].plot([0, 120], [df['Close'].mean(), df['Close'].mean()], linewidth=.7, color=pltColor['red'], linestyle='-')
 
-        axes[1].fill_between(df['Day'],  tr_percentage, linewidth=0, color=(.5, .5, .5), linestyle='-', alpha=0.2)
+        #axes[1].fill_between(df['Day'],  tr_percentage, linewidth=0, color=(.5, .5, .5), linestyle='-', alpha=0.2)
         axes[1].fill_between(df['Day'],  df['Drawdown%'], linewidth=1, color=(.5, .5, .5), linestyle='-', alpha=0.2)
         axes[1].plot(df['Day'],  df['Drawdown%'], linewidth=.7, color=(.5, .5, .5), linestyle='-')
         axes[1].plot(df['Day'], df['NDay_Drawdown%'], linewidth=.7, color=pltColor['red'], linestyle='--')
         axes[1].plot(df['Day'][0], df['NDay_Drawdown%'][0], color=pltColor['red'], linewidth=1, marker='o', markersize=5)
-        axes[1].plot(df['Day'], df['NDay_TrueRange%'], linewidth=.7, color=pltColor['red'], linestyle='--')
-        axes[1].plot(df['Day'][0], df['NDay_TrueRange%'][0], color=pltColor['red'], linewidth=1, marker='o',
-                     markersize=4)
+        #axes[1].plot(df['Day'], df['NDay_TrueRange%'], linewidth=.7, color=pltColor['red'], linestyle='--')
+        #axes[1].plot(df['Day'][0], df['NDay_TrueRange%'][0], color=pltColor['red'], linewidth=1, marker='o',markersize=4)
         axes[1].plot([0, 100], [df['Max_Drawdown%'][0], df['Max_Drawdown%'][0]], linewidth=.7, color=pltColor['red'],
                      linestyle='-')
         #axes[1].plot([0, 120], [df['Avg_Drawdown%'][0], df['Avg_Drawdown%'][0]], linewidth=.7, color=pltColor['yellow'], linestyle='--')
@@ -438,8 +439,8 @@ if __name__ == '__main__' :
     #presetPath = dataPath + '/preset.json'
     #presetJson = json.load(open(presetPath))
 
-    #getAnalysis(histPath + 'THB_ADA' + '.csv', 'P4',saveImage=False,showImage=True)
-    getSignalAllPreset()
+    getAnalysis(histPath + 'THB_ADA' + '.csv', 'P4',saveImage=False,showImage=True)
+    #getSignalAllPreset()
     """
     for i in os.listdir(dataPath + '/hist'):
         print(i)
