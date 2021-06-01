@@ -291,12 +291,14 @@ def AllUser(*_):
                 continue
     while isInternetConnect and not os.name == 'nt':
         try:
-            print('Uploading mornitoring data...')
-            gSheet.updateFromCSV(mornitorFilePath, 'Mornitor')
-            print('Upload mornitoring data finish')
-            print('Uploading Transaction data...')
-            gSheet.updateFromCSV(transacFilePath, 'Transaction')
-            print('Upload Transaction data finish')
+            #print('Uploading mornitoring data...')
+            if os.path.exists(mornitorFilePath):
+                gSheet.updateFromCSV(mornitorFilePath, 'Mornitor')
+            #print('Upload mornitoring data finish')
+            #print('Uploading Transaction data...')
+            if os.path.exists(transacFilePath):
+                gSheet.updateFromCSV(transacFilePath, 'Transaction')
+            #print('Upload Transaction data finish')
         except:
             pass
         else:
