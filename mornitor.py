@@ -88,7 +88,7 @@ def Transaction(idName,code,symbol,change):
 def MornitoringUser(idName,sendNotify=True):
     isActive = bool(configJson[idName]['active'])
     isReset = bool(configJson[idName]['reset'])
-    if isActive == False or isReset:
+    if isActive == False:
         return None
     print('---------------------\n[ {} ]  Monitoring\n---------------------'.format(idName))
     now = round(time.time())
@@ -249,7 +249,7 @@ def MornitoringUser(idName,sendNotify=True):
     profit_condition = report_df['Profit%'].mean() >= profitTarget
     if systemJson[system]['takeProfitBy'] == 'Sum':
         profit_condition = report_df['Profit%'].sum() >= profitTarget
-    if report_df['Profit%'].sum() >= profitTarget:
+    if profit_condition:
         gSheet.setValue('Config', findKey='idName', findValue=idName, key='reset', value=1)
         configJson[idName]['reset'] = 1
         text = '[ Take Profit ]\n' + \
@@ -259,6 +259,9 @@ def MornitoringUser(idName,sendNotify=True):
         print(text)
         if sendNotify:
             lineNotify.sendNotifyMassage(token, text)
+
+    # Prepare Sell When Take Profit or Reset
+    if profit_condition or isReset:
         for sym in report_df['Symbol'].tolist():
             if sym in sellList:
                 continue
