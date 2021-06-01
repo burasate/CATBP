@@ -206,7 +206,6 @@ def MornitoringUser(idName,sendNotify=True):
     #Report
     report_df = morn_df[morn_df['User'] == idName]
     report_df = report_df.sort_values(['Profit%'], ascending=[False])
-    print (report_df['Symbol'].tolist())
 
     #Portfolio report
     if report_df['Symbol'].count() != 0 and reportHourDuration >= configJson[idName]['reportEveryHour']:
@@ -233,6 +232,10 @@ def MornitoringUser(idName,sendNotify=True):
         print(text)
         if sendNotify:
             lineNotify.sendNotifyMassage(token, text)
+        for sym in report_df['Symbol'].tolist():
+            if sym in sellList:
+                continue
+            sellList.append(sym)
 
     # Sell And Delete Symbol
     for i in sellList:
