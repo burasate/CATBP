@@ -69,7 +69,7 @@ def Transaction(idName,code,symbol,change):
         'User' : [idName],
         'Code' : [code],
         'Symbol' : [symbol],
-        'Change' : [change]
+        'Change%' : [change]
     }
     col = ['dateTime']
     if not os.path.exists(transacFilePath):
@@ -265,16 +265,24 @@ def MornitoringUser(idName,sendNotify=True):
         for sym in report_df['Symbol'].tolist():
             if sym in sellList:
                 continue
-            sellList.append(sym)
+            sellList.append(
+                {
+                    'User': idName,
+                    'Symbol': sym
+                }
+            )
 
     # Sell And Delete Symbol
     for i in sellList:
         profit = morn_df[(morn_df['User'] == i['User']) & (morn_df['Symbol'] == i['Symbol'])]['Profit%'].tolist()[0]
+        print(profit)
+
         morn_df = morn_df.drop(
             morn_df[(morn_df['User'] == i['User']) & (morn_df['Symbol'] == i['Symbol'])].index
         )
         Transaction( i['User'], 'Sell', i['Symbol'], ((systemJson[system]['percentageComission'] / 100) * -1) + profit )
 
+    #Finish
     morn_df.to_csv(mornitorFilePath, index=False)
     print('{} Update Finished'.format(idName))
 
@@ -311,7 +319,7 @@ def AllUser(*_):
             #break
 
 if __name__ == '__main__' :
-    #import update
+    import update
     #update.updateConfig()
     #configJson = json.load(open(configPath))
     #update.updateSystem()
@@ -319,8 +327,8 @@ if __name__ == '__main__' :
 
     #Reset()
     #MornitoringUser('CryptoBot')
-    #MornitoringUser('user1')
-    AllUser()
+    MornitoringUser('user1')
+    #AllUser()
     #Transaction('idName', 'code', 'symbol', 'change')
     """
     morn_df = pd.read_csv(dataPath + '/mornitor.csv')
