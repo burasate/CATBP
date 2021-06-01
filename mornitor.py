@@ -80,7 +80,7 @@ def Transaction(idName,code,symbol,change):
     # Checking Column
     for c in list(data):
         if not c in df.columns.tolist():
-            morn_df[c] = None
+            df[c] = None
     rec = pd.DataFrame(data)
     df = df.append(rec,ignore_index=True)
     df.to_csv(transacFilePath,index=False)
@@ -215,7 +215,7 @@ def MornitoringUser(idName,sendNotify=True):
     sellList = []
     for i in range(morn_df['Symbol'].count()):
         row = morn_df.iloc[i]
-        text = '[ Sell ] {}\n{} Bath'.format(row['Symbol'], row['Market'])
+        text = '[ Sell ] {}\n{} Bath ({}%)'.format(row['Symbol'], row['Market'],row['Profit%'])
         sell_condition = (
                 ( row['Market'] < row['BreakOut_L'] ) &
                 ( row['User'] == idName )
@@ -277,8 +277,6 @@ def MornitoringUser(idName,sendNotify=True):
     # Sell And Delete Symbol
     for i in sellList:
         profit = morn_df[(morn_df['User'] == i['User']) & (morn_df['Symbol'] == i['Symbol'])]['Profit%'].tolist()[0]
-        print(profit)
-
         morn_df = morn_df.drop(
             morn_df[(morn_df['User'] == i['User']) & (morn_df['Symbol'] == i['Symbol'])].index
         )
