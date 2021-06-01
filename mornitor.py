@@ -20,6 +20,8 @@ systemJson = json.load(open(systemPath))
 
 pd.set_option('display.max_columns', None)
 pd.set_option('display.max_rows', None)
+mornitorFilePath = dataPath + '/mornitor.csv'
+transacFilePath = dataPath + '/transaction.csv'
 
 def isInternetConnect(*_):
     url = 'http://google.com'
@@ -31,7 +33,7 @@ def isInternetConnect(*_):
 
 def Reset(*_):
     print('---------------------\nReset\n---------------------')
-    mornitorFilePath = dataPath + '/mornitor.csv'
+    global mornitorFilePath
     if not os.path.exists(mornitorFilePath):
         return None
     df = pd.read_csv(mornitorFilePath)
@@ -58,6 +60,30 @@ def Reset(*_):
         df = df[df['User'] != user]
     df.to_csv(mornitorFilePath,index=False)
     print('User Reset')
+
+def Transaction(idName,code,symbol,change):
+    global transacFilePath
+    date_time = str(dt.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+    data = {
+        'dateTime' : [date_time],
+        'User' : [idName],
+        'Code' : [code],
+        'Symbol' : [symbol],
+        'Change' : [change]
+    }
+    col = ['dateTime']
+    if not os.path.exists(transacFilePath):
+        df = pd.DataFrame(columns=list(data))
+        df.to_csv(transacFilePath, index=False)
+    df = pd.read_csv(transacFilePath)
+
+    # Checking Column
+    for c in list(data):
+        if not c in df.columns.tolist():
+            morn_df[c] = None
+    rec = pd.DataFrame(data)
+    df = df.append(rec,ignore_index=True)
+    df.to_csv(transacFilePath,index=False)
 
 def MornitoringUser(idName,sendNotify=True):
     isActive = bool(configJson[idName]['active'])
@@ -106,7 +132,7 @@ def MornitoringUser(idName,sendNotify=True):
     print('Select Entry {}'.format(df['Symbol'].to_list()))
 
     # Mornitor data frame
-    mornitorFilePath = dataPath + '/mornitor.csv'
+    global mornitorFilePath
     if not os.path.exists(mornitorFilePath):
         morn_df = pd.DataFrame(columns=colSelect)
         morn_df.to_csv(mornitorFilePath,index=False)
@@ -140,6 +166,7 @@ def MornitoringUser(idName,sendNotify=True):
                 lineNotify.sendNotifyImageMsg(token, imgFilePath, text)
             morn_df = morn_df.append(row,ignore_index=True)
             portfolioList.append(row['Symbol'])
+            Transaction(idName, 'Buy', row['Symbol'], (systemJson[system]['percentageComission']/100) * -1)
         elif len(portfolioList) >= size: # Port is Full
             print('Can\'t Buy More\nportfolio is full')
             break
@@ -239,16 +266,19 @@ def MornitoringUser(idName,sendNotify=True):
 
     # Sell And Delete Symbol
     for i in sellList:
+        profit = morn_df[(morn_df['User'] == i['User']) & (morn_df['Symbol'] == i['Symbol'])]['Profit%'].tolist()[0]
         morn_df = morn_df.drop(
             morn_df[(morn_df['User'] == i['User']) & (morn_df['Symbol'] == i['Symbol'])].index
         )
+        Transaction( i['User'], 'Sell', i['Symbol'], ((systemJson[system]['percentageComission'] / 100) * -1) + profit )
 
     morn_df.to_csv(mornitorFilePath, index=False)
     print('{} Update Finished'.format(idName))
 
 def AllUser(*_):
     os.system('cls||clear')
-    mornitorFilePath = dataPath + '/mornitor.csv'
+    global mornitorFilePath
+    global transacFilePath
     for user in configJson:
         if os.name == 'nt':
             print('[For Dev Testing...]')
@@ -264,6 +294,9 @@ def AllUser(*_):
             print('Uploading mornitoring data...')
             gSheet.updateFromCSV(mornitorFilePath, 'Mornitor')
             print('Upload mornitoring data finish')
+            print('Uploading Transaction data...')
+            gSheet.updateFromCSV(transacFilePath, 'Transaction')
+            print('Upload Transaction data finish')
         except:
             pass
         else:
@@ -273,7 +306,7 @@ def AllUser(*_):
             #break
 
 if __name__ == '__main__' :
-    import update
+    #import update
     #update.updateConfig()
     #configJson = json.load(open(configPath))
     #update.updateSystem()
@@ -283,6 +316,7 @@ if __name__ == '__main__' :
     #MornitoringUser('CryptoBot')
     #MornitoringUser('user1')
     AllUser()
+    #Transaction('idName', 'code', 'symbol', 'change')
     """
     morn_df = pd.read_csv(dataPath + '/mornitor.csv')
     morn_df = morn_df.sort_values(['User', 'Profit%'], ascending=[True, False])
