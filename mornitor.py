@@ -40,7 +40,6 @@ def Reset(*_):
     df = pd.read_csv(mornitorFilePath)
     t_df = pd.read_csv(transacFilePath)
     deleteList = []
-    print(df['User'].unique().tolist())
     for user in df['User'].unique().tolist():
         if not user in list(configJson):
             deleteList.append(user)
