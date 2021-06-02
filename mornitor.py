@@ -43,7 +43,9 @@ def Reset(*_):
     for user in df['User'].unique().tolist():
         if not user in list(configJson):
             deleteList.append(user)
-            continue
+
+    #Sending Restart
+    for user in list(configJson):
         systemName = configJson[user]['system']
         if bool(configJson[user]['reset']):
             deleteList.append(user)
@@ -60,7 +62,7 @@ def Reset(*_):
             print(text)
 
     for user in deleteList:
-        print('delete {}'.format(user))
+        print('delete [ {} ]'.format(user))
         df = df[df['User'] != user]
         t_df = t_df[t_df['User'] != user]
 
