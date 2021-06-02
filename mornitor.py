@@ -289,7 +289,7 @@ def MornitoringUser(idName,sendNotify=True):
             morn_df[(morn_df['User'] == i['User']) & (morn_df['Symbol'] == i['Symbol'])].index
         )
         if systemJson[system]['takeProfitBy'] == 'Average':
-            profit = profit/size
+            profit = profit/len(portfolioList)
         Transaction( i['User'], 'Sell', i['Symbol'], ((systemJson[system]['percentageComission'] / 100) * -1) + profit )
 
     #Finish
