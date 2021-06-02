@@ -1,8 +1,12 @@
 import os,json,requests,time
 from datetime import datetime as dt
 import pandas as pd
+import numpy as np
 import kbApi
 import gSheet
+
+pd.set_option('display.max_columns', None)
+pd.set_option('display.max_rows', None)
 
 rootPath = os.path.dirname(os.path.abspath(__file__))
 dataPath = rootPath+'/data'
@@ -93,12 +97,16 @@ def updateGSheetHistory(limit = 35000):
     # delete duplicate
     df.drop_duplicates(['symbol','date','hour','minute'], keep='last', inplace=True)
     #cleanup & sort
+    epoch_limit = time.time() - (((2*24)*60)*60)
     df.dropna(subset=['epoch','dateTime'],inplace=True)
     df['epoch'] = pd.to_numeric(df['epoch'], errors='coerce')
     df['dateTime'] = df['dateTime'].astype(str)
     df = df[df['dateTime'] != 'nan']
     #df.sort_values(['epoch'], ascending=[True])
-    df.sort_values(['epoch','dateTime'], ascending=[True,True])
+    df = df.drop( df[(df['date'].str.isdigit() == True)].index )
+    df = df.drop( df[(df['dateTime'].str.isdigit() == True)].index )
+    df = df.drop( df[(df['epoch'] < epoch_limit)].index )
+    df.sort_values(['epoch', 'dateTime'], ascending=[True, True])
     df.sort_index(inplace=True)
     #limit row
     df = df.tail(limit)
@@ -188,6 +196,6 @@ def loadAllHist(timeFrame = 'minute'):
 
 if __name__ == '__main__':
     #createSymbolHistory('THB_DOGE')
-    #updateGSheetHistory()
-    loadAllHist(timeFrame='hour')
+    updateGSheetHistory()
+    #loadAllHist(timeFrame='hour')
     pass
