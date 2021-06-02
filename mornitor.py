@@ -38,6 +38,7 @@ def Reset(*_):
         return None
     df = pd.read_csv(mornitorFilePath)
     deleteList = []
+    print(df['User'].unique().tolist())
     for user in df['User'].unique().tolist():
         systemName = configJson[user]['system']
         if not user in list(configJson):
@@ -57,6 +58,7 @@ def Reset(*_):
             print(text)
 
     for user in deleteList:
+        print('delete {}'.format(user))
         df = df[df['User'] != user]
     df.to_csv(mornitorFilePath,index=False)
     print('User Reset')
@@ -327,10 +329,10 @@ if __name__ == '__main__' :
     #update.updateSystem()
     #systemJson = json.load(open(systemPath))
 
-    #Reset()
+    Reset()
     #MornitoringUser('CryptoBot')
     #MornitoringUser('user1')
-    AllUser()
+    #AllUser()
     #Transaction('idName', 'code', 'symbol', 'change')
     """
     morn_df = pd.read_csv(dataPath + '/mornitor.csv')
