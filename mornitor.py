@@ -110,8 +110,7 @@ def MornitoringUser(idName,sendNotify=True):
         ( df['Rec_Date'] == df['Rec_Date'].max() ) &
         ( df['Signal'] == 'Entry' ) &
         ( df['Preset'] == preset ) &
-        ( df['Change4HR%'] >= 0 ) &
-        ( df['Close'] < df['BreakOut_M'] )
+        ( df['Change4HR%'] >= 0 )
     ]
     df = df.sort_values(['Change4HR%_Abs','Value_M'], ascending=[True,False])
     #df = df.sort_values(['Change4HR%','Value_M'], ascending=[False,False])

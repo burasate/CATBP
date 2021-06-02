@@ -98,7 +98,7 @@ def updateGSheetHistory(limit = 35000):
     df['dateTime'] = df['dateTime'].astype(str)
     df = df[df['dateTime'] != 'nan']
     #df.sort_values(['epoch'], ascending=[True])
-    df.sort_values(['dateTime'], ascending=[True])
+    df.sort_values(['epoch','dateTime'], ascending=[True,True])
     df.sort_index(inplace=True)
     #limit row
     df = df.tail(limit)
@@ -165,7 +165,8 @@ def createSymbolHistory(symbol,timeFrame = 'minute'):
     df['Open'] = histDF['open'].round(2)
     df['Low'] = histDF['low'].round(2)
     df['High'] = histDF['high'].round(2)
-    df['Volume'] = histDF['baseVolume'].diff(1).abs()
+    #df['Volume'] = histDF['baseVolume'].diff(1).abs()
+    df['Volume'] = histDF['baseVolume']
     df['Day'] = histDF.index
 
     #revese index and save
@@ -187,6 +188,6 @@ def loadAllHist(timeFrame = 'minute'):
 
 if __name__ == '__main__':
     #createSymbolHistory('THB_DOGE')
-    updateGSheetHistory()
-    #loadAllHist(timeFrame='hour')
+    #updateGSheetHistory()
+    loadAllHist(timeFrame='hour')
     pass

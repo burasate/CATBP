@@ -208,7 +208,7 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
         # Line Plot
         axes[0].plot(df['Day'], df['BreakOut_H'], linewidth=.7, color=pltColor['green'], linestyle='-')
         axes[0].plot(df['Day'], df['BreakOut_L'], linewidth=.7, color=pltColor['red'], linestyle='-')
-        #axes[0].plot(df['Day'], df['BreakOut_M'], linewidth=.7, color=pltColor['yellow'], linestyle=':')
+        axes[0].plot(df['Day'], df['BreakOut_M'], linewidth=.7, color=pltColor['yellow'], linestyle=':')
         #axes[0].plot(df['Day'], df['BreakOut_MH'], linewidth=.7, color=pltColor['green'], linestyle='--',alpha=0.5)
         #axes[0].plot(df['Day'], df['BreakOut_ML'], linewidth=.7, color=pltColor['red'], linestyle='--',alpha=0.5)
 
@@ -439,8 +439,8 @@ if __name__ == '__main__' :
     #presetPath = dataPath + '/preset.json'
     #presetJson = json.load(open(presetPath))
 
-    getAnalysis(histPath + 'THB_ADA' + '.csv', 'P4',saveImage=False,showImage=True)
-    #getSignalAllPreset()
+    #getAnalysis(histPath + 'THB_ADA' + '.csv', 'P4',saveImage=False,showImage=True)
+    getSignalAllPreset()
     """
     for i in os.listdir(dataPath + '/hist'):
         print(i)
