@@ -97,7 +97,8 @@ def updateGSheetHistory(limit = 35000):
     df['epoch'] = pd.to_numeric(df['epoch'], errors='coerce')
     df['dateTime'] = df['dateTime'].astype(str)
     df = df[df['dateTime'] != 'nan']
-    df.sort_values(['epoch'], ascending=[True])
+    #df.sort_values(['epoch'], ascending=[True])
+    df.sort_values(['dateTime'], ascending=[True])
     df.sort_index(inplace=True)
     #limit row
     df = df.tail(limit)
