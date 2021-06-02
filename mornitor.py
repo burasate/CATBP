@@ -40,10 +40,11 @@ def Reset(*_):
     deleteList = []
     print(df['User'].unique().tolist())
     for user in df['User'].unique().tolist():
-        systemName = configJson[user]['system']
         if not user in list(configJson):
             deleteList.append(user)
-        elif bool(configJson[user]['reset']):
+            continue
+        systemName = configJson[user]['system']
+        if bool(configJson[user]['reset']):
             deleteList.append(user)
             gSheet.setValue('Config',findKey='idName',findValue=user,key='reset',value=0)
             gSheet.setValue('Config', findKey='idName', findValue=user, key='lastReport', value=time.time())
@@ -324,8 +325,8 @@ def AllUser(*_):
 
 if __name__ == '__main__' :
     import update
-    #update.updateConfig()
-    #configJson = json.load(open(configPath))
+    update.updateConfig()
+    configJson = json.load(open(configPath))
     #update.updateSystem()
     #systemJson = json.load(open(systemPath))
 
