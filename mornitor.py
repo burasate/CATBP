@@ -34,9 +34,11 @@ def isInternetConnect(*_):
 def Reset(*_):
     print('---------------------\nReset\n---------------------')
     global mornitorFilePath
+    global transacFilePath
     if not os.path.exists(mornitorFilePath):
         return None
     df = pd.read_csv(mornitorFilePath)
+    t_df = pd.read_csv(transacFilePath)
     deleteList = []
     print(df['User'].unique().tolist())
     for user in df['User'].unique().tolist():
@@ -61,7 +63,10 @@ def Reset(*_):
     for user in deleteList:
         print('delete {}'.format(user))
         df = df[df['User'] != user]
+        t_df = t_df[t_df['User'] != user]
+
     df.to_csv(mornitorFilePath,index=False)
+    t_df.to_csv(transacFilePath, index=False)
     print('User Reset')
 
 def Transaction(idName,code,symbol,change):
