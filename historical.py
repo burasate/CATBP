@@ -97,7 +97,7 @@ def updateGSheetHistory(limit = 35000):
     # delete duplicate
     df.drop_duplicates(['symbol','date','hour','minute'], keep='last', inplace=True)
     #cleanup & sort
-    epoch_limit = time.time() - (((2*24)*60)*60)
+    epoch_limit = time.time() - (((5*24)*60)*60)
     df.dropna(subset=['epoch','dateTime'],inplace=True)
     df['epoch'] = pd.to_numeric(df['epoch'], errors='coerce')
     df['dateTime'] = df['dateTime'].astype(str)
