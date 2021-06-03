@@ -439,8 +439,8 @@ if __name__ == '__main__' :
     #presetPath = dataPath + '/preset.json'
     #presetJson = json.load(open(presetPath))
 
-    #getAnalysis(histPath + 'THB_ADA' + '.csv', 'P4',saveImage=False,showImage=True)
-    getSignalAllPreset()
+    getAnalysis(histPath + 'THB_BAND' + '.csv', 'P4',saveImage=False,showImage=True)
+    #getSignalAllPreset()
     """
     for i in os.listdir(dataPath + '/hist'):
         print(i)
