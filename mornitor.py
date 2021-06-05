@@ -111,6 +111,9 @@ def MornitoringUser(idName,sendNotify=True):
 
     signal_df = pd.read_csv(dataPath+'/signal.csv')
     signal_df = signal_df[signal_df['Rec_Date'] == signal_df['Rec_Date'].max()]
+    signal_df = signal_df[
+        (signal_df['Preset'] == preset)
+    ]
 
     # Select Entry
     entry_df = signal_df
@@ -179,12 +182,20 @@ def MornitoringUser(idName,sendNotify=True):
         elif len(portfolioList) >= size: # Port is Full
             print('Can\'t Buy More\nportfolio is full')
             break
-        # Update Break out When Entry Symbol in Port Exist
-        if row['Symbol'] in portfolioList:
-            morn_df = morn_df.append(row, ignore_index=True)
-            print('updated preset indicator ( {} )'.format(row['Symbol']))
-    morn_df = morn_df[colSelect]
     # ==============================
+
+    # Update Break out When Entry Symbol in Port Exist
+    for i in range(signal_df['Symbol'].count()):
+        row = signal_df.iloc[i]
+        trailing_condition = (
+            ( row['Symbol'] in portfolioList ) and
+            ( row['Close'] > row['BreakOut_M'] )
+        )
+        if trailing_condition:
+            morn_df = morn_df.append(row, ignore_index=True)
+            print('Updated Trailing ( {} )'.format(row['Symbol']))
+
+    morn_df = morn_df[colSelect]
 
     # Ticker ( Update Last Price as 'Market' )
     ticker = kbApi.getTicker()
@@ -331,14 +342,14 @@ def AllUser(*_):
 
 if __name__ == '__main__' :
     import update
-    update.updateConfig()
-    configJson = json.load(open(configPath))
-    #update.updateSystem()
-    #systemJson = json.load(open(systemPath))
+    #update.updateConfig()
+    #configJson = json.load(open(configPath))
+    update.updateSystem()
+    systemJson = json.load(open(systemPath))
 
-    Reset()
+    #Reset()
     #MornitoringUser('CryptoBot')
-    #MornitoringUser('user1')
+    MornitoringUser('user1')
     #AllUser()
     #Transaction('idName', 'code', 'symbol', 'change')
     """

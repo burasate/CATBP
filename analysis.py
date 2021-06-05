@@ -95,6 +95,9 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
     df['BreakOut_ML'] = (df['BreakOut_L']+df['BreakOut_M'])*0.5
     #['BreakOut_ML'] = breakout_ml.sort_index(ascending=True)
 
+    #cut loss zone
+    cut_loss = breakout_l.rolling(ps_breakout_low).max().sort_index(ascending=True)
+
     # sma
     sma_s = df_reverse['Close'].rolling(ps_sma_s).mean()
     sma_l = df_reverse['Close'].rolling(ps_sma_l).mean()
@@ -209,8 +212,9 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
         axes[0].plot(df['Day'], df['BreakOut_H'], linewidth=.7, color=pltColor['green'], linestyle='-')
         axes[0].plot(df['Day'], df['BreakOut_L'], linewidth=.7, color=pltColor['red'], linestyle='-')
         axes[0].plot(df['Day'], df['BreakOut_M'], linewidth=.7, color=pltColor['yellow'], linestyle=':')
-        axes[0].plot(df['Day'], df['BreakOut_MH'], linewidth=.7, color=pltColor['green'], linestyle='--',alpha=0.5)
-        axes[0].plot(df['Day'], df['BreakOut_ML'], linewidth=.7, color=pltColor['red'], linestyle='--',alpha=0.5)
+        #axes[0].plot(df['Day'], df['BreakOut_MH'], linewidth=.7, color=pltColor['green'], linestyle='--',alpha=0.5)
+        #axes[0].plot(df['Day'], df['BreakOut_ML'], linewidth=.7, color=pltColor['red'], linestyle='--',alpha=0.5)
+        axes[0].plot(df['Day'], cut_loss, linewidth=.7, color=pltColor['red'], linestyle=':')
 
         #axes[0].plot([100, 120], [df['BreakOut_H'][0], df['BreakOut_H'][0]], linewidth=.7, color=pltColor['green'], linestyle='-',alpha = 1)
         #axes[0].plot([100, 120], [df['BreakOut_L'][0], df['BreakOut_L'][0]], linewidth=.7, color=pltColor['red'], linestyle='-',alpha = 1)
@@ -439,7 +443,7 @@ if __name__ == '__main__' :
     #presetPath = dataPath + '/preset.json'
     #presetJson = json.load(open(presetPath))
 
-    getAnalysis(histPath + 'THB_BAND' + '.csv', 'P4',saveImage=False,showImage=True)
+    getAnalysis(histPath + 'THB_JFIN' + '.csv', 'P4',saveImage=False,showImage=True)
     #getSignalAllPreset()
     """
     for i in os.listdir(dataPath + '/hist'):
