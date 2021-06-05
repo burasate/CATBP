@@ -197,5 +197,5 @@ def loadAllHist(timeFrame = 'minute'):
 if __name__ == '__main__':
     #createSymbolHistory('THB_DOGE')
     updateGSheetHistory()
-    #loadAllHist(timeFrame='hour')
+    loadAllHist(timeFrame='hour')
     pass
