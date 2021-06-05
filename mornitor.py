@@ -64,11 +64,12 @@ def CreateBuyOrder(idName,symbol):
     bitkub.set_api_key(API_KEY)
     bitkub.set_api_secret(API_SECRET)
     balance = getBalance(idName)
+    percentageBalanceUsing = configJson[idName]['percentageBalanceUsing']
     system = configJson[idName]['system']
     size = int(systemJson[system]['size'])
     portSize = len(list(balance))-1
     budget = balance['THB']['available']
-    sizedBudget = budget / (size-portSize)
+    sizedBudget = (budget / (size-portSize)) * (percentageBalanceUsing/100)
     #print(sizedBudget)
     result = bitkub.place_bid(sym=symbol, amt=sizedBudget, typ='market')
     print(result)
