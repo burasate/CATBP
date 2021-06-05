@@ -41,7 +41,7 @@ def Reset(*_):
     t_df = pd.read_csv(transacFilePath)
     deleteList = []
     for user in entry_df['User'].unique().tolist():
-        print(user)
+        print('{}  {}'.format(user,entry_df['User'].unique().tolist()))
         if not user in list(configJson):
             deleteList.append(user)
 
