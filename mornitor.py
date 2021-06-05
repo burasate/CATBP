@@ -322,7 +322,7 @@ def AllUser(*_):
             try:
                 MornitoringUser(user)
             except Exception as e:
-                print('Error To Record : {}  then skip'.format(e))
+                print('\nError To Record ! : {}  then skip\n'.format(e))
                 continue
     while isInternetConnect and not os.name == 'nt':
         try:
