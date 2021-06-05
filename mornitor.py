@@ -187,7 +187,7 @@ def MornitoringUser(idName,sendNotify=True):
         # Update Trailing when Price > Mid
         trailing_condition = (
                 (row['Symbol'] in portfolioList) and
-                (row['Close'] > row['BreakOut_M'])
+                (row['Buy'] > row['BreakOut_M'])
         )
         if trailing_condition:
             morn_df = morn_df.append(row, ignore_index=True)
