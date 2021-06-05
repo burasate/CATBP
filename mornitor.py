@@ -41,14 +41,15 @@ def Reset(*_):
     t_df = pd.read_csv(transacFilePath)
     deleteList = []
     for user in entry_df['User'].unique().tolist():
+        print(user)
         if not user in list(configJson):
             deleteList.append(user)
+
 
     #Sending Restart
     for user in list(configJson):
         systemName = configJson[user]['system']
         if bool(configJson[user]['reset']):
-            deleteList.append(user)
             gSheet.setValue('Config',findKey='idName',findValue=user,key='reset',value=0)
             gSheet.setValue('Config', findKey='idName', findValue=user, key='lastReport', value=time.time())
             text = '[ Reset Portfoilo ]\n' +\
