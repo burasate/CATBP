@@ -5,7 +5,7 @@ import datetime as dt
 import gSheet
 import kbApi
 import lineNotify
-
+from bitkub import Bitkub
 
 rootPath = os.path.dirname(os.path.abspath(__file__))
 dataPath = rootPath+'/data'
@@ -30,6 +30,66 @@ def isInternetConnect(*_):
         return True
     else:
         return False
+
+def getBalance(idName):
+    API_KEY = configJson[idName]['bk_apiKey']
+    API_SECRET = configJson[idName]['bk_apiSecret']
+    if API_KEY == '' or API_SECRET == '' :
+        print('this user have no API KEY or API SECRET to send order')
+        return None
+    bitkub = Bitkub()
+    bitkub.set_api_key(API_KEY)
+    bitkub.set_api_secret(API_SECRET)
+    balance = bitkub.balances()
+    data = {}
+    if balance['error'] == 0 :
+        for sym in balance['result']:
+            if balance['result'][sym]['available'] > 0 :
+                data[sym] = {
+                    'available' : balance['result'][sym]['available'],
+                    'reserved' : balance['result'][sym]['reserved']
+                }
+    return data
+
+def CreateBuyOrder(idName,symbol):
+    if not symbol.__contains__('THB_'):
+        print('symbol name need contains THB_')
+        return None
+    API_KEY = configJson[idName]['bk_apiKey']
+    API_SECRET = configJson[idName]['bk_apiSecret']
+    if API_KEY == '' or API_SECRET == '' :
+        print('this user have no API KEY or API SECRET to send order')
+        return None
+    bitkub = Bitkub()
+    bitkub.set_api_key(API_KEY)
+    bitkub.set_api_secret(API_SECRET)
+    balance = getBalance(idName)
+    system = configJson[idName]['system']
+    size = int(systemJson[system]['size'])
+    portSize = len(list(balance))-1
+    budget = balance['THB']['available']
+    sizedBudget = budget / (size-portSize)
+    #print(sizedBudget)
+    result = bitkub.place_bid(sym=symbol, amt=sizedBudget, typ='market')
+    print(result)
+
+def CreateSellOrder(idName,symbol):
+    if not symbol.__contains__('THB_'):
+        print('symbol name need contains THB_')
+        return None
+    API_KEY = configJson[idName]['bk_apiKey']
+    API_SECRET = configJson[idName]['bk_apiSecret']
+    bitkub = Bitkub()
+    bitkub.set_api_key(API_KEY)
+    bitkub.set_api_secret(API_SECRET)
+    balance = getBalance(idName)
+    sym = symbol.replace('THB_','')
+    if not sym in list(balance):
+        print('not found [{}] in balance'.format(sym))
+        return None
+    amount = balance[sym]['available']
+    result = bitkub.place_ask(sym=symbol, amt=amount, typ='market')
+    print(result)
 
 def Reset(*_):
     print('---------------------\nReset\n---------------------')
@@ -190,6 +250,7 @@ def MornitoringUser(idName,sendNotify=True):
             morn_df = morn_df.append(row,ignore_index=True)
             portfolioList.append(row['Symbol'])
             Transaction(idName, 'Buy', row['Symbol'], (systemJson[system]['percentageComission']/100) * -1)
+            CreateBuyOrder(idName,row['Symbol'])
         elif len(portfolioList) >= size: # Port is Full
             print('Can\'t Buy More\nportfolio is full')
             break
@@ -310,6 +371,7 @@ def MornitoringUser(idName,sendNotify=True):
         if systemJson[system]['takeProfitBy'] == 'Average':
             profit = profit/size
         Transaction( i['User'], 'Sell', i['Symbol'], ((systemJson[system]['percentageComission'] / 100) * -1) + profit )
+        CreateSellOrder(i['User'],i['Symbol'])
 
     #Finish
     morn_df.to_csv(mornitorFilePath, index=False)
@@ -347,16 +409,20 @@ def AllUser(*_):
         #if gSheet.getAllDataS('Mornitor') != []:
             #break
 
+
+
 if __name__ == '__main__' :
-    import update
+    #import update
     #update.updateConfig()
     #configJson = json.load(open(configPath))
-    update.updateSystem()
-    systemJson = json.load(open(systemPath))
+    #update.updateSystem()
+    #systemJson = json.load(open(systemPath))
 
     #Reset()
     #MornitoringUser('CryptoBot')
-    MornitoringUser('user1')
+    #MornitoringUser('user1')
+    #CreateBuyOrder('user1','THB_USDC')
+    #CreateSellOrder('user1','THB_USDC')
     #AllUser()
     #Transaction('idName', 'code', 'symbol', 'change')
     """
