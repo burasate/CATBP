@@ -121,9 +121,9 @@ def MornitoringUser(idName,sendNotify=True):
     entry_df = entry_df[
         ( entry_df['Rec_Date'] == entry_df['Rec_Date'].max() ) &
         ( entry_df['Signal'] == 'Entry' ) &
-        ( entry_df['Preset'] == preset ) &
+        ( entry_df['Preset'] == preset )
         #( entry_df['Change4HR%'] >= 0 ) &
-        ( entry_df['Close'] <= entry_df['BreakOut_M'] )
+        #( entry_df['Close'] <= entry_df['BreakOut_M'] )
     ]
     entry_df = entry_df.sort_values(['Change4HR%_Abs','Value_M'], ascending=[True,False])
     #entry_df = entry_df.sort_values(['Change4HR%','Value_M'], ascending=[False,False])
@@ -166,7 +166,8 @@ def MornitoringUser(idName,sendNotify=True):
         buy_condition =  (
             (len(portfolioList) < size) and  #Port is not full
             (not row['Symbol'] in portfolioList) and # Not Symbol in Port
-            (row['Buy'] > row['BreakOut_L']) # Price Not Equal Break Low
+            (row['Buy'] > row['BreakOut_L']) and # Price Not Equal Break Low
+            (row['Buy'] < row['BreakOut_M']) # Price Not Equal Break Low
         )
         if buy_condition: # Buy Condition
             text = '[ Buy ] {}\n{} Bath'.format(row['Symbol'],row['Buy'])
@@ -182,18 +183,16 @@ def MornitoringUser(idName,sendNotify=True):
         elif len(portfolioList) >= size: # Port is Full
             print('Can\'t Buy More\nportfolio is full')
             break
-    # ==============================
 
-    # Update Break out When Entry Symbol in Port Exist
-    for i in range(signal_df['Symbol'].count()):
-        row = signal_df.iloc[i]
+        # Update Trailing when Price > Mid
         trailing_condition = (
-            ( row['Symbol'] in portfolioList ) and
-            ( row['Close'] > row['BreakOut_M'] )
+                (row['Symbol'] in portfolioList) and
+                (row['Close'] > row['BreakOut_M'])
         )
         if trailing_condition:
             morn_df = morn_df.append(row, ignore_index=True)
             print('Updated Trailing ( {} )'.format(row['Symbol']))
+    # ==============================
 
     morn_df = morn_df[colSelect]
 
