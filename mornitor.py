@@ -37,10 +37,10 @@ def Reset(*_):
     global transacFilePath
     if not os.path.exists(mornitorFilePath):
         return None
-    df = pd.read_csv(mornitorFilePath)
+    entry_df = pd.read_csv(mornitorFilePath)
     t_df = pd.read_csv(transacFilePath)
     deleteList = []
-    for user in df['User'].unique().tolist():
+    for user in entry_df['User'].unique().tolist():
         if not user in list(configJson):
             deleteList.append(user)
 
@@ -63,10 +63,10 @@ def Reset(*_):
 
     for user in deleteList:
         print('delete [ {} ]'.format(user))
-        df = df[df['User'] != user]
+        entry_df = entry_df[entry_df['User'] != user]
         t_df = t_df[t_df['User'] != user]
 
-    df.to_csv(mornitorFilePath,index=False)
+    entry_df.to_csv(mornitorFilePath,index=False)
     t_df.to_csv(transacFilePath, index=False)
     print('User Reset')
 
@@ -82,17 +82,17 @@ def Transaction(idName,code,symbol,change):
     }
     col = ['dateTime']
     if not os.path.exists(transacFilePath):
-        df = pd.DataFrame(columns=list(data))
-        df.to_csv(transacFilePath, index=False)
-    df = pd.read_csv(transacFilePath)
+        entry_df = pd.DataFrame(columns=list(data))
+        entry_df.to_csv(transacFilePath, index=False)
+    entry_df = pd.read_csv(transacFilePath)
 
     # Checking Column
     for c in list(data):
-        if not c in df.columns.tolist():
-            df[c] = None
+        if not c in entry_df.columns.tolist():
+            entry_df[c] = None
     rec = pd.DataFrame(data)
-    df = df.append(rec,ignore_index=True)
-    df.to_csv(transacFilePath,index=False)
+    entry_df = entry_df.append(rec,ignore_index=True)
+    entry_df.to_csv(transacFilePath,index=False)
 
 def MornitoringUser(idName,sendNotify=True):
     isActive = bool(configJson[idName]['active'])
@@ -113,32 +113,32 @@ def MornitoringUser(idName,sendNotify=True):
     signal_df = signal_df[signal_df['Rec_Date'] == signal_df['Rec_Date'].max()]
 
     # Select Entry
-    df = signal_df
-    df['Change4HR%_Abs'] = df['Change4HR%'].abs()
-    df = df[
-        ( df['Rec_Date'] == df['Rec_Date'].max() ) &
-        ( df['Signal'] == 'Entry' ) &
-        ( df['Preset'] == preset ) &
-        ( df['Change4HR%'] >= 0 ) &
-        ( df['Close'] <= df['BreakOut_M'] )
+    entry_df = signal_df
+    entry_df['Change4HR%_Abs'] = entry_df['Change4HR%'].abs()
+    entry_df = entry_df[
+        ( entry_df['Rec_Date'] == entry_df['Rec_Date'].max() ) &
+        ( entry_df['Signal'] == 'Entry' ) &
+        ( entry_df['Preset'] == preset ) &
+        #( entry_df['Change4HR%'] >= 0 ) &
+        ( entry_df['Close'] <= entry_df['BreakOut_M'] )
     ]
-    df = df.sort_values(['Change4HR%_Abs','Value_M'], ascending=[True,False])
-    #df = df.sort_values(['Change4HR%','Value_M'], ascending=[False,False])
-    #df = df.head(size) # Select Count
-    df.reset_index(inplace=True)
-    #print(df) # Signal Checking
+    entry_df = entry_df.sort_values(['Change4HR%_Abs','Value_M'], ascending=[True,False])
+    #entry_df = entry_df.sort_values(['Change4HR%','Value_M'], ascending=[False,False])
+    #entry_df = entry_df.head(size) # Select Count
+    entry_df.reset_index(inplace=True)
+    #print(entry_df) # Signal Checking
 
     # New Column
-    df['User'] = idName
-    df['Buy'] = df['Close']
-    df['Market'] = df['Close']
-    df['Profit%'] = ( ( df['Market'] - df['Buy'] ) / df['Buy'] ) * 100
-    df['Max_Drawdown%'] =  0.0
+    entry_df['User'] = idName
+    entry_df['Buy'] = entry_df['Close']
+    entry_df['Market'] = entry_df['Close']
+    entry_df['Profit%'] = ( ( entry_df['Market'] - entry_df['Buy'] ) / entry_df['Buy'] ) * 100
+    entry_df['Max_Drawdown%'] =  0.0
 
     colSelect = ['User','Symbol','Signal','Buy','Market','Profit%','Max_Drawdown%','Change4HR%','Value_M','BreakOut_H','BreakOut_L','Rec_Date']
-    df = df[colSelect]
-    #print(df[['Symbol','Signal','Change4HR%']])
-    print('Select Entry {}'.format(df['Symbol'].to_list()))
+    entry_df = entry_df[colSelect]
+    #print(entry_df[['Symbol','Signal','Change4HR%']])
+    print('Select Entry {}'.format(entry_df['Symbol'].to_list()))
 
     # Mornitor data frame
     global mornitorFilePath
@@ -158,8 +158,8 @@ def MornitoringUser(idName,sendNotify=True):
 
     # Buy Notify
     # ==============================
-    for i in range(df['Symbol'].count()):
-        row = df.iloc[i]
+    for i in range(entry_df['Symbol'].count()):
+        row = entry_df.iloc[i]
         buy_condition =  (
             (len(portfolioList) < size) and  #Port is not full
             (not row['Symbol'] in portfolioList) and # Not Symbol in Port

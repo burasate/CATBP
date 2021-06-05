@@ -173,8 +173,8 @@ def createSymbolHistory(symbol,timeFrame = 'minute'):
     df['Open'] = histDF['open'].round(2)
     df['Low'] = histDF['low'].round(2)
     df['High'] = histDF['high'].round(2)
-    #df['Volume'] = histDF['baseVolume'].diff(1).abs()
-    df['Volume'] = histDF['baseVolume']
+    df['Volume'] = histDF['baseVolume'].diff(4).abs()
+    #df['Volume'] = histDF['baseVolume']
     df['Day'] = histDF.index
 
     #revese index and save
