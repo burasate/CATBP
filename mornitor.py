@@ -37,14 +37,20 @@ def Reset(*_):
     global transacFilePath
     if not os.path.exists(mornitorFilePath):
         return None
-    entry_df = pd.read_csv(mornitorFilePath)
+    m_df = pd.read_csv(mornitorFilePath)
     t_df = pd.read_csv(transacFilePath)
     deleteList = []
-    for user in entry_df['User'].unique().tolist():
-        print('{}  {}'.format(user,entry_df['User'].unique().tolist()))
+
+    m_user_list = m_df['User'].unique().tolist()
+    t_user_list = t_df['User'].unique().tolist()
+    for user in m_user_list:
+        print('Checking User {} in Mornitor {}'.format(user,m_user_list))
         if not user in list(configJson):
             deleteList.append(user)
-
+    for user in t_user_list:
+        print('Checking User {} in Transaction {}'.format(user, t_user_list))
+        if not user in list(configJson):
+            deleteList.append(user)
 
     #Sending Restart
     for user in list(configJson):
@@ -64,10 +70,10 @@ def Reset(*_):
 
     for user in deleteList:
         print('delete [ {} ]'.format(user))
-        entry_df = entry_df[entry_df['User'] != user]
+        m_df = m_df[m_df['User'] != user]
         t_df = t_df[t_df['User'] != user]
 
-    entry_df.to_csv(mornitorFilePath,index=False)
+    m_df.to_csv(mornitorFilePath,index=False)
     t_df.to_csv(transacFilePath, index=False)
     print('User Reset')
 
@@ -274,9 +280,8 @@ def MornitoringUser(idName,sendNotify=True):
     profit_condition = report_df['Profit%'].mean() >= profitTarget
     if systemJson[system]['takeProfitBy'] == 'Sum':
         profit_condition = report_df['Profit%'].sum() >= profitTarget
-    if profit_condition:
+    if profit_condition or isReset:
         gSheet.setValue('Config', findKey='idName', findValue=idName, key='reset', value=1)
-        configJson[idName]['reset'] = 1
         text = '[ Take Profit ]\n' + \
                'Target Profit {}%\n'.format(profitTarget) + \
                'Profit Sum {}%\n'.format(report_df['Profit%'].sum().round(2)) + \
@@ -285,8 +290,7 @@ def MornitoringUser(idName,sendNotify=True):
         if sendNotify:
             lineNotify.sendNotifyMassage(token, text)
 
-    # Prepare Sell When Take Profit or Reset
-    if profit_condition or isReset:
+        # Prepare Sell When Take Profit or Reset
         for sym in report_df['Symbol'].tolist():
             if sym in sellList:
                 continue
