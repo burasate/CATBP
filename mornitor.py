@@ -80,6 +80,9 @@ def CreateSellOrder(idName,symbol):
         return None
     API_KEY = configJson[idName]['bk_apiKey']
     API_SECRET = configJson[idName]['bk_apiSecret']
+    if API_KEY == '' or API_SECRET == '' :
+        print('this user have no API KEY or API SECRET to send order')
+        return None
     bitkub = Bitkub()
     bitkub.set_api_key(API_KEY)
     bitkub.set_api_secret(API_SECRET)
