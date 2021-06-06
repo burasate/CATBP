@@ -23,10 +23,12 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
     # Plot Indicator
     quote = os.path.splitext(os.path.basename(csvPath))[0]
     info = ''
+
     for data in symbols:
         if data['symbol'] == quote:
             info = data['info']
             break
+        else: continue
 
     quote = quote.split('_')[-1]
 
@@ -220,7 +222,10 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
         #axes[0].plot([100, 120], [df['BreakOut_L'][0], df['BreakOut_L'][0]], linewidth=.7, color=pltColor['red'], linestyle='-',alpha = 1)
         #axes[0].plot([100, 120], [df['BreakOut_M'][0], df['BreakOut_M'][0]], linewidth=.7, color=pltColor['yellow'], linestyle=':',alpha = 1)
 
-        axes[0].plot(df['Day'], clh, color=(.5,.5,.5), linewidth=1, marker='', markersize=1)
+        axes[0].fill_between(df['Day'], y1=h_plt, y2=l_plt, linewidth=1, color=(.5, .5, .5),
+                             linestyle='-', alpha=0.1)
+
+        axes[0].plot(df['Day'], clh, color=(.4,.4,.4), linewidth=.7, marker='', markersize=1)
         axes[0].plot(df['Day'][0], clh[0], color=(.5,.5,.5), linewidth=1, marker='o', markersize=5)
         axes[0].plot(df['Day'], h_plt, color=(0.25, 0.25, 0.25), linewidth=.4, linestyle=':', marker='', markersize=.5)
         axes[0].plot(df['Day'], l_plt, color=(0.25, 0.25, 0.25), linewidth=.4, linestyle=':', marker='', markersize=.5)
@@ -444,7 +449,7 @@ if __name__ == '__main__' :
     #presetPath = dataPath + '/preset.json'
     #presetJson = json.load(open(presetPath))
 
-    #getAnalysis(histPath + 'THB_CRV' + '.csv', 'P4',saveImage=False,showImage=True)
+    getAnalysis(histPath + 'THB_CRV' + '.csv', 'P4',saveImage=False,showImage=True)
     #getSignalAllPreset()
     """
     for i in os.listdir(dataPath + '/hist'):
