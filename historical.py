@@ -57,6 +57,8 @@ def updateGSheetHistory(limit = 45000):
     elif hour > 16 :
         backupPath = dataPath + '/hist_backup/cryptoHist_{}_{}.csv'.format(date.replace('-', '_'), 2)
     df.to_csv(backupPath, index=False)
+    #spare backup path
+    backupPath = dataPath + '/hist_backup/cryptoHist_{}_{}.csv'.format(date.replace('-', '_'), 3)
 
     # append backup
     backupList = os.listdir(dataPath + '/hist_backup')
