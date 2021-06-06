@@ -214,7 +214,7 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
         axes[0].plot(df['Day'], df['BreakOut_M'], linewidth=.7, color=pltColor['yellow'], linestyle=':')
         #axes[0].plot(df['Day'], df['BreakOut_MH'], linewidth=.7, color=pltColor['green'], linestyle='--',alpha=0.5)
         #axes[0].plot(df['Day'], df['BreakOut_ML'], linewidth=.7, color=pltColor['red'], linestyle='--',alpha=0.5)
-        axes[0].plot(df['Day'], cut_loss, linewidth=.7, color=pltColor['red'], linestyle=':')
+        axes[0].plot(df['Day'], cut_loss, linewidth=.7, color=pltColor['yellow'], linestyle=':')
 
         #axes[0].plot([100, 120], [df['BreakOut_H'][0], df['BreakOut_H'][0]], linewidth=.7, color=pltColor['green'], linestyle='-',alpha = 1)
         #axes[0].plot([100, 120], [df['BreakOut_L'][0], df['BreakOut_L'][0]], linewidth=.7, color=pltColor['red'], linestyle='-',alpha = 1)
@@ -229,13 +229,13 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
         # Test Signal
         buyMark = df[(df['SMA_S'] > df['SMA_L']) &
                      (df['%K'] > df['%D']) &
-                     (df['GL_Ratio'] > df['GL_Ratio_Slow']) &
-                     (df['Volume_Break_H'][0] >= df['Volume_Break_H'][1])
+                     (df['GL_Ratio'] > df['GL_Ratio_Slow']) #&
+                     #(df['Volume_Break_H'][0] >= df['Volume_Break_H'][1])
                      ]
         sellMark = df[(df['SMA_S'] < df['SMA_L']) &
                       (df['%K'] < df['%D']) &
-                      (df['GL_Ratio'] < df['GL_Ratio_Slow']) &
-                      (df['Volume_Break_H'][0] >= df['Volume_Break_H'][1])
+                      (df['GL_Ratio'] < df['GL_Ratio_Slow']) #&
+                      #(df['Volume_Break_H'][0] >= df['Volume_Break_H'][1])
                       ]
         axes[0].plot(buyMark['Day'],
                      buyMark['Close'],
@@ -388,7 +388,7 @@ def getSignalAllPreset(*_):
 
                 # Condition Setting
                 filter_condition = (
-                    df['Volume_Break_H'][0] >= df['Volume_Break_H'][1]
+                    #df['Volume_Break_H'][0] >= df['Volume_Break_H'][1]
                 )
                 entry_condition = (
                     entry_condition_list[0] and
@@ -443,7 +443,7 @@ if __name__ == '__main__' :
     #presetPath = dataPath + '/preset.json'
     #presetJson = json.load(open(presetPath))
 
-    getAnalysis(histPath + 'THB_JFIN' + '.csv', 'P4',saveImage=False,showImage=True)
+    getAnalysis(histPath + 'THB_CRV' + '.csv', 'P4',saveImage=False,showImage=True)
     #getSignalAllPreset()
     """
     for i in os.listdir(dataPath + '/hist'):
