@@ -111,15 +111,18 @@ def updateGSheetHistory(limit = 45000):
     #limit row
     df = df.tail(limit)
 
+    print('Save Historical Data...')
     allHistPath = dataPath + '/cryptoHist.csv'
     df = df[list(rowData)]
     df.to_csv(allHistPath, index=False)
+    df.tail(5000).to_csv(backupPath, index=False)
 
     while isInternetConnect():
         try:
-            print('uploading history data...')
-            gSheet.updateFromCSV(allHistPath, 'History')
-            print('upload history data finish')
+            if not os.name == 'nt': #for raspi
+                print('uploading history data...')
+                gSheet.updateFromCSV(allHistPath, 'History')
+                print('upload history data finish')
         except: pass
         time.sleep(10)
         if gSheet.getAllDataS('History') != []:
