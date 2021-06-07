@@ -449,7 +449,7 @@ if __name__ == '__main__' :
     #presetPath = dataPath + '/preset.json'
     #presetJson = json.load(open(presetPath))
 
-    getAnalysis(histPath + 'THB_CRV' + '.csv', 'P4',saveImage=False,showImage=True)
+    getAnalysis(histPath + 'THB_BTC' + '.csv', 'P4',saveImage=False,showImage=True)
     #getSignalAllPreset()
     """
     for i in os.listdir(dataPath + '/hist'):
