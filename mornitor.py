@@ -204,7 +204,14 @@ def MornitoringUser(idName,sendNotify=True):
     entry_df.reset_index(inplace=True)
     #print(entry_df) # Signal Checking
 
-    # New Column
+    # New Column For Signal DF
+    signal_df['User'] = idName
+    signal_df['Buy'] = signal_df['Close']
+    signal_df['Market'] = signal_df['Close']
+    signal_df['Profit%'] = ((signal_df['Market'] - signal_df['Buy']) / signal_df['Buy']) * 100
+    signal_df['Max_Drawdown%'] = 0.0
+
+    # New Column For Entry DF
     entry_df['User'] = idName
     entry_df['Buy'] = entry_df['Close']
     entry_df['Market'] = entry_df['Close']
@@ -274,7 +281,6 @@ def MornitoringUser(idName,sendNotify=True):
             print('Updated Trailing ( {} )'.format(row['Symbol']))
 
     morn_df = morn_df[colSelect]
-
 
     # Ticker ( Update Last Price as 'Market' )
     ticker = kbApi.getTicker()
