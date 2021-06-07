@@ -181,10 +181,12 @@ def MornitoringUser(idName,sendNotify=True):
     print('Last Report  {} Hour Ago / Report Every {} H'.format(reportHourDuration, configJson[idName]['reportEveryHour']))
 
     signal_df = pd.read_csv(dataPath+'/signal.csv')
-    signal_df = signal_df[signal_df['Rec_Date'] == signal_df['Rec_Date'].max()]
+    #signal_df = signal_df[signal_df['Rec_Date'] == signal_df['Rec_Date'].max()]
     signal_df = signal_df[
+        (signal_df['Rec_Date'] == signal_df['Rec_Date'].max()) &
         (signal_df['Preset'] == preset)
     ]
+    signal_df.reset_index(inplace=True)
 
     # Select Entry
     entry_df = signal_df
@@ -258,18 +260,21 @@ def MornitoringUser(idName,sendNotify=True):
         elif len(portfolioList) >= size: # Port is Full
             print('Can\'t Buy More\nportfolio is full')
             break
+    # ==============================
 
-        # Update Trailing when Price > Mid
+    # Update Trailing (If Close > Mid)
+    for i in range(signal_df['Symbol'].count()):
+        row = signal_df.iloc[i]
         trailing_condition = (
                 (row['Symbol'] in portfolioList) and
-                (row['Buy'] > row['BreakOut_M'])
+                (row['Close'] > row['BreakOut_M'])
         )
         if trailing_condition:
             morn_df = morn_df.append(row, ignore_index=True)
             print('Updated Trailing ( {} )'.format(row['Symbol']))
-    # ==============================
 
     morn_df = morn_df[colSelect]
+
 
     # Ticker ( Update Last Price as 'Market' )
     ticker = kbApi.getTicker()
