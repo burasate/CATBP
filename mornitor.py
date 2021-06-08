@@ -325,6 +325,11 @@ def MornitoringUser(idName,sendNotify=True):
                 ( row['Market'] < row['BreakOut_L'] ) &
                 ( row['User'] == idName )
                 )
+        if row['BreakOut_L'] < row['Buy'] :  # Edit Sell Condition When Triling < Buy
+            sell_condition = (
+                    (row['Market'] < row['BreakOut_M']) &
+                    (row['User'] == idName)
+            )
         if sell_condition:
             print(text)
             if sendNotify:

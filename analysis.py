@@ -134,9 +134,6 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
     df['NDay_TrueRange%'] = (tr_percentage.sort_index(ascending=False)).rolling(ps_breakout_low).max()
     df['NDay_TrueRange%'] = df['NDay_TrueRange%'].sort_index(ascending=True).round(1)
 
-    # cut loss zone
-    cut_loss = breakout_l.rolling(ps_breakout_low).max().sort_index(ascending=True)
-
     if saveImage or showImage:
         # Plot Figure
         pltColor = {
@@ -216,7 +213,6 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
         axes[0].plot(df['Day'], df['BreakOut_M'], linewidth=.7, color=pltColor['yellow'], linestyle='-')
         #axes[0].plot(df['Day'], df['BreakOut_MH'], linewidth=.7, color=pltColor['green'], linestyle='--',alpha=0.5)
         #axes[0].plot(df['Day'], df['BreakOut_ML'], linewidth=.7, color=pltColor['red'], linestyle='--',alpha=0.5)
-        axes[0].plot(df['Day'], cut_loss, linewidth=.7, color=pltColor['red'], linestyle='--')
 
         #ATR Cut
         #axes[0].plot(df['Day'], clh-(clh*(df['NDay_TrueRange%']/100)).mean(), color=(.4, .4, .4), linewidth=.7, linestyle='--')
@@ -453,7 +449,7 @@ if __name__ == '__main__' :
     presetPath = dataPath + '/preset.json'
     presetJson = json.load(open(presetPath))
 
-    getAnalysis(histPath + 'THB_BTC' + '.csv', 'P4',saveImage=False,showImage=True)
+    getAnalysis(histPath + 'THB_KUB' + '.csv', 'P4',saveImage=False,showImage=True)
     #getSignalAllPreset()
     """
     for i in os.listdir(dataPath + '/hist'):
