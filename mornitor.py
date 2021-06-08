@@ -171,6 +171,7 @@ def MornitoringUser(idName,sendNotify=True):
     if isActive == False:
         return None
     print('---------------------\n[ {} ]  Monitoring\n---------------------'.format(idName))
+    ticker = kbApi.getTicker()
     now = round(time.time())
     reportHourDuration = round( float(((now - configJson[idName]['lastReport'])/60)/60),2 )
     preset = configJson[idName]['preset']
@@ -188,6 +189,15 @@ def MornitoringUser(idName,sendNotify=True):
     ]
     signal_df.reset_index(inplace=True)
 
+    # New Column For Signal DF
+    signal_df['User'] = idName
+    signal_df['Buy'] = signal_df['Close']
+    signal_df['Market'] = signal_df['Close']
+    signal_df['Profit%'] = ((signal_df['Market'] - signal_df['Buy']) / signal_df['Buy']) * 100
+    signal_df['Max_Drawdown%'] = 0.0
+    for sym in ticker:
+        signal_df.loc[(signal_df['Symbol'] == sym), 'Buy'] = ticker[sym]['last']
+
     # Select Entry
     entry_df = signal_df
     #entry_df['Change4HR%_Abs'] = entry_df['Change4HR%'].abs()
@@ -204,19 +214,14 @@ def MornitoringUser(idName,sendNotify=True):
     entry_df.reset_index(inplace=True)
     #print(entry_df) # Signal Checking
 
-    # New Column For Signal DF
-    signal_df['User'] = idName
-    signal_df['Buy'] = signal_df['Close']
-    signal_df['Market'] = signal_df['Close']
-    signal_df['Profit%'] = ((signal_df['Market'] - signal_df['Buy']) / signal_df['Buy']) * 100
-    signal_df['Max_Drawdown%'] = 0.0
-
+    """
     # New Column For Entry DF
     entry_df['User'] = idName
     entry_df['Buy'] = entry_df['Close']
     entry_df['Market'] = entry_df['Close']
     entry_df['Profit%'] = ( ( entry_df['Market'] - entry_df['Buy'] ) / entry_df['Buy'] ) * 100
     entry_df['Max_Drawdown%'] =  0.0
+    """
 
     colSelect = ['User','Symbol','Signal','Buy','Market',
                  'Profit%','Max_Drawdown%','Change4HR%',
@@ -283,7 +288,6 @@ def MornitoringUser(idName,sendNotify=True):
     morn_df = morn_df[colSelect]
 
     # Ticker ( Update Last Price as 'Market' )
-    ticker = kbApi.getTicker()
     for sym in ticker:
         if not sym in morn_df['Symbol'].unique().tolist():
             continue
