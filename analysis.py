@@ -393,8 +393,8 @@ def getSignalAllPreset(*_):
 
                 # Condition Setting
                 filter_condition = (
-                    #df['Close'][0] >= df['Close'].mean()
-                    True
+                    df['Close'][0] >= df['Close'].mean()
+                    #True
                 )
                 entry_condition = (
                     entry_condition_list[0] and
