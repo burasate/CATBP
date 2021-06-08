@@ -276,7 +276,7 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
         axes[3].plot(df['Day'], df['GL_Ratio'], linewidth=.7, color=(.5, .5, .5), linestyle='-')
         axes[3].plot(df['Day'], df['GL_Ratio_Slow'], linewidth=.7, color=(.5,.5,.5), linestyle=':')
         axes[3].plot(df['Day'][0], df['GL_Ratio'][0], color=(.5, .5, .5), linewidth=1, marker='o', markersize=5)
-        #axes[3].plot([0, 120], [1, 1], linewidth=.7, color=pltColor['red'],linestyle='--')
+        axes[3].plot([0, 120], [1, 1], linewidth=.7, color=pltColor['red'],linestyle='-')
 
         axes[4].fill_between(df['Day'], y1=df['SMA_S'], y2=df['SMA_L'], where=df['SMA_S']>=df['SMA_L'], linewidth=1, color=(.5, .5, .5), linestyle='-', alpha=0.2)
         axes[4].plot(df['Day'], df['SMA_S'], linewidth=1, color=(.5, .5, .5), linestyle='-')
@@ -449,7 +449,7 @@ if __name__ == '__main__' :
     presetPath = dataPath + '/preset.json'
     presetJson = json.load(open(presetPath))
 
-    getAnalysis(histPath + 'THB_KUB' + '.csv', 'P4',saveImage=False,showImage=True)
+    getAnalysis(histPath + 'THB_DOGE' + '.csv', 'P4',saveImage=False,showImage=True)
     #getSignalAllPreset()
     """
     for i in os.listdir(dataPath + '/hist'):
