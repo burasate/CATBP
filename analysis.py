@@ -97,9 +97,6 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
     df['BreakOut_ML'] = (df['BreakOut_L']+df['BreakOut_M'])*0.5
     #['BreakOut_ML'] = breakout_ml.sort_index(ascending=True)
 
-    #cut loss zone
-    cut_loss = breakout_l.rolling(ps_breakout_low).max().sort_index(ascending=True)
-
     # sma
     sma_s = df_reverse['Close'].rolling(ps_sma_s).mean()
     sma_l = df_reverse['Close'].rolling(ps_sma_l).mean()
@@ -136,6 +133,9 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
     tr_percentage = 100 * ((df['High'] - df['Low']) / df['High'])
     df['NDay_TrueRange%'] = (tr_percentage.sort_index(ascending=False)).rolling(ps_breakout_low).max()
     df['NDay_TrueRange%'] = df['NDay_TrueRange%'].sort_index(ascending=True).round(1)
+
+    # cut loss zone
+    cut_loss = breakout_l.rolling(ps_breakout_low).max().sort_index(ascending=True)
 
     if saveImage or showImage:
         # Plot Figure
@@ -217,6 +217,9 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
         #axes[0].plot(df['Day'], df['BreakOut_MH'], linewidth=.7, color=pltColor['green'], linestyle='--',alpha=0.5)
         #axes[0].plot(df['Day'], df['BreakOut_ML'], linewidth=.7, color=pltColor['red'], linestyle='--',alpha=0.5)
         axes[0].plot(df['Day'], cut_loss, linewidth=.7, color=pltColor['red'], linestyle='--')
+
+        #ATR Cut
+        #axes[0].plot(df['Day'], clh-(clh*(df['NDay_TrueRange%']/100)).mean(), color=(.4, .4, .4), linewidth=.7, linestyle='--')
 
         #axes[0].plot([100, 120], [df['BreakOut_H'][0], df['BreakOut_H'][0]], linewidth=.7, color=pltColor['green'], linestyle='-',alpha = 1)
         #axes[0].plot([100, 120], [df['BreakOut_L'][0], df['BreakOut_L'][0]], linewidth=.7, color=pltColor['red'], linestyle='-',alpha = 1)
@@ -393,7 +396,8 @@ def getSignalAllPreset(*_):
 
                 # Condition Setting
                 filter_condition = (
-                    df['Close'][0] >= df['Close'].mean()
+                    df['SMA_L'][0] >= df['Close'].mean() and
+                    df['Volume'][0] >= df['Volume'][1]
                     #True
                 )
                 entry_condition = (
@@ -445,10 +449,10 @@ def getSignalAllPreset(*_):
         gSheet.updateFromCSV(gsheet_csvPath, 'SignalRecord')
 
 if __name__ == '__main__' :
-    #import update
-    #update.updatePreset()
-    #presetPath = dataPath + '/preset.json'
-    #presetJson = json.load(open(presetPath))
+    import update
+    update.updatePreset()
+    presetPath = dataPath + '/preset.json'
+    presetJson = json.load(open(presetPath))
 
     getAnalysis(histPath + 'THB_BTC' + '.csv', 'P4',saveImage=False,showImage=True)
     #getSignalAllPreset()
