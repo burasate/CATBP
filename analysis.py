@@ -418,6 +418,7 @@ def getSignalAllPreset(*_):
                     df['Signal'] = 'Exit'
                     signal_df = signal_df.append(df.iloc[0])
                 else:
+                    df['Signal'] = ''
                     signal_df = signal_df.append(df.iloc[0])
 
             except:
