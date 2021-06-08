@@ -393,7 +393,8 @@ def getSignalAllPreset(*_):
                 # Condition Setting
                 filter_condition = (
                     df['SMA_L'][0] >= df['Close'].mean() and
-                    df['Volume'][0] >= df['Volume'][1]
+                    df['Volume'][0] >= df['Volume'][1] and
+                    df['GL_Ratio'][0] > 1
                     #True
                 )
                 entry_condition = (
@@ -444,10 +445,10 @@ def getSignalAllPreset(*_):
         gSheet.updateFromCSV(gsheet_csvPath, 'SignalRecord')
 
 if __name__ == '__main__' :
-    import update
-    update.updatePreset()
-    presetPath = dataPath + '/preset.json'
-    presetJson = json.load(open(presetPath))
+    #import update
+    #update.updatePreset()
+    #presetPath = dataPath + '/preset.json'
+    #presetJson = json.load(open(presetPath))
 
     getAnalysis(histPath + 'THB_DOGE' + '.csv', 'P4',saveImage=False,showImage=True)
     #getSignalAllPreset()
