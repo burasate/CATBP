@@ -393,7 +393,7 @@ def getSignalAllPreset(*_):
 
                 # Condition Setting
                 filter_condition = (
-                    #df['Volume_Break_H'][0] >= df['Volume_Break_H'][1]
+                    #df['Close'][0] >= df['Close'].mean()
                     True
                 )
                 entry_condition = (
