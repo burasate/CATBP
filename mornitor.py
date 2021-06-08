@@ -248,9 +248,9 @@ def MornitoringUser(idName,sendNotify=True):
         row = entry_df.iloc[i]
         buy_condition =  (
             (len(portfolioList) < size) and  #Port is not full
-            (not row['Symbol'] in portfolioList) and # Not Symbol in Port
-            (row['Buy'] > row['BreakOut_L']) and # Price Not Equal Break Low
-            (row['Buy'] < row['BreakOut_M']) # Price Not Equal Break Low
+            (not row['Symbol'] in portfolioList) #and # Not Symbol in Port
+            #(row['Buy'] > row['BreakOut_L']) and # Price Not Equal Break Low
+            #(row['Buy'] < row['BreakOut_M']) # Price Not Equal Break Low
         )
         if buy_condition: # Buy Condition
             text = '[ Buy ] {}\n{} Bath'.format(row['Symbol'],row['Buy'])
@@ -325,11 +325,6 @@ def MornitoringUser(idName,sendNotify=True):
                 ( row['Market'] < row['BreakOut_L'] ) &
                 ( row['User'] == idName )
                 )
-        if row['BreakOut_L'] < row['Buy'] :  # Edit Sell Condition When Triling < Buy
-            sell_condition = (
-                    (row['Market'] < row['BreakOut_M']) &
-                    (row['User'] == idName)
-            )
         if sell_condition:
             print(text)
             if sendNotify:
