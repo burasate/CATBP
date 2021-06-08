@@ -190,7 +190,7 @@ def MornitoringUser(idName,sendNotify=True):
 
     # Select Entry
     entry_df = signal_df
-    entry_df['Change4HR%_Abs'] = entry_df['Change4HR%'].abs()
+    #entry_df['Change4HR%_Abs'] = entry_df['Change4HR%'].abs()
     entry_df = entry_df[
         ( entry_df['Rec_Date'] == entry_df['Rec_Date'].max() ) &
         ( entry_df['Signal'] == 'Entry' ) &
@@ -198,8 +198,8 @@ def MornitoringUser(idName,sendNotify=True):
         #( entry_df['Change4HR%'] >= 0 ) &
         #( entry_df['Close'] <= entry_df['BreakOut_M'] )
     ]
-    entry_df = entry_df.sort_values(['Change4HR%_Abs','Value_M'], ascending=[True,False])
-    #entry_df = entry_df.sort_values(['Change4HR%','Value_M'], ascending=[False,False])
+    #entry_df = entry_df.sort_values(['Change4HR%_Abs','Value_M'], ascending=[True,False])
+    entry_df = entry_df.sort_values(['Change4HR%','Value_M'], ascending=[False,False])
     #entry_df = entry_df.head(size) # Select Count
     entry_df.reset_index(inplace=True)
     #print(entry_df) # Signal Checking
