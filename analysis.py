@@ -92,10 +92,10 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
     df['BreakOut_H'] = breakout_h.sort_index(ascending=True)
     df['BreakOut_M'] = (df['BreakOut_L']+df['BreakOut_H'])*0.5
     df['BreakOut_M'] = df['BreakOut_M'].round(2)
-    df['BreakOut_MH'] = (df['BreakOut_M']+df['BreakOut_H'])*0.5
-    #df['BreakOut_MH'] = breakout_mh.sort_index(ascending=True)
-    df['BreakOut_ML'] = (df['BreakOut_L']+df['BreakOut_M'])*0.5
-    #['BreakOut_ML'] = breakout_ml.sort_index(ascending=True)
+    #df['BreakOut_MH'] = (df['BreakOut_M']+df['BreakOut_H'])*0.5
+    df['BreakOut_MH'] = breakout_mh.sort_index(ascending=True)
+    #df['BreakOut_ML'] = (df['BreakOut_L']+df['BreakOut_M'])*0.5
+    df['BreakOut_ML'] = breakout_ml.sort_index(ascending=True)
 
     # sma
     sma_s = df_reverse['Close'].rolling(ps_sma_s).mean()
@@ -211,8 +211,8 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
         axes[0].plot(df['Day'], df['BreakOut_H'], linewidth=.7, color=pltColor['green'], linestyle='-')
         axes[0].plot(df['Day'], df['BreakOut_L'], linewidth=.7, color=pltColor['red'], linestyle='-')
         axes[0].plot(df['Day'], df['BreakOut_M'], linewidth=.7, color=pltColor['yellow'], linestyle='-')
-        #axes[0].plot(df['Day'], df['BreakOut_MH'], linewidth=.7, color=pltColor['green'], linestyle='--',alpha=0.5)
-        #axes[0].plot(df['Day'], df['BreakOut_ML'], linewidth=.7, color=pltColor['red'], linestyle='--',alpha=0.5)
+        axes[0].plot(df['Day'], df['BreakOut_MH'], linewidth=.7, color=pltColor['green'], linestyle='--',alpha=0.5)
+        axes[0].plot(df['Day'], df['BreakOut_ML'], linewidth=.7, color=pltColor['red'], linestyle='--',alpha=0.5)
 
         #ATR Cut
         #axes[0].plot(df['Day'], clh-(clh*(df['NDay_TrueRange%']/100)).mean(), color=(.4, .4, .4), linewidth=.7, linestyle='--')
@@ -450,7 +450,7 @@ if __name__ == '__main__' :
     #presetPath = dataPath + '/preset.json'
     #presetJson = json.load(open(presetPath))
 
-    getAnalysis(histPath + 'THB_DOGE' + '.csv', 'P4',saveImage=False,showImage=True)
+    getAnalysis(histPath + 'THB_CRV' + '.csv', 'P4',saveImage=False,showImage=True)
     #getSignalAllPreset()
     """
     for i in os.listdir(dataPath + '/hist'):

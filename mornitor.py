@@ -225,8 +225,8 @@ def MornitoringUser(idName,sendNotify=True):
 
     colSelect = ['User','Symbol','Signal','Buy','Market',
                  'Profit%','Max_Drawdown%','Change4HR%',
-                 'Value_M','BreakOut_H','BreakOut_M',
-                 'BreakOut_L','Rec_Date']
+                 'Value_M','BreakOut_H','BreakOut_MH','BreakOut_M',
+                 'BreakOut_ML','BreakOut_L','Low','High','Rec_Date']
     entry_df = entry_df[colSelect]
     #print(entry_df[['Symbol','Signal','Change4HR%']])
     print('Select Entry {}'.format(entry_df['Symbol'].to_list()))
@@ -254,8 +254,7 @@ def MornitoringUser(idName,sendNotify=True):
         buy_condition =  (
             (len(portfolioList) < size) and  #Port is not full
             (not row['Symbol'] in portfolioList) #and # Not Symbol in Port
-            #(row['Buy'] > row['BreakOut_L']) and # Price Not Equal Break Low
-            #(row['Buy'] < row['BreakOut_M']) # Price Not Equal Break Low
+            (row['BreakOut_ML'] != row['BreakOut_L'])
         )
         if buy_condition: # Buy Condition
             text = '[ Buy ] {}\n{} Bath'.format(row['Symbol'],row['Buy'])
@@ -325,10 +324,17 @@ def MornitoringUser(idName,sendNotify=True):
     for i in range(morn_df['Symbol'].count()):
         row = morn_df.iloc[i]
         text = '[ Sell ] {}\n{} Bath ({}%)'.format(row['Symbol'], row['Market'],row['Profit%'])
-        sell_condition = (
+        sell_condition = (       # Sell Default
                 ( row['Market'] < row['BreakOut_L'] ) &
                 ( row['User'] == idName )
                 )
+        if (row['BreakOut_MH'] == row['BreakOut_H']) and (row['BreakOut_L'] > row['Buy']) : # New High Take Profit
+            sell_condition = sell_condition
+        elif (row['BreakOut_L'] <= row['Buy']) : # Cut Loss
+            sell_condition = (  # Sell for Cut Loss
+                    (row['Market'] < row['BreakOut_ML']) &
+                    (row['User'] == idName)
+            )
         if sell_condition:
             print(text)
             if sendNotify:
