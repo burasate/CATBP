@@ -253,7 +253,7 @@ def MornitoringUser(idName,sendNotify=True):
         row = entry_df.iloc[i]
         buy_condition =  (
             (len(portfolioList) < size) and  #Port is not full
-            (not row['Symbol'] in portfolioList) #and # Not Symbol in Port
+            (not row['Symbol'] in portfolioList) and #and # Not Symbol in Port
             (row['BreakOut_ML'] != row['BreakOut_L'])
         )
         if buy_condition: # Buy Condition
