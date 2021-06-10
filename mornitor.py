@@ -254,7 +254,8 @@ def MornitoringUser(idName,sendNotify=True):
         buy_condition =  (
             (len(portfolioList) < size) and  #Port is not full
             (not row['Symbol'] in portfolioList) and #and # Not Symbol in Port
-            (row['BreakOut_ML'] != row['BreakOut_L'])
+            (row['BreakOut_ML'] != row['BreakOut_L']) and
+            (row['Low'] != row['BreakOut_ML'])
         )
         if buy_condition: # Buy Condition
             text = '[ Buy ] {}\n{} Bath'.format(row['Symbol'],row['Buy'])
@@ -278,7 +279,7 @@ def MornitoringUser(idName,sendNotify=True):
         row = signal_df.iloc[i]
         trailing_condition = (
                 (row['Symbol'] in portfolioList) and
-                (row['Close'] > row['BreakOut_M'])
+                (ticker[row['Symbol']]['last'] > row['BreakOut_ML'])
         )
         if trailing_condition:
             morn_df = morn_df.append(row, ignore_index=True)
@@ -400,7 +401,7 @@ def MornitoringUser(idName,sendNotify=True):
 
     #Finish
     morn_df.to_csv(mornitorFilePath, index=False)
-    print('{} Update Finished'.format(idName))
+    print('{} Update Finished\n'.format(idName))
 
 def AllUser(*_):
     os.system('cls||clear')
