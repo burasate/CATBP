@@ -366,7 +366,7 @@ def MornitoringUser(idName,sendNotify=True):
     profit_condition = report_df['Profit%'].mean() >= profitTarget
     if systemJson[system]['takeProfitBy'] == 'Sum':
         profit_condition = report_df['Profit%'].sum() >= profitTarget
-    if profit_condition or isReset:
+    if ( profit_condition or isReset ) and report_df['Profit%'].count() != 0 :
         gSheet.setValue('Config', findKey='idName', findValue=idName, key='reset', value=1)
         text = '[ Take Profit ]\n' + \
                'Target Profit {}%\n'.format(profitTarget) + \
