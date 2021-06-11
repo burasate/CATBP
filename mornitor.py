@@ -274,8 +274,8 @@ def MornitoringUser(idName,sendNotify=True):
         if buy_condition and filter_condition : # Buy Condition
             text = '[ Buy ] {}\n{} Bath'.format(row['Symbol'],row['Buy'])
             quote = row['Symbol'].split('_')[-1]
-            #row['Buy_Count'] = row['Buy_Count']+1
-            entry_df['Buy_Count'].iloc[i] = row['Buy_Count']+1
+            row['Buy_Count'] = entry_df['Buy_Count'].iloc[i]+1
+            #entry_df['Buy_Count'].iloc[i] = row['Buy_Count']+1
             imgFilePath = imgPath + os.sep + '{}_{}.png'.format(preset,quote)
             print(text)
             print(imgFilePath)
