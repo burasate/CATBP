@@ -265,7 +265,7 @@ def MornitoringUser(idName,sendNotify=True):
                 (row['Buy'] <= row['BreakOut_ML'])
         )
         count_df = morn_df[(morn_df['User'] == idName) & (morn_df['Symbol'] == row['Symbol'])]
-        print(count_df['Buy_Count'].count())
+        #print(count_df['Buy_Count'].count())
         if count_df['Buy_Count'].count() != 0: #If Found Symbol in Row
             filter_condition = (count_df['Buy_Count'].tolist()[0] <= duplicateBuyCount)
             if count_df['Buy_Count'].tolist()[0] > 1 and filter_condition: #Buy Low When Buy Duplicate
