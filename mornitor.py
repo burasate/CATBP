@@ -259,17 +259,18 @@ def MornitoringUser(idName,sendNotify=True):
                 (row['BreakOut_ML'] != row['BreakOut_L']) and
                 (row['Low'] != row['BreakOut_ML'])
         )
-        count_df = morn_df[(morn_df['User'] == idName) & (morn_df['Symbol'] == row['Symbol'])]
-        print(count_df['Buy_Count'].count())
-        if count_df['Buy_Count'].count() != 0: #If Found Symbol in Row
-            filter_condition = (count_df['Buy_Count'].tolist()[0] <= duplicateBuyCount)
         buy_low_condition = (
                 (len(portfolioList) < size) and  # Port is not full
                 (row['BreakOut_ML'] != row['BreakOut_L']) and
                 (row['Buy'] <= row['BreakOut_ML'])
         )
-        if count_df['Buy_Count'].tolist()[0] > 1 and filter_condition: #Buy Low When Buy Duplicate
-            buy_condition = buy_low_condition
+        count_df = morn_df[(morn_df['User'] == idName) & (morn_df['Symbol'] == row['Symbol'])]
+        print(count_df['Buy_Count'].count())
+        if count_df['Buy_Count'].count() != 0: #If Found Symbol in Row
+            filter_condition = (count_df['Buy_Count'].tolist()[0] <= duplicateBuyCount)
+            if count_df['Buy_Count'].tolist()[0] > 1 and filter_condition: #Buy Low When Buy Duplicate
+                buy_condition = buy_low_condition
+
         if buy_condition and filter_condition : # Buy1 Condition
             text = '[ Buy ] {}\n{} Bath'.format(row['Symbol'],row['Buy'])
             quote = row['Symbol'].split('_')[-1]
