@@ -179,10 +179,10 @@ def MornitoringUser(idName,sendNotify=True):
     token = configJson[idName]['lineToken']
     size = int(systemJson[system]['size'])
     profitTarget = float(systemJson[system]['percentageProfitTarget'])
+    duplicateBuyCount = int(systemJson[system]['duplicateBuyCount'])
     print('Last Report  {} Hour Ago / Report Every {} H'.format(reportHourDuration, configJson[idName]['reportEveryHour']))
 
     signal_df = pd.read_csv(dataPath+'/signal.csv')
-    #signal_df = signal_df[signal_df['Rec_Date'] == signal_df['Rec_Date'].max()]
     signal_df = signal_df[
         (signal_df['Rec_Date'] == signal_df['Rec_Date'].max()) &
         (signal_df['Preset'] == preset)
@@ -195,6 +195,7 @@ def MornitoringUser(idName,sendNotify=True):
     signal_df['Market'] = signal_df['Close']
     signal_df['Profit%'] = ((signal_df['Market'] - signal_df['Buy']) / signal_df['Buy']) * 100
     signal_df['Max_Drawdown%'] = 0.0
+    signal_df['Buy_Count'] = 0
     for sym in ticker:
         signal_df.loc[(signal_df['Symbol'] == sym), 'Buy'] = ticker[sym]['last']
 
@@ -226,7 +227,8 @@ def MornitoringUser(idName,sendNotify=True):
     colSelect = ['User','Symbol','Signal','Buy','Market',
                  'Profit%','Max_Drawdown%','Change4HR%',
                  'Value_M','BreakOut_H','BreakOut_MH','BreakOut_M',
-                 'BreakOut_ML','BreakOut_L','Low','High','Rec_Date']
+                 'BreakOut_ML','BreakOut_L','Low','High','Rec_Date',
+                 'Buy_Count']
     entry_df = entry_df[colSelect]
     #print(entry_df[['Symbol','Signal','Change4HR%']])
     print('Select Entry {}'.format(entry_df['Symbol'].to_list()))
@@ -251,27 +253,40 @@ def MornitoringUser(idName,sendNotify=True):
     # ==============================
     for i in range(entry_df['Symbol'].count()):
         row = entry_df.iloc[i]
-        buy_condition =  (
-            (len(portfolioList) < size) and  #Port is not full
-            (not row['Symbol'] in portfolioList) and #and # Not Symbol in Port
-            (row['BreakOut_ML'] != row['BreakOut_L']) and
-            (row['Low'] != row['BreakOut_ML'])
+        filter_condition = True
+        buy_condition = (
+                (len(portfolioList) < size) and  # Port is not full
+                (row['BreakOut_ML'] != row['BreakOut_L']) and
+                (row['Low'] != row['BreakOut_ML'])
         )
-        if buy_condition: # Buy Condition
+        count_df = morn_df[(morn_df['User'] == idName) & (morn_df['Symbol'] == row['Symbol'])]
+        print(count_df.count())
+        if count_df.count() != 0: #If Found Symbol in Row
+            filter_condition = (count_df['Buy_Count'].tolist()[0] <= duplicateBuyCount)
+        buy_low_condition = (
+                (len(portfolioList) < size) and  # Port is not full
+                (row['BreakOut_ML'] != row['BreakOut_L']) and
+                (row['Buy'] <= row['BreakOut_ML'])
+        )
+        if count_df['Buy_Count'].tolist()[0] > 1 and filter_condition: #Buy Low When Buy Duplicate
+            buy_condition = buy_low_condition
+        if buy_condition and filter_condition : # Buy1 Condition
             text = '[ Buy ] {}\n{} Bath'.format(row['Symbol'],row['Buy'])
             quote = row['Symbol'].split('_')[-1]
+            row['Buy_Count'] = row['Buy_Count']+1
             imgFilePath = imgPath + os.sep + '{}_{}.png'.format(preset,quote)
             print(text)
             print(imgFilePath)
             if sendNotify:
                 lineNotify.sendNotifyImageMsg(token, imgFilePath, text)
             morn_df = morn_df.append(row,ignore_index=True)
+            morn_df['Buy'] = morn_df.groupby(['User', 'Symbol']).transform('first')['Buy']
             portfolioList.append(row['Symbol'])
             Transaction(idName, 'Buy', row['Symbol'], (systemJson[system]['percentageComission']/100) * -1)
             CreateBuyOrder(idName,row['Symbol'])
-        elif len(portfolioList) >= size: # Port is Full
-            print('Can\'t Buy More\nportfolio is full')
-            break
+        elif len(portfolioList) >= size or not filter_condition : # Port is Full or Duplicate Buy is Limited
+            print('Can\'t Buy {} More'.format(row['Symbol']))
+            #break
     # ==============================
 
     # Update Trailing (If Close > Mid)
@@ -296,7 +311,10 @@ def MornitoringUser(idName,sendNotify=True):
 
     # Calculate in Column
     print('Profit Calculating...')
+    morn_df['Buy_Count'] = morn_df.groupby(['User', 'Symbol']).transform('sum')['Buy_Count']
     morn_df['Buy'] = morn_df.groupby(['User','Symbol']).transform('first')['Buy']
+    if morn_df['Buy_Count'].max() > 1:
+        morn_df['Buy'] = morn_df.groupby(['User','Symbol']).transform('mean')['Buy']
     morn_df['Profit%'] = ((morn_df['Market'] - morn_df['Buy']) / morn_df['Buy']) * 100
     morn_df['Profit%'] = morn_df['Profit%'].round(2)
     morn_df.loc[(morn_df['Profit%'] < 0.0) & (morn_df['Max_Drawdown%'] == 0.0), 'Max_Drawdown%'] = morn_df['Profit%'].abs()
@@ -333,10 +351,11 @@ def MornitoringUser(idName,sendNotify=True):
             sell_condition = sell_condition
         elif (row['BreakOut_L'] <= row['Buy']) : # Cut Loss
             sell_condition = (  # Sell for Cut Loss
+                    (row['Buy_Count'] == 0) &
                     (row['Market'] < row['BreakOut_ML']) &
                     (row['User'] == idName)
             )
-        if sell_condition:
+        if sell_condition or row['Profit%'] > profitTarget:
             print(text)
             if sendNotify:
                 lineNotify.sendNotifyMassage(token, text)
@@ -363,15 +382,12 @@ def MornitoringUser(idName,sendNotify=True):
         if sendNotify:
             lineNotify.sendNotifyMassage(token, text)
 
-    #Take profit all
+    #Take profit all (Clear Portfolio)
     profit_condition = report_df['Profit%'].mean() >= profitTarget
-    if systemJson[system]['takeProfitBy'] == 'Sum':
-        profit_condition = report_df['Profit%'].sum() >= profitTarget
     if ( profit_condition or isReset ) and report_df['Profit%'].count() != 0 :
         gSheet.setValue('Config', findKey='idName', findValue=idName, key='reset', value=1)
         text = '[ Take Profit ]\n' + \
                'Target Profit {}%\n'.format(profitTarget) + \
-               'Profit Sum {}%\n'.format(report_df['Profit%'].sum().round(2)) + \
                'Profit Average {}%'.format(report_df['Profit%'].mean().round(2))
         print(text)
         if sendNotify:
