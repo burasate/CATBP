@@ -271,10 +271,11 @@ def MornitoringUser(idName,sendNotify=True):
             if count_df['Buy_Count'].tolist()[0] > 1 and filter_condition: #Buy Low When Buy Duplicate
                 buy_condition = buy_low_condition
 
-        if buy_condition and filter_condition : # Buy1 Condition
+        if buy_condition and filter_condition : # Buy Condition
             text = '[ Buy ] {}\n{} Bath'.format(row['Symbol'],row['Buy'])
             quote = row['Symbol'].split('_')[-1]
-            row['Buy_Count'] = row['Buy_Count']+1
+            #row['Buy_Count'] = row['Buy_Count']+1
+            entry_df['Buy_Count'].iloc[i] = row['Buy_Count']+1
             imgFilePath = imgPath + os.sep + '{}_{}.png'.format(preset,quote)
             print(text)
             print(imgFilePath)
