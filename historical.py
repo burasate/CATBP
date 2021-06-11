@@ -68,9 +68,14 @@ def updateGSheetHistory(limit = 45000):
     for f in backupList:
         filePath = dataPath + '/hist_backup/{}'.format(f)
         print('Read [ {} ]'.format(filePath))
-        df = df.append(
-            pd.read_csv(filePath).sort_values(['dateTime'],ascending=[True]).tail(5000), ignore_index=True
-        )
+        try:
+            df = df.append(
+                pd.read_csv(filePath).sort_values(['dateTime'],ascending=[True]).tail(5000), ignore_index=True
+            )
+        except:
+            print('Can\'t Read {}   Column DateTime..'.format(filePath))
+        else:
+            pass
 
     os.system('cls||clear')
     for data in symbols:
