@@ -352,12 +352,14 @@ def MornitoringUser(idName,sendNotify=True):
                 ( row['Market'] < row['BreakOut_L'] ) &
                 ( row['User'] == idName )
                 )
-        if (row['BreakOut_L'] <= row['Buy']) and (row['Buy_Count'] == 0) : # Cut Loss
+        """
+        if (row['BreakOut_L'] <= row['Buy']) : # Fast Cut Loss 
             sell_condition = (  # Sell for Cut Loss
                     (row['Market'] < row['BreakOut_ML']) &
                     (row['User'] == idName)
             )
-        if sell_condition or row['Profit%'] > profitTarget:
+        """
+        if sell_condition or (row['Profit%'] > profitTarget):
             print(text)
             if sendNotify:
                 lineNotify.sendNotifyMassage(token, text)
