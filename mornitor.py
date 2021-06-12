@@ -338,23 +338,22 @@ def MornitoringUser(idName,sendNotify=True):
 
     # Sell Notify
     # ==============================
+    """
     sell_df = signal_df[
         (signal_df['Signal'] == 'Exit') &
         (signal_df['Preset'] == preset)
         ]
+    """
     sellList = []
     for i in range(morn_df['Symbol'].count()):
         row = morn_df.iloc[i]
         text = '[ Sell ] {}\n{} Bath ({}%)'.format(row['Symbol'], row['Market'],row['Profit%'])
-        sell_condition = (       # Sell Default
+        sell_condition = ( # Sell Default
                 ( row['Market'] < row['BreakOut_L'] ) &
                 ( row['User'] == idName )
                 )
-        if (row['BreakOut_MH'] == row['BreakOut_H']) and (row['BreakOut_L'] > row['Buy']) : # New High Take Profit
-            sell_condition = sell_condition
-        elif (row['BreakOut_L'] <= row['Buy']) : # Cut Loss
+        if (row['BreakOut_L'] <= row['Buy']) and (row['Buy_Count'] == 0) : # Cut Loss
             sell_condition = (  # Sell for Cut Loss
-                    (row['Buy_Count'] == 0) &
                     (row['Market'] < row['BreakOut_ML']) &
                     (row['User'] == idName)
             )
