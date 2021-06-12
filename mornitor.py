@@ -247,6 +247,7 @@ def MornitoringUser(idName,sendNotify=True):
 
     #Portfolio
     portfolioList = morn_df[morn_df['User'] == idName]['Symbol'].tolist()
+    portfolioCount = morn_df[morn_df['User'] == idName]['Buy_Count'].sum()
     print('{} Portfolio have {}'.format(idName, portfolioList))
 
     # Buy Notify
@@ -255,12 +256,12 @@ def MornitoringUser(idName,sendNotify=True):
         row = entry_df.iloc[i]
         filter_condition = True
         buy_condition = (
-                (len(portfolioList) < size) and  # Port is not full
+                (portfolioCount < size) and  # Port is not full
                 (row['BreakOut_ML'] != row['BreakOut_L']) and
                 (row['Low'] != row['BreakOut_ML'])
         )
         buy_low_condition = (
-                (len(portfolioList) < size) and  # Port is not full
+                (portfolioCount < size) and  # Port is not full
                 (row['BreakOut_ML'] != row['BreakOut_L']) and
                 (row['Buy'] <= row['BreakOut_ML'])
         )
@@ -286,7 +287,7 @@ def MornitoringUser(idName,sendNotify=True):
             portfolioList.append(row['Symbol'])
             Transaction(idName, 'Buy', row['Symbol'], (systemJson[system]['percentageComission']/100) * -1)
             CreateBuyOrder(idName,row['Symbol'])
-        elif len(portfolioList) >= size or not filter_condition : # Port is Full or Duplicate Buy is Limited
+        elif portfolioCount >= size or not filter_condition : # Port is Full or Duplicate Buy is Limited
             print('Can\'t Buy {} More'.format(row['Symbol']))
             #break
     # ==============================
@@ -296,7 +297,7 @@ def MornitoringUser(idName,sendNotify=True):
         row = signal_df.iloc[i]
         trailing_condition = (
                 (row['Symbol'] in portfolioList) and
-                (ticker[row['Symbol']]['last'] > row['BreakOut_ML'])
+                (ticker[row['Symbol']]['last'] > row['BreakOut_M'])
         )
         if trailing_condition:
             morn_df = morn_df.append(row, ignore_index=True)
