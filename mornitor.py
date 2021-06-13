@@ -307,6 +307,7 @@ def MornitoringUser(idName,sendNotify=True):
                     lineNotify.sendNotifyMassage(token, text)
                 Transaction(idName, 'Buy', row['Symbol'], (systemJson[system]['percentageComission'] / 100) * -1)
                 CreateBuyOrder(idName, row['Symbol'])
+            # Update Trailing
             trailing_condition = (
                     (row['Symbol'] in portfolioList) and
                     (ticker[row['Symbol']]['last'] > row['BreakOut_M'])
