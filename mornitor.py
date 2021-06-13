@@ -179,7 +179,8 @@ def MornitoringUser(idName,sendNotify=True):
     token = configJson[idName]['lineToken']
     size = int(systemJson[system]['size'])
     profitTarget = float(systemJson[system]['percentageProfitTarget'])
-    duplicateBuyCount = int(systemJson[system]['duplicateBuyCount'])
+    duplicateBuyCount = 2
+    secondaryBuy = bool(systemJson[system]['secondaryBuy'])
     print('Last Report  {} Hour Ago / Report Every {} H'.format(reportHourDuration, configJson[idName]['reportEveryHour']))
 
     signal_df = pd.read_csv(dataPath+'/signal.csv')
@@ -250,35 +251,25 @@ def MornitoringUser(idName,sendNotify=True):
     portfolioCount = morn_df[morn_df['User'] == idName]['Buy_Count'].sum()
     print('{} Portfolio have {}'.format(idName, portfolioList))
 
-    # Buy Notify
+    # Buy Notify (by Singnal)
     # ==============================
     for i in range(entry_df['Symbol'].count()):
         row = entry_df.iloc[i]
-        filter_condition = True
         buy_condition = (
                 (portfolioCount < size) and  # Port is not full
                 (row['BreakOut_ML'] != row['BreakOut_L']) and
                 (row['Low'] != row['BreakOut_ML'])
         )
-        buy_low_condition = (
-                (portfolioCount < size) and  # Port is not full
-                (row['BreakOut_ML'] != row['BreakOut_L']) and
-                (row['Buy'] <= row['BreakOut_ML']) and
-                (row['Buy_Count'] >= 1)
-        )
-        count_df = morn_df[(morn_df['User'] == idName) & (morn_df['Symbol'] == row['Symbol'])]
-        #print(count_df['Buy_Count'].count())
-        if count_df['Buy_Count'].count() != 0: #If Found Symbol in Row
-            filter_condition = (
-                (count_df['Buy_Count'].tolist()[0] <= duplicateBuyCount)
-            )
-            if count_df['Buy_Count'].tolist()[0] > 1 and filter_condition: #Buy Low When Buy Duplicate
-                buy_condition = buy_low_condition
 
-        if buy_condition and filter_condition : # Buy Condition
+        """
+        if row['Buy_Count'] >= 1:
+            buy_condition = buy_low_condition
+        """
+        if buy_condition and not row['Symbol'] in portfolioList : # Buy Primary
+            row['Buy_Count'] = 1
             text = '[ Buy ] {}\n{} Bath'.format(row['Symbol'],row['Buy'])
             quote = row['Symbol'].split('_')[-1]
-            row['Buy_Count'] = entry_df['Buy_Count'].iloc[i]+1
+
             #entry_df['Buy_Count'].iloc[i] = row['Buy_Count']+1
             imgFilePath = imgPath + os.sep + '{}_{}.png'.format(preset,quote)
             print(text)
@@ -290,21 +281,40 @@ def MornitoringUser(idName,sendNotify=True):
             portfolioList.append(row['Symbol'])
             Transaction(idName, 'Buy', row['Symbol'], (systemJson[system]['percentageComission']/100) * -1)
             CreateBuyOrder(idName,row['Symbol'])
-        elif portfolioCount >= size or not filter_condition : # Port is Full or Duplicate Buy is Limited
+        elif portfolioCount >= size or row['Symbol'] in portfolioList : # Port is Full or Duplicate Buy is Limited
             print('Can\'t Buy {} More'.format(row['Symbol']))
             #break
     # ==============================
 
-    # Update Trailing (If Close > Mid)
+    # Update Checking
     for i in range(signal_df['Symbol'].count()):
         row = signal_df.iloc[i]
-        trailing_condition = (
-                (row['Symbol'] in portfolioList) and
-                (ticker[row['Symbol']]['last'] > row['BreakOut_M'])
-        )
-        if trailing_condition:
-            morn_df = morn_df.append(row, ignore_index=True)
-            print('Updated Trailing ( {} )'.format(row['Symbol']))
+        port_df = morn_df[(morn_df['User'] == idName) & (morn_df['Symbol'] == row['Symbol'])]
+        if port_df['Symbol'].count() != 0 : #Have Symbol in Port
+            buy_low_condition = (
+                    secondaryBuy and
+                    (portfolioCount < size) and  # size is not full
+                    (row['BreakOut_ML'] != row['BreakOut_L']) and
+                    (row['BreakOut_ML'] < row['BreakOut_M']) and
+                    (row['Market'] < row['BreakOut_ML']) and
+                    (port_df['Buy_Count'].tolist()[0] >= 1) and
+                    (port_df['Buy_Count'].tolist()[0] < 2)
+            )
+            if buy_low_condition: # Secondary Buying
+                row['Buy_Count'] = 1
+                text = '[ Secondary Buy ] {}\n{} Bath\nStop Loss {} Bath'.format(row['Symbol'], row['Market'],row['BreakOut_L'])
+                if sendNotify:
+                    lineNotify.sendNotifyMassage(token, text)
+                Transaction(idName, 'Buy', row['Symbol'], (systemJson[system]['percentageComission'] / 100) * -1)
+                CreateBuyOrder(idName, row['Symbol'])
+            trailing_condition = (
+                    (row['Symbol'] in portfolioList) and
+                    (ticker[row['Symbol']]['last'] > row['BreakOut_M'])
+            )
+            if trailing_condition:
+                morn_df = morn_df.append(row, ignore_index=True)
+                print('Updated Trailing ( {} )'.format(row['Symbol']))
+    # ==============================
 
     morn_df = morn_df[colSelect]
 
