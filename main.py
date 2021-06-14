@@ -6,6 +6,7 @@ os.system('cls||clear')
 print('BitPy')
 time.sleep(15)
 import update
+
 if not os.name == 'nt':
     time.sleep(15)
     update.updateAllFile()
@@ -16,6 +17,9 @@ while True:
         update.updatePreset()
         update.updateSystem()
 
+        import mornitor
+        mornitor.Reset()
+
         import historical
         importlib.reload(historical)
         historical.updateGSheetHistory()
@@ -25,10 +29,9 @@ while True:
         importlib.reload(analysis)
         analysis.getSignalAllPreset()
 
-        import mornitor
         importlib.reload(mornitor)
         mornitor.AllUser()
-        mornitor.Reset()
+
     except Exception as e:
         print('!!!! ==========================')
         exc_type, exc_obj, exc_tb = sys.exc_info()
