@@ -51,29 +51,6 @@ def getBalance(idName):
                 }
     return data
 
-def CreateBuyOrder(idName,symbol):
-    if not symbol.__contains__('THB_'):
-        print('symbol name need contains THB_')
-        return None
-    API_KEY = configJson[idName]['bk_apiKey']
-    API_SECRET = configJson[idName]['bk_apiSecret']
-    if API_KEY == '' or API_SECRET == '' :
-        print('this user have no API KEY or API SECRET to send order')
-        return None
-    bitkub = Bitkub()
-    bitkub.set_api_key(API_KEY)
-    bitkub.set_api_secret(API_SECRET)
-    balance = getBalance(idName)
-    percentageBalanceUsing = configJson[idName]['percentageBalanceUsing']
-    system = configJson[idName]['system']
-    size = int(systemJson[system]['size'])
-    portSize = len(list(balance))-1
-    budget = balance['THB']['available']
-    sizedBudget = (budget / (size-portSize)) * (percentageBalanceUsing/100)
-    #print(sizedBudget)
-    result = bitkub.place_bid(sym=symbol, amt=sizedBudget, typ='market')
-    print(result)
-
 def CreateSellOrder(idName,symbol):
     if not symbol.__contains__('THB_'):
         print('symbol name need contains THB_')
@@ -93,6 +70,44 @@ def CreateSellOrder(idName,symbol):
         return None
     amount = balance[sym]['available']
     result = bitkub.place_ask(sym=symbol, amt=amount, typ='market')
+    print(result)
+
+def CreateBuyOrder(idName,symbol,portfoiloList):
+    if not symbol.__contains__('THB_'):
+        print('symbol name need contains THB_')
+        return None
+    API_KEY = configJson[idName]['bk_apiKey']
+    API_SECRET = configJson[idName]['bk_apiSecret']
+    if API_KEY == '' or API_SECRET == '' :
+        print('this user have no API KEY or API SECRET to send order')
+        return None
+    bitkub = Bitkub()
+    bitkub.set_api_key(API_KEY)
+    bitkub.set_api_secret(API_SECRET)
+    balance = getBalance(idName)
+    percentageBalanceUsing = configJson[idName]['percentageBalanceUsing']
+    system = configJson[idName]['system']
+    size = int(systemJson[system]['size'])
+    portSize = len(list(balance))-1
+
+    portSymList = []
+    for symbol in portfoiloList:  # Chane Symbol to Sym
+        q = symbol.replace('THB_', '')
+        portSymList.append(q)
+    if portSize >= size: #checking except symbol
+        for sym in list(balance):
+            if (not sym in portSymList) and (sym != 'THB'):
+                CreateSellOrder(idName,'THB_'+sym)
+                time.sleep(5)
+                balance = getBalance(idName)
+                portSize = len(list(balance)) - 1
+
+    print('size {}'.format(size))
+    print('portSize {}'.format(portSize))
+    budget = balance['THB']['available']
+    sizedBudget = (budget / (size-portSize)) * (percentageBalanceUsing/100)
+    print(sizedBudget)
+    result = bitkub.place_bid(sym=symbol, amt=sizedBudget, typ='market')
     print(result)
 
 def Reset(*_):
@@ -256,6 +271,7 @@ def MornitoringUser(idName,sendNotify=True):
     for i in range(entry_df['Symbol'].count()):
         row = entry_df.iloc[i]
         buy_condition = (
+                (not row['Symbol'] in portfolioList) and
                 (portfolioCount < size) and  # Port is not full
                 (row['BreakOut_ML'] != row['BreakOut_L']) and
                 (row['Low'] != row['BreakOut_ML'])
@@ -278,9 +294,9 @@ def MornitoringUser(idName,sendNotify=True):
                 lineNotify.sendNotifyImageMsg(token, imgFilePath, text)
             morn_df = morn_df.append(row,ignore_index=True)
             morn_df['Buy'] = morn_df.groupby(['User', 'Symbol']).transform('first')['Buy']
+            CreateBuyOrder(idName, row['Symbol'],portfolioList)
             portfolioList.append(row['Symbol'])
-            Transaction(idName, 'Buy', row['Symbol'], (systemJson[system]['percentageComission']/100) * -1)
-            CreateBuyOrder(idName,row['Symbol'])
+            Transaction(idName, 'Buy', row['Symbol'], (systemJson[system]['percentageComission'] / 100) * -1)
         elif portfolioCount >= size or row['Symbol'] in portfolioList : # Port is Full or Duplicate Buy is Limited
             print('Can\'t Buy {} More'.format(row['Symbol']))
             #break
@@ -293,6 +309,7 @@ def MornitoringUser(idName,sendNotify=True):
         if port_df['Symbol'].count() != 0 : #Have Symbol in Port
             buy_low_condition = (
                     secondaryBuy and
+                    (row['Symbol'] in portfolioList) and #is already in port
                     (portfolioCount < size) and  # size is not full
                     (row['BreakOut_ML'] != row['BreakOut_L']) and
                     (row['BreakOut_ML'] < row['BreakOut_M']) and
@@ -305,8 +322,10 @@ def MornitoringUser(idName,sendNotify=True):
                 text = '[ Secondary Buy ] {}\n{} Bath\nStop Loss {} Bath'.format(row['Symbol'], row['Market'],row['BreakOut_L'])
                 if sendNotify:
                     lineNotify.sendNotifyMassage(token, text)
+                morn_df = morn_df.append(row, ignore_index=True)
+                morn_df['Buy'] = morn_df.groupby(['User', 'Symbol']).transform('mean')['Buy']
+                CreateBuyOrder(idName, row['Symbol'], portfolioList)
                 Transaction(idName, 'Buy', row['Symbol'], (systemJson[system]['percentageComission'] / 100) * -1)
-                CreateBuyOrder(idName, row['Symbol'])
             # Update Trailing
             trailing_condition = (
                     (row['Symbol'] in portfolioList) and
@@ -432,8 +451,8 @@ def MornitoringUser(idName,sendNotify=True):
         morn_df = morn_df.drop(
             morn_df[(morn_df['User'] == i['User']) & (morn_df['Symbol'] == i['Symbol'])].index
         )
+        CreateSellOrder(i['User'], i['Symbol'])
         Transaction( i['User'], 'Sell', i['Symbol'], ((systemJson[system]['percentageComission'] / 100) * -1) + profit )
-        CreateSellOrder(i['User'],i['Symbol'])
 
     #Finish
     morn_df.to_csv(mornitorFilePath, index=False)
