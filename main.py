@@ -17,9 +17,6 @@ while True:
         update.updatePreset()
         update.updateSystem()
 
-        import mornitor
-        mornitor.Reset()
-
         import historical
         importlib.reload(historical)
         historical.updateGSheetHistory()
@@ -29,8 +26,10 @@ while True:
         importlib.reload(analysis)
         analysis.getSignalAllPreset()
 
+        import mornitor
         importlib.reload(mornitor)
         mornitor.AllUser()
+        mornitor.Reset()
 
     except Exception as e:
         print('!!!! ==========================')
