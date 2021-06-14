@@ -363,8 +363,11 @@ def MornitoringUser(idName,sendNotify=True):
         row = morn_df.iloc[i]
         text = '[ Sell ] {}\n{} Bath ({}%)'.format(row['Symbol'], row['Market'],row['Profit%'])
         sell_condition = ( # Sell Default
-                ( row['Market'] < row['BreakOut_L'] ) &
+                ( row['Market'] < row['BreakOut_L'] ) and
                 ( row['User'] == idName )
+                ) or (
+                ( row['User'] == idName ) and
+                (row['Profit%'] > profitTarget)
                 )
         """
         if (row['BreakOut_L'] <= row['Buy']) : # Fast Cut Loss 
@@ -373,7 +376,7 @@ def MornitoringUser(idName,sendNotify=True):
                     (row['User'] == idName)
             )
         """
-        if sell_condition or (row['Profit%'] > profitTarget):
+        if sell_condition:
             print(text)
             if sendNotify:
                 lineNotify.sendNotifyMassage(token, text)
