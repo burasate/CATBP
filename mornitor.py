@@ -305,6 +305,8 @@ def MornitoringUser(idName,sendNotify=True):
 
     # Update Checking
     for i in range(signal_df['Symbol'].count()):
+        if isReset :
+            break
         row = signal_df.iloc[i]
         port_df = morn_df[(morn_df['User'] == idName) & (morn_df['Symbol'] == row['Symbol'])]
         if port_df['Symbol'].count() != 0 : #Have Symbol in Port
