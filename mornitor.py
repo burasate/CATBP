@@ -428,11 +428,10 @@ def MornitoringUser(idName,sendNotify=True):
     # Sell And Delete Symbol
     for i in sellList:
         profit = morn_df[(morn_df['User'] == i['User']) & (morn_df['Symbol'] == i['Symbol'])]['Profit%'].tolist()[0]
+        profit = profit/size
         morn_df = morn_df.drop(
             morn_df[(morn_df['User'] == i['User']) & (morn_df['Symbol'] == i['Symbol'])].index
         )
-        if systemJson[system]['takeProfitBy'] == 'Average':
-            profit = profit/size
         Transaction( i['User'], 'Sell', i['Symbol'], ((systemJson[system]['percentageComission'] / 100) * -1) + profit )
         CreateSellOrder(i['User'],i['Symbol'])
 
