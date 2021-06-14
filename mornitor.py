@@ -269,6 +269,8 @@ def MornitoringUser(idName,sendNotify=True):
     # Buy Notify (by Singnal)
     # ==============================
     for i in range(entry_df['Symbol'].count()):
+        if isReset :
+            break
         row = entry_df.iloc[i]
         buy_condition = (
                 (not row['Symbol'] in portfolioList) and
