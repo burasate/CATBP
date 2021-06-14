@@ -277,10 +277,6 @@ def MornitoringUser(idName,sendNotify=True):
                 (row['Low'] != row['BreakOut_ML'])
         )
 
-        """
-        if row['Buy_Count'] >= 1:
-            buy_condition = buy_low_condition
-        """
         if buy_condition and not row['Symbol'] in portfolioList : # Buy Primary
             row['Buy_Count'] = 1
             text = '[ Buy ] {}\n{} Bath'.format(row['Symbol'],row['Buy'])
@@ -294,12 +290,15 @@ def MornitoringUser(idName,sendNotify=True):
                 lineNotify.sendNotifyImageMsg(token, imgFilePath, text)
             morn_df = morn_df.append(row,ignore_index=True)
             morn_df['Buy'] = morn_df.groupby(['User', 'Symbol']).transform('first')['Buy']
-            CreateBuyOrder(idName, row['Symbol'],portfolioList)
+
             portfolioList.append(row['Symbol'])
+            portfolioCount += 1
+
+            CreateBuyOrder(idName, row['Symbol'], portfolioList)
             Transaction(idName, 'Buy', row['Symbol'], (systemJson[system]['percentageComission'] / 100) * -1)
         elif portfolioCount >= size or row['Symbol'] in portfolioList : # Port is Full or Duplicate Buy is Limited
-            print('Can\'t Buy {} More'.format(row['Symbol']))
-            #break
+            print('Can\'t Buy More Because Size is Full...')
+            break
     # ==============================
 
     # Update Checking
