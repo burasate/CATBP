@@ -260,11 +260,11 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
         axes[5].plot([0,120], [20,20], linewidth=.7, color=pltColor['red'], linestyle='-')
         axes[5].plot([0,120], [50,50], linewidth=.7, color=(.5,.5,.5), linestyle='--')
 
-        #axes[2].bar(df['Day'], df['Volume'], linewidth=.5, color=(.5, .5, .5), linestyle=':',alpha=0.1)
-        axes[2].bar(df[df['Close'] >= df['Open']]['Day'], df[df['Close'] >= df['Open']]['Volume'], linewidth=.5,
-                    color=pltColor['green'], linestyle=':', alpha=.2)
-        axes[2].bar(df[df['Close'] < df['Open']]['Day'], df[df['Close'] < df['Open']]['Volume'], linewidth=.5,
-                    color=pltColor['red'], linestyle=':', alpha=.2)
+        axes[2].bar(df['Day'], df['Volume'], linewidth=.5, color=(.5, .5, .5), linestyle=':',alpha=.2)
+        #axes[2].bar(df[df['Close'] >= df['Open']]['Day'], df[df['Close'] >= df['Open']]['Volume'], linewidth=.5,
+                    #color=pltColor['green'], linestyle=':', alpha=.2)
+        #axes[2].bar(df[df['Close'] < df['Open']]['Day'], df[df['Close'] < df['Open']]['Volume'], linewidth=.5,
+                    #color=pltColor['red'], linestyle=':', alpha=.2)
         #axes[2].plot(df['Day'], df['Volume_SMA_S'], linewidth=1, color=(.5, .5, .5), linestyle='-')
         #axes[2].plot(df['Day'], df['Volume_SMA_L'], linewidth=.5, color=(.5, .5, .5), linestyle='-')
         axes[2].plot(df['Day'], df['Volume_Break_H'], linewidth=1, color=(.5, .5, .5), linestyle='-')
@@ -284,7 +284,7 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
         axes[4].plot(df['Day'][0], df['SMA_S'][0], color=(.5, .5, .5), linewidth=1, marker='o', markersize=5)
         axes[4].plot([0, 120], [df['Close'].mean(), df['Close'].mean()], linewidth=.7, color=pltColor['red'], linestyle='-')
 
-        #axes[1].fill_between(df['Day'],  tr_percentage, linewidth=0, color=(.5, .5, .5), linestyle='-', alpha=0.2)
+        axes[1].fill_between(df['Day'],  tr_percentage, linewidth=0, color=(.5, .5, .5), linestyle='-', alpha=0.2)
         axes[1].fill_between(df['Day'],  df['Drawdown%'], linewidth=1, color=(.5, .5, .5), linestyle='-', alpha=0.2)
         axes[1].plot(df['Day'],  df['Drawdown%'], linewidth=.7, color=(.5, .5, .5), linestyle='-')
         axes[1].plot(df['Day'], df['NDay_Drawdown%'], linewidth=.7, color=pltColor['red'], linestyle='--')
@@ -394,7 +394,7 @@ def getSignalAllPreset(*_):
                 filter_condition = (
                     df['SMA_L'][0] >= df['Close'].mean() and
                     df['Volume'][0] >= df['Volume'][1] and
-                    df['GL_Ratio'][0] > 1
+                    df['GL_Ratio_Slow'][0] > 1
                     #True
                 )
                 entry_condition = (
@@ -445,12 +445,12 @@ def getSignalAllPreset(*_):
         gSheet.updateFromCSV(gsheet_csvPath, 'SignalRecord')
 
 if __name__ == '__main__' :
-    #import update
-    #update.updatePreset()
-    #presetPath = dataPath + '/preset.json'
-    #presetJson = json.load(open(presetPath))
+    import update
+    update.updatePreset()
+    presetPath = dataPath + '/preset.json'
+    presetJson = json.load(open(presetPath))
 
-    getAnalysis(histPath + 'THB_KUB' + '.csv', 'P1',saveImage=False,showImage=True)
+    getAnalysis(histPath + 'THB_KUB' + '.csv', 'P4',saveImage=False,showImage=True)
     #getSignalAllPreset()
     """
     for i in os.listdir(dataPath + '/hist'):
