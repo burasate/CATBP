@@ -38,5 +38,5 @@ while True:
         print('Error Type {}\nFile {}\n Line {}'.format(exc_type, fname, exc_tb.tb_lineno))
         print('!!!! ==========================')
     finally:
-        time.sleep(60*5)
+        time.sleep(60*2)
         pass
