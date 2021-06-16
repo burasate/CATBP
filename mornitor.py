@@ -275,7 +275,8 @@ def MornitoringUser(idName,sendNotify=True):
                 (not row['Symbol'] in portfolioList) and
                 (portfolioCount < size) and  # Port is not full
                 (row['BreakOut_ML'] != row['BreakOut_L']) and
-                (row['Low'] != row['BreakOut_ML'])
+                (row['Low'] != row['BreakOut_ML'])and
+				(row['Low'] < row['BreakOut_M'])
         )
 
         if buy_condition and not row['Symbol'] in portfolioList : # Buy Primary
