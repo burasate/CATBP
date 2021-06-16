@@ -275,7 +275,7 @@ def MornitoringUser(idName,sendNotify=True):
                 (not row['Symbol'] in portfolioList) and
                 (portfolioCount < size) and  # Port is not full
                 (row['BreakOut_ML'] != row['BreakOut_L']) and
-                (row['Low'] != row['BreakOut_ML'])and
+                (row['Low'] != row['BreakOut_ML']) and
 				(row['Low'] < row['BreakOut_M'])
         )
 
@@ -391,13 +391,11 @@ def MornitoringUser(idName,sendNotify=True):
                 ( row['User'] == idName ) and
                 (row['Profit%'] > profitTarget)
                 )
-        """
-        if (row['BreakOut_L'] <= row['Buy']) : # Fast Cut Loss 
-            sell_condition = (  # Sell for Cut Loss
-                    (row['Market'] < row['BreakOut_ML']) &
-                    (row['User'] == idName)
-            )
-        """
+        if ( row['Profit%'] <= 0.0 ) : # Fast Cut Loss if no profit
+            sell_condition = ( # Sell Default
+                ( row['Market'] < row['BreakOut_ML'] ) and
+                ( row['User'] == idName )
+                )
         if sell_condition:
             print(text)
             if sendNotify:
