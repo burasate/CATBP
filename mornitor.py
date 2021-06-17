@@ -275,6 +275,7 @@ def MornitoringUser(idName,sendNotify=True):
                 (not row['Symbol'] in portfolioList) and
                 (portfolioCount < size) and  # Port is not full
                 (row['BreakOut_ML'] != row['BreakOut_L']) and
+                (row['BreakOut_MH'] != row['BreakOut_H']) and
                 (row['Low'] != row['BreakOut_ML']) and
 				(row['Low'] < row['BreakOut_M'])
         )
