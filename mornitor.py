@@ -352,8 +352,6 @@ def MornitoringUser(idName,sendNotify=True):
     print('Profit Calculating...')
     morn_df['Buy_Count'] = morn_df.groupby(['User', 'Symbol']).transform('sum')['Buy_Count']
     morn_df['Buy'] = morn_df.groupby(['User','Symbol']).transform('first')['Buy']
-    #if morn_df['Buy_Count'].max() > 1:
-        #morn_df['Buy'] = morn_df.groupby(['User','Symbol']).transform('mean')['Buy']
     morn_df['Profit%'] = ((morn_df['Market'] - morn_df['Buy']) / morn_df['Buy']) * 100
     morn_df['Profit%'] = morn_df['Profit%'].round(2)
     morn_df.loc[(morn_df['Profit%'] < 0.0) & (morn_df['Max_Drawdown%'] == 0.0), 'Max_Drawdown%'] = morn_df['Profit%'].abs()
