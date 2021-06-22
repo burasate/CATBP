@@ -351,17 +351,18 @@ def MornitoringUser(idName,sendNotify=True):
 
     # Calculate in Column
     print('Profit Calculating...')
-    morn_df['Buy_Count'] = morn_df.groupby(['User', 'Symbol']).transform('sum')['Buy_Count']
-    morn_df['Buy'] = morn_df.groupby(['User','Symbol']).transform('first')['Buy']
-    morn_df['Profit%'] = ((morn_df['Market'] - morn_df['Buy']) / morn_df['Buy']) * 100
-    morn_df['Profit%'] = morn_df['Profit%'].round(2)
-    morn_df.loc[(morn_df['Profit%'] < 0.0) & (morn_df['Max_Drawdown%'] == 0.0), 'Max_Drawdown%'] = morn_df['Profit%'].abs()
-    morn_df.loc[(morn_df['Profit%'] > 0.0) & (morn_df['Max_Drawdown%'] == 0.0), 'Max_Drawdown%'] = 0.0
-    morn_df.loc[(morn_df['Profit%'] < 0.0) & (morn_df['Profit%'] < morn_df['Max_Drawdown%'].abs()*-1),
-                'Max_Drawdown%'] = morn_df['Profit%'].abs()
-    morn_df['Max_Drawdown%'] = morn_df.groupby(['User', 'Symbol'])['Max_Drawdown%'].transform('max')
-    morn_df.drop_duplicates(['User','Symbol'],keep='last',inplace=True)
-    morn_df.to_csv(mornitorFilePath, index=False)
+    if not morn_df.empty:
+        morn_df['Buy_Count'] = morn_df.groupby(['User', 'Symbol']).transform('sum')['Buy_Count']
+        morn_df['Buy'] = morn_df.groupby(['User','Symbol']).transform('first')['Buy']
+        morn_df['Profit%'] = ((morn_df['Market'] - morn_df['Buy']) / morn_df['Buy']) * 100
+        morn_df['Profit%'] = morn_df['Profit%'].round(2)
+        morn_df.loc[(morn_df['Profit%'] < 0.0) & (morn_df['Max_Drawdown%'] == 0.0), 'Max_Drawdown%'] = morn_df['Profit%'].abs()
+        morn_df.loc[(morn_df['Profit%'] > 0.0) & (morn_df['Max_Drawdown%'] == 0.0), 'Max_Drawdown%'] = 0.0
+        morn_df.loc[(morn_df['Profit%'] < 0.0) & (morn_df['Profit%'] < morn_df['Max_Drawdown%'].abs()*-1),
+                    'Max_Drawdown%'] = morn_df['Profit%'].abs()
+        morn_df['Max_Drawdown%'] = morn_df.groupby(['User', 'Symbol'])['Max_Drawdown%'].transform('max')
+        morn_df.drop_duplicates(['User','Symbol'],keep='last',inplace=True)
+        morn_df.to_csv(mornitorFilePath, index=False)
 
     # Reload mornitor again
     morn_df = pd.read_csv(mornitorFilePath)
