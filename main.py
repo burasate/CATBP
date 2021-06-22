@@ -20,7 +20,8 @@ while True:
         import historical
         importlib.reload(historical)
         historical.updateGSheetHistory()
-        historical.loadAllHist(timeFrame='hour')
+        #historical.loadAllHist(timeFrame='hour')
+        historical.loadAllHist(timeFrame='minute')
 
         import analysis
         importlib.reload(analysis)
