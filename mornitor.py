@@ -423,18 +423,18 @@ def MornitoringUser(idName,sendNotify=True):
         if sendNotify:
             lineNotify.sendNotifyMassage(token, text)
 
-    #Take profit all (Clear Portfolio)
-    profit_condition = (
-        (report_df['Profit%'].mean() >= profitTarget) and
-        (portfolioCount >= size)
-                       )
-    gSheet.setValue('Config', findKey='idName', findValue=idName, key='reset', value=1)
-    text = '[ Take Profit ]\n' + \
-           'Target Profit {}%\n'.format(profitTarget) + \
-           'Profit Average {}%'.format(report_df['Profit%'].mean().round(2))
-    print(text)
-    if sendNotify:
-        lineNotify.sendNotifyMassage(token, text)
+        #Take profit all (Clear Portfolio)
+        profit_condition = (
+            (report_df['Profit%'].mean() >= profitTarget) and
+            (portfolioCount >= size)
+                           )
+        gSheet.setValue('Config', findKey='idName', findValue=idName, key='reset', value=1)
+        text = '[ Take Profit ]\n' + \
+               'Target Profit {}%\n'.format(profitTarget) + \
+               'Profit Average {}%'.format(report_df['Profit%'].mean().round(2))
+        print(text)
+        if sendNotify:
+            lineNotify.sendNotifyMassage(token, text)
 
     # Prepare Sell When Take Profit or Reset
     for sym in report_df['Symbol'].tolist():
