@@ -424,8 +424,10 @@ def MornitoringUser(idName,sendNotify=True):
             lineNotify.sendNotifyMassage(token, text)
 
     #Take profit all (Clear Portfolio)
-    profit_condition = report_df['Profit%'].mean() >= profitTarget
-    if ( profit_condition or isReset ) and report_df['Profit%'].count() != 0 :
+    profit_condition = (
+        (report_df['Profit%'].mean() >= profitTarget) and
+        (portfolioCount >= size)
+                       )
         gSheet.setValue('Config', findKey='idName', findValue=idName, key='reset', value=1)
         text = '[ Take Profit ]\n' + \
                'Target Profit {}%\n'.format(profitTarget) + \
