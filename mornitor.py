@@ -423,11 +423,12 @@ def MornitoringUser(idName,sendNotify=True):
         if sendNotify:
             lineNotify.sendNotifyMassage(token, text)
 
-        #Take profit all (Clear Portfolio)
-        profit_condition = (
-            (report_df['Profit%'].mean() >= profitTarget) and
-            (portfolioCount >= size)
-                           )
+    #Take profit all (Clear Portfolio)
+    profit_condition = (
+        (report_df['Profit%'].mean() >= profitTarget) and
+        (report_df['Profit%'].count() >= size)
+    )
+    if ( profit_condition or isReset ) and report_df['Profit%'].count() != 0 :
         gSheet.setValue('Config', findKey='idName', findValue=idName, key='reset', value=1)
         text = '[ Take Profit ]\n' + \
                'Target Profit {}%\n'.format(profitTarget) + \
@@ -436,16 +437,16 @@ def MornitoringUser(idName,sendNotify=True):
         if sendNotify:
             lineNotify.sendNotifyMassage(token, text)
 
-    # Prepare Sell When Take Profit or Reset
-    for sym in report_df['Symbol'].tolist():
-        if sym in sellList:
-            continue
-        sellList.append(
-            {
-                'User': idName,
-                'Symbol': sym
-            }
-        )
+        # Prepare Sell When Take Profit or Reset
+        for sym in report_df['Symbol'].tolist():
+            if sym in sellList:
+                continue
+            sellList.append(
+                {
+                    'User': idName,
+                    'Symbol': sym
+                }
+            )
 
     # Sell And Delete Symbol
     for i in sellList:
