@@ -418,6 +418,7 @@ def getSignalAllPreset(*_):
                     print('Preset : {} | Exit : {}'.format(ps, file))
                     df['Signal'] = 'Exit'
                     signal_df = signal_df.append(df.iloc[0])
+                    getAnalysis(histPath + os.sep + file, ps, saveImage=True, showImage=False)
                 else:
                     df['Signal'] = ''
                     signal_df = signal_df.append(df.iloc[0])
