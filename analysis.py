@@ -357,8 +357,13 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
 def getSignalAllPreset(*_):
     #rec_date = dt.datetime.today().isoformat()
     rec_date = dt.datetime.now().strftime('%Y-%m-%d %H:00:00')
-    if int( dt.datetime.now().strftime('%M') ) >= 30:
+    if int( dt.datetime.now().strftime('%M') ) >= 15 and int( dt.datetime.now().strftime('%M') ) < 30:
+        rec_date = dt.datetime.now().strftime('%Y-%m-%d %H:15:00')
+    elif int( dt.datetime.now().strftime('%M') ) >= 30 and int( dt.datetime.now().strftime('%M') ) < 45:
         rec_date = dt.datetime.now().strftime('%Y-%m-%d %H:30:00')
+    elif int( dt.datetime.now().strftime('%M') ) >= 45 and int( dt.datetime.now().strftime('%M') ) < 59:
+        rec_date = dt.datetime.now().strftime('%Y-%m-%d %H:45:00')
+
 
     signal_df = pd.DataFrame()
     # Clear Directory
