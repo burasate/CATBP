@@ -272,20 +272,21 @@ def Realtime(idName,sendNotify=True):
             #print('  Checking buy count')
             symbol_index = port_df[port_df['Symbol'] == row['Symbol']].index.tolist()[0]
             if port_df.loc[symbol_index,'Count'] < buySize : #Buy position size is not full
-                print('Buy {} more'.format(row['Symbol']))
-                port_df.loc[symbol_index,'Count'] += 1
-                port_df.loc[symbol_index,'Rec_Date'] = row['Rec_Date']
-                port_df.loc[symbol_index,'Buy'] = round((port_df.loc[symbol_index,'Buy'] + row['Buy'])*0.5,2)
+                if row['Rec_Date'] != port_df.loc[symbol_index,'Rec_Date']: #if Date Time not exist
+                    print('Buy {} more'.format(row['Symbol']))
+                    port_df.loc[symbol_index,'Count'] += 1
+                    port_df.loc[symbol_index,'Rec_Date'] = row['Rec_Date']
+                    port_df.loc[symbol_index,'Buy'] = round((port_df.loc[symbol_index,'Buy'] + row['Buy'])*0.5,2)
 
-                # Do Buy
-                portfolioList = port_df['Symbol'].tolist()
-                countLeft = buySize - row['Count'] + 1
-                CreateBuyOrder(idName, row['Symbol'], portfolioList, countLeft)
-                Transaction(idName, 'Buy', row['Symbol'], (systemJson[system]['percentageComission'] / 100) * -1)
-                if sendNotify:
-                    quote = row['Symbol'].split('_')[-1]
-                    imgFilePath = imgPath + os.sep + '{}_{}.png'.format(preset, quote)
-                    lineNotify.sendNotifyImageMsg(token, imgFilePath, text)
+                    # Do Buy
+                    portfolioList = port_df['Symbol'].tolist()
+                    countLeft = buySize - row['Count'] + 1
+                    CreateBuyOrder(idName, row['Symbol'], portfolioList, countLeft)
+                    Transaction(idName, 'Buy', row['Symbol'], (systemJson[system]['percentageComission'] / 100) * -1)
+                    if sendNotify:
+                        quote = row['Symbol'].split('_')[-1]
+                        imgFilePath = imgPath + os.sep + '{}_{}.png'.format(preset, quote)
+                        lineNotify.sendNotifyImageMsg(token, imgFilePath, text)
         elif not row['Symbol'] in port_df['Symbol'].tolist(): #Symbol isn't in portfolio
             #print('  Checking port is not full')
             if port_df['Symbol'].count() < portSize:  #Portfolio isn't full
