@@ -283,6 +283,7 @@ def Realtime(idName,sendNotify=True):
                 CreateBuyOrder(idName, row['Symbol'], portfolioList, countLeft)
                 Transaction(idName, 'Buy', row['Symbol'], (systemJson[system]['percentageComission'] / 100) * -1)
                 if sendNotify:
+                    quote = row['Symbol'].split('_')[-1]
                     imgFilePath = imgPath + os.sep + '{}_{}.png'.format(preset, quote)
                     lineNotify.sendNotifyImageMsg(token, imgFilePath, text)
         elif not row['Symbol'] in port_df['Symbol'].tolist(): #Symbol isn't in portfolio
