@@ -144,7 +144,7 @@ def Reset(*_):
                    'User ID : {} \n'.format(user) +\
                    'Preset ID : {} \n'.format(configJson[user]['preset']) +\
                    'System ID : {} \n'.format(systemName) +\
-                   'Size : {} \n'.format(systemJson[systemName]['size']) +\
+                   'Size : {} \n'.format(systemJson[systemName]['portSize']) +\
                    'Target Profit : {}%'.format(systemJson[systemName]['percentageProfitTarget'])
             lineNotify.sendNotifyMassage(configJson[user]['lineToken'],text)
             print(text)
