@@ -20,17 +20,17 @@ while True:
         import historical
         importlib.reload(historical)
         historical.updateGSheetHistory()
-        #historical.loadAllHist(timeFrame='hour')
-        historical.loadAllHist(timeFrame='minute')
+        historical.loadAllHist(timeFrame='hour')
+        #historical.loadAllHist(timeFrame='minute')
 
         import analysis
         importlib.reload(analysis)
         analysis.getSignalAllPreset()
 
-        import mornitor
-        importlib.reload(mornitor)
-        mornitor.AllUser()
-        mornitor.Reset()
+        import realtime
+        importlib.reload(realtime)
+        realtime.AllUser()
+        realtime.Reset()
 
     except Exception as e:
         print('!!!! ==========================')

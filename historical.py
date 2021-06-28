@@ -193,8 +193,10 @@ def createSymbolHistory(symbol,timeFrame = 'minute'):
     df.to_csv(symbolPath,index=False)
 
 def loadAllHist(timeFrame = 'minute'):
+    """
     for f in os.listdir(histPath):
         os.remove(histPath + os.sep + f)
+    """
 
     ticker = kbApi.getTicker()
     symbols = kbApi.getSymbol()
@@ -207,5 +209,5 @@ def loadAllHist(timeFrame = 'minute'):
 if __name__ == '__main__':
     #createSymbolHistory('THB_DOGE')
     updateGSheetHistory()
-    loadAllHist(timeFrame='minute')
+    loadAllHist(timeFrame='hour')
     pass
