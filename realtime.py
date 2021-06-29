@@ -51,7 +51,7 @@ def getBalance(idName):
                 }
     return data
 
-def CreateSellOrder(idName,symbol,count):
+def CreateSellOrder(idName,symbol,count=1):
     if not symbol.__contains__('THB_'):
         print('symbol name need contains THB_')
         return None
@@ -357,7 +357,7 @@ def Realtime(idName,sendNotify=True):
 
             # Do Sell
             count = port_df.loc[i, 'Count'] + 1
-            CreateSellOrder(idName, row['Symbol'],count)
+            CreateSellOrder(idName, row['Symbol'],count=count)
             Transaction(idName, 'Sell', row['Symbol'],
                         ((systemJson[system]['percentageComission'] / 100) * -1) + profit)
             if sendNotify:
