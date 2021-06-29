@@ -126,11 +126,11 @@ def Reset(*_):
     m_user_list = m_df['User'].unique().tolist()
     t_user_list = t_df['User'].unique().tolist()
     for user in m_user_list:
-        print('Checking User {} in Mornitor {}'.format(user,m_user_list))
+        print('Checking User {} in Mornitor'.format(user))
         if not user in list(configJson):
             deleteList.append(user)
     for user in t_user_list:
-        print('Checking User {} in Transaction {}'.format(user, t_user_list))
+        print('Checking User {} in Transaction'.format(user))
         if not user in list(configJson):
             deleteList.append(user)
 
