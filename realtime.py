@@ -200,6 +200,7 @@ def Realtime(idName,sendNotify=True):
     portSize = int(configJson[idName]['portSize'])
     buySize = int(configJson[idName]['buySize'])
     profitTarget = float(configJson[idName]['percentageProfitTarget'])
+    lossTarget = float(configJson[idName]['percentageLossTarget']) * (-1)
     triggerBuy = systemJson[system]['triggerBuy']
     triggerSell = systemJson[system]['triggerSell']
     triggerBuyPos = systemJson[system]['triggerBuyPosition']
@@ -261,6 +262,12 @@ def Realtime(idName,sendNotify=True):
                 (signal_df['Signal'] == triggerBuy) &
                 (signal_df['Market'] > signal_df['BreakOut_MH'])
             ][colSelect]
+    elif triggerBuyPos == 'Middle':
+        buy_df = signal_df[
+                (signal_df['Signal'] == triggerBuy) &
+                (signal_df['Market'] < signal_df['BreakOut_M'])
+            ][colSelect]
+
     buy_df = buy_df.head(portSize)
     print('Buy Data Frame')
     print(buy_df[['Symbol','Signal','Market','BreakOut_MH','BreakOut_ML']])
@@ -342,6 +349,8 @@ def Realtime(idName,sendNotify=True):
         row = port_df.loc[i]
         sell_signal = False
         sell_profit = row['Profit%'] > profitTarget
+        sell_loss = row['Profit%'] < lossTarget
+
         if triggerSellPos == 'Lower':
             sell_signal = (
                 (row['Signal'] == triggerSell) and
@@ -352,8 +361,13 @@ def Realtime(idName,sendNotify=True):
                 (row['Signal'] == triggerSell) and
                 (row['Market'] > row['BreakOut_MH'])
             )
+        elif triggerSellPos == 'Middle':
+            sell_signal = (
+                (row['Signal'] == triggerSell) and
+                (row['Market'] > row['BreakOut_M'])
+            )
 
-        if sell_signal or sell_profit or isReset : #Sell
+        if sell_signal or sell_profit or sell_loss or isReset : #Sell
             port_df.loc[i, 'Count'] -= 1
             text = '[ Sell ] {}\n{} Bath ({}%)'.format(row['Symbol'], row['Market'], row['Profit%'])
 
