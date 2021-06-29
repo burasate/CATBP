@@ -285,9 +285,8 @@ def Realtime(idName,sendNotify=True):
                     CreateBuyOrder(idName, row['Symbol'], portfolioList, countLeft)
                     Transaction(idName, 'Buy', row['Symbol'], (systemJson[system]['percentageComission'] / 100) * -1)
                     if sendNotify:
-                        quote = row['Symbol'].split('_')[-1]
-                        imgFilePath = imgPath + os.sep + '{}_{}.png'.format(preset, quote)
-                        lineNotify.sendNotifyImageMsg(token, imgFilePath, text)
+                        lineNotify.sendNotifyMassage(token, text)
+
         elif not row['Symbol'] in port_df['Symbol'].tolist(): #Symbol isn't in portfolio
             #print('  Checking port is not full')
             if port_df['Symbol'].count() < portSize:  #Portfolio isn't full
@@ -300,7 +299,9 @@ def Realtime(idName,sendNotify=True):
                 CreateBuyOrder(idName, row['Symbol'], portfolioList, countLeft)
                 Transaction(idName, 'Buy', row['Symbol'], (systemJson[system]['percentageComission'] / 100) * -1)
                 if sendNotify:
-                    lineNotify.sendNotifyMassage(token, text)
+                    quote = row['Symbol'].split('_')[-1]
+                    imgFilePath = imgPath + os.sep + '{}_{}.png'.format(preset, quote)
+                    lineNotify.sendNotifyImageMsg(token, imgFilePath, text)
 
     #Market Update and Calculate Profit
     for i in signal_df.index.tolist():
@@ -359,7 +360,7 @@ def Realtime(idName,sendNotify=True):
             count = port_df.loc[i, 'Count'] + 1
             CreateSellOrder(idName, row['Symbol'],count=count)
             Transaction(idName, 'Sell', row['Symbol'],
-                        ((systemJson[system]['percentageComission'] / 100) * -1) + profit)
+                        ((systemJson[system]['percentageComission'] / 100) * -1) + row['Profit%'])
             if sendNotify:
                 lineNotify.sendNotifyMassage(token, text)
 
