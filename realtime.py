@@ -89,9 +89,9 @@ def CreateBuyOrder(idName,symbol,portfoiloList,countLeft):
     balance = getBalance(idName)
     percentageBalanceUsing = configJson[idName]['percentageBalanceUsing']
     system = configJson[idName]['system']
-    size = int(systemJson[system]['portSize'])
+    size = int(configJson[idName]['portSize'])
     portSize = len(list(balance))-1 #Real Port
-    buySize = int(systemJson[system]['buySize'])
+    buySize = int(configJson[idName]['buySize'])
 
     portSymList = []
     for symbol in portfoiloList:  # Chane Symbol to Sym
@@ -197,9 +197,9 @@ def Realtime(idName,sendNotify=True):
     preset = configJson[idName]['preset']
     system = configJson[idName]['system']
     token = configJson[idName]['lineToken']
-    portSize = int(systemJson[system]['portSize'])
-    buySize = int(systemJson[system]['buySize'])
-    profitTarget = float(systemJson[system]['percentageProfitTarget'])
+    portSize = int(configJson[idName]['portSize'])
+    buySize = int(configJson[idName]['buySize'])
+    profitTarget = float(configJson[idName]['percentageProfitTarget'])
     triggerBuy = systemJson[system]['triggerBuy']
     triggerSell = systemJson[system]['triggerSell']
     triggerBuyPos = systemJson[system]['triggerBuyPosition']
@@ -284,7 +284,7 @@ def Realtime(idName,sendNotify=True):
                     portfolioList = port_df['Symbol'].tolist()
                     countLeft = buySize - row['Count'] + 1
                     CreateBuyOrder(idName, row['Symbol'], portfolioList, countLeft)
-                    Transaction(idName, 'Buy', row['Symbol'], (systemJson[system]['percentageComission'] / 100) * -1)
+                    Transaction(idName, 'Buy', row['Symbol'], (configJson[idName]['percentageComission'] / 100) * -1)
                     if sendNotify:
                         lineNotify.sendNotifyMassage(token, text)
 
@@ -298,7 +298,7 @@ def Realtime(idName,sendNotify=True):
                 portfolioList = port_df['Symbol'].tolist()
                 countLeft = buySize - row['Count'] + 1
                 CreateBuyOrder(idName, row['Symbol'], portfolioList, countLeft)
-                Transaction(idName, 'Buy', row['Symbol'], (systemJson[system]['percentageComission'] / 100) * -1)
+                Transaction(idName, 'Buy', row['Symbol'], (configJson[idName]['percentageComission'] / 100) * -1)
                 if sendNotify:
                     quote = row['Symbol'].split('_')[-1]
                     imgFilePath = imgPath + os.sep + '{}_{}.png'.format(preset, quote)
@@ -361,7 +361,7 @@ def Realtime(idName,sendNotify=True):
             count = port_df.loc[i, 'Count'] + 1
             CreateSellOrder(idName, row['Symbol'],count=count)
             Transaction(idName, 'Sell', row['Symbol'],
-                        ((systemJson[system]['percentageComission'] / 100) * -1) + row['Profit%'])
+                        ((configJson[idName]['percentageComission'] / 100) * -1) + row['Profit%'])
             if sendNotify:
                 lineNotify.sendNotifyMassage(token, text)
 
