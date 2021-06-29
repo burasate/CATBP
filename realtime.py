@@ -374,8 +374,9 @@ def Realtime(idName,sendNotify=True):
             # Do Sell
             count = port_df.loc[i, 'Count'] + 1
             CreateSellOrder(idName, row['Symbol'],count=count)
+            profit = (( row['Profit%'] / buySize ) * row['Count']) / portSize #real percentage of total cost
             Transaction(idName, 'Sell', row['Symbol'],
-                        ((configJson[idName]['percentageComission'] / 100) * -1) + row['Profit%'])
+                        ((configJson[idName]['percentageComission'] / 100) * -1) + profit)
             if sendNotify:
                 lineNotify.sendNotifyMassage(token, text)
 
