@@ -28,6 +28,7 @@ while True:
         analysis.getSignalAllPreset()
 
         import realtime
+        update.updateConfig()
         importlib.reload(realtime)
         realtime.AllUser()
         realtime.Reset()
