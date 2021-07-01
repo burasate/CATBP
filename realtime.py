@@ -277,6 +277,8 @@ def Realtime(idName,sendNotify=True):
         row = buy_df.loc[i]
         text = '[ Buy ] {}\n{} Bath'.format(row['Symbol'], row['Buy'])
         #print('Buying {} : {}'.format(row['Symbol'],row['Market']))
+        portfolioList = port_df['Symbol'].tolist()
+        countLeft = (buySize * portSize) - (port_df['Count'].sum())
         if row['Symbol'] in port_df['Symbol'].tolist(): #Symbol is in portfolio already
             #print('  Checking buy count')
             symbol_index = port_df[port_df['Symbol'] == row['Symbol']].index.tolist()[0]
@@ -284,8 +286,6 @@ def Realtime(idName,sendNotify=True):
                 if row['Rec_Date'] != port_df.loc[symbol_index,'Rec_Date']: #if Date Time not exist
                     # Do Buy
                     print('Buy {} more'.format(row['Symbol']))
-                    portfolioList = port_df['Symbol'].tolist()
-                    countLeft = (buySize*portSize)-(port_df['Count'].sum())
                     CreateBuyOrder(idName, row['Symbol'], portfolioList, countLeft)
                     Transaction(idName, 'Buy', row['Symbol'], (configJson[idName]['percentageComission'] / 100) * -1)
                     if sendNotify:
@@ -299,8 +299,6 @@ def Realtime(idName,sendNotify=True):
             if port_df['Symbol'].count() < portSize:  #Portfolio isn't full
                 # Do Buy
                 print('Buy {} as new symbol'.format(row['Symbol']))
-                portfolioList = port_df['Symbol'].tolist()
-                countLeft = (buySize*portSize)-(port_df['Count'].sum())
                 CreateBuyOrder(idName, row['Symbol'], portfolioList, countLeft)
                 Transaction(idName, 'Buy', row['Symbol'], (configJson[idName]['percentageComission'] / 100) * -1)
                 if sendNotify:
