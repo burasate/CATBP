@@ -136,17 +136,16 @@ def Reset(*_):
 
     #Sending Restart
     for user in list(configJson):
-        systemName = configJson[user]['system']
         if bool(configJson[user]['reset']):
             gSheet.setValue('Config',findKey='idName',findValue=user,key='reset',value=0)
             gSheet.setValue('Config', findKey='idName', findValue=user, key='lastReport', value=time.time())
             text = '[ Reset Portfoilo ]\n' +\
                    'User ID : {} \n'.format(user) +\
                    'Preset ID : {} \n'.format(configJson[user]['preset']) +\
-                   'System ID : {} \n'.format(systemName) +\
-                   'Portfolio Size : {} \n'.format(systemJson[systemName]['portSize']) +\
-                   'Position Size : {} \n'.format(systemJson[systemName]['buySize']) +\
-                   'Target Profit : {}%'.format(systemJson[systemName]['percentageProfitTarget'])
+                   'System ID : {} \n'.format(configJson[user]['system']) +\
+                   'Portfolio Size : {} \n'.format(configJson[user]['portSize']) +\
+                   'Position Size : {} \n'.format(configJson[user]['buySize']) +\
+                   'Target Profit : {}%'.format(configJson[user]['percentageProfitTarget'])
             lineNotify.sendNotifyMassage(configJson[user]['lineToken'],text)
             print(text)
 
