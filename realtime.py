@@ -104,7 +104,7 @@ def CreateBuyOrder(idName,symbol,portfoiloList,countLeft):
                 time.sleep(5)
                 balance = getBalance(idName)
                 portSize = len(list(balance)) - 1
-        if (size - portSize): #fixing 0 division
+        if (size - portSize) == 0: #fixing 0 division
             portSize -= 1
 
     print('size {}'.format(size))
