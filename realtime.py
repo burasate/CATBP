@@ -98,13 +98,6 @@ def CreateBuyOrder(idName,symbol,portfoiloList,countLeft):
         q = symbol.replace('THB_', '')
         portSymList.append(q)
 
-        for sym in list(balance):  #checking except symbol
-            if (not sym in portSymList) and (sym != 'THB'):
-                CreateSellOrder(idName,'THB_'+sym)
-                time.sleep(5)
-                balance = getBalance(idName)
-                portSize = len(list(balance)) - 1
-
     #print('size {}'.format(size))
     #print('portSize {}'.format(portSize))
     print('countLeft {}'.format(countLeft))
