@@ -97,20 +97,19 @@ def CreateBuyOrder(idName,symbol,portfoiloList,countLeft):
     for symbol in portfoiloList:  # Chane Symbol to Sym
         q = symbol.replace('THB_', '')
         portSymList.append(q)
-    if portSize >= size: #checking except symbol
-        for sym in list(balance):
+
+        for sym in list(balance):  #checking except symbol
             if (not sym in portSymList) and (sym != 'THB'):
                 CreateSellOrder(idName,'THB_'+sym)
                 time.sleep(5)
                 balance = getBalance(idName)
                 portSize = len(list(balance)) - 1
-        if (size - portSize) == 0: #fixing 0 division
-            portSize -= 1
 
     print('size {}'.format(size))
     print('portSize {}'.format(portSize))
     budget = balance['THB']['available']
-    sizedBudget = ( (budget / (size-portSize)) /countLeft) * (percentageBalanceUsing/100)
+    #sizedBudget = ( (budget / (size-portSize)) /countLeft) * (percentageBalanceUsing/100)
+    sizedBudget =  ( budget/(countLeft+1) ) * (percentageBalanceUsing/100)
     print(sizedBudget)
     result = bitkub.place_bid(sym=symbol, amt=sizedBudget, typ='market')
     print(result)
@@ -283,34 +282,32 @@ def Realtime(idName,sendNotify=True):
             symbol_index = port_df[port_df['Symbol'] == row['Symbol']].index.tolist()[0]
             if port_df.loc[symbol_index,'Count'] < buySize : #Buy position size is not full
                 if row['Rec_Date'] != port_df.loc[symbol_index,'Rec_Date']: #if Date Time not exist
-                    print('Buy {} more'.format(row['Symbol']))
-                    port_df.loc[symbol_index,'Count'] += 1
-                    port_df.loc[symbol_index,'Rec_Date'] = row['Rec_Date']
-                    port_df.loc[symbol_index,'Buy'] = round((port_df.loc[symbol_index,'Buy'] + row['Buy'])*0.5,2)
-
                     # Do Buy
+                    print('Buy {} more'.format(row['Symbol']))
                     portfolioList = port_df['Symbol'].tolist()
-                    countLeft = buySize - row['Count'] + 1
+                    countLeft = (buySize*portSize)-(port_df['Count'].sum())
                     CreateBuyOrder(idName, row['Symbol'], portfolioList, countLeft)
                     Transaction(idName, 'Buy', row['Symbol'], (configJson[idName]['percentageComission'] / 100) * -1)
                     if sendNotify:
                         lineNotify.sendNotifyMassage(token, text)
+                    port_df.loc[symbol_index, 'Count'] += 1
+                    port_df.loc[symbol_index, 'Rec_Date'] = row['Rec_Date']
+                    port_df.loc[symbol_index, 'Buy'] = round((port_df.loc[symbol_index, 'Buy'] + row['Buy']) * 0.5, 2)
 
         elif not row['Symbol'] in port_df['Symbol'].tolist(): #Symbol isn't in portfolio
             #print('  Checking port is not full')
             if port_df['Symbol'].count() < portSize:  #Portfolio isn't full
-                print('Buy {} as new symbol'.format(row['Symbol']))
-                port_df = port_df.append(row,ignore_index=False)
-
                 # Do Buy
+                print('Buy {} as new symbol'.format(row['Symbol']))
                 portfolioList = port_df['Symbol'].tolist()
-                countLeft = buySize - row['Count'] + 1
+                countLeft = (buySize*portSize)-(port_df['Count'].sum())
                 CreateBuyOrder(idName, row['Symbol'], portfolioList, countLeft)
                 Transaction(idName, 'Buy', row['Symbol'], (configJson[idName]['percentageComission'] / 100) * -1)
                 if sendNotify:
                     quote = row['Symbol'].split('_')[-1]
                     imgFilePath = imgPath + os.sep + '{}_{}.png'.format(preset, quote)
                     lineNotify.sendNotifyImageMsg(token, imgFilePath, text)
+                port_df = port_df.append(row, ignore_index=False)
 
     #Market Update and Calculate Profit
     for i in signal_df.index.tolist():
@@ -369,7 +366,11 @@ def Realtime(idName,sendNotify=True):
             )
 
         if sell_signal or sell_profit or sell_loss or isReset : #Sell
-            port_df.loc[i, 'Count'] -= 1
+            if sell_loss or isReset:
+                port_df.loc[i, 'Count'] = 0 #sell all
+            else:
+                port_df.loc[i, 'Count'] -= 1
+
             text = '[ Sell ] {}\n{} Bath ({}%)'.format(row['Symbol'], row['Market'], row['Profit%'])
 
             # Do Sell
