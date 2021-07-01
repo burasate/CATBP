@@ -137,8 +137,6 @@ def Reset(*_):
     #Sending Restart
     for user in list(configJson):
         if bool(configJson[user]['reset']):
-            gSheet.setValue('Config',findKey='idName',findValue=user,key='reset',value=0)
-            gSheet.setValue('Config', findKey='idName', findValue=user, key='lastReport', value=time.time())
             text = '[ Reset Portfoilo ]\n' +\
                    'User ID : {} \n'.format(user) +\
                    'Preset ID : {} \n'.format(configJson[user]['preset']) +\
@@ -147,6 +145,8 @@ def Reset(*_):
                    'Position Size : {} \n'.format(configJson[user]['buySize']) +\
                    'Target Profit : {}%'.format(configJson[user]['percentageProfitTarget'])
             lineNotify.sendNotifyMassage(configJson[user]['lineToken'],text)
+            gSheet.setValue('Config', findKey='idName', findValue=user, key='reset', value=0)
+            gSheet.setValue('Config', findKey='idName', findValue=user, key='lastReport', value=time.time())
             print(text)
 
     for user in deleteList:
