@@ -75,6 +75,9 @@ def CreateSellOrder(idName,symbol,count=1):
     print(result)
 
 def CreateBuyOrder(idName,symbol,portfoiloList,countLeft):
+    if countLeft <= 0 :
+        print('count left = 0')
+        return None
     if not symbol.__contains__('THB_'):
         print('symbol name need contains THB_')
         return None
@@ -103,7 +106,7 @@ def CreateBuyOrder(idName,symbol,portfoiloList,countLeft):
     print('countLeft {}'.format(countLeft))
     budget = balance['THB']['available']
     #sizedBudget = ( (budget / (size-portSize)) /countLeft) * (percentageBalanceUsing/100)
-    sizedBudget =  ( budget/(countLeft+1) ) * (percentageBalanceUsing/100)
+    sizedBudget =  ( budget/countLeft ) * (percentageBalanceUsing/100)
     print('sizedBudget {}'.format(sizedBudget))
     result = bitkub.place_bid(sym=symbol, amt=sizedBudget, typ='market')
     print(result)
