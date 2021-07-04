@@ -247,6 +247,7 @@ def Realtime(idName,sendNotify=True):
     print('Portfolio')
     print(port_df['Symbol'].tolist())
 
+    print('---------------------\nBuying\n---------------------')
     #Find New Buy
     buy_df = None
     if triggerBuyPos == 'Lower':
@@ -266,8 +267,8 @@ def Realtime(idName,sendNotify=True):
             ][colSelect]
 
     buy_df = buy_df.head(portSize)
-    print('Buy Data Frame')
-    print(buy_df[['Symbol','Signal','Market','BreakOut_MH','BreakOut_ML']])
+    #print('Buy Data Frame')
+    #print(buy_df[['Symbol','Signal','Market','BreakOut_MH','BreakOut_ML']])
 
     #Buy Condition
     for i in buy_df.index.tolist():
@@ -306,6 +307,7 @@ def Realtime(idName,sendNotify=True):
                     lineNotify.sendNotifyImageMsg(token, imgFilePath, text)
                 port_df = port_df.append(row, ignore_index=False)
 
+    print('---------------------\nProfit Calulating\n---------------------')
     #Market Update and Calculate Profit
     for i in signal_df.index.tolist():
         row = signal_df.loc[i]
@@ -339,6 +341,7 @@ def Realtime(idName,sendNotify=True):
         if sendNotify:
             lineNotify.sendNotifyMassage(token, text)
 
+    print('---------------------\nSelling\n---------------------')
     #Sell Condition
     for i in port_df.index.tolist():
         row = port_df.loc[i]
@@ -371,6 +374,7 @@ def Realtime(idName,sendNotify=True):
                 port_df.loc[i, 'Count'] -= 1
 
             text = '[ Sell ] {}\n{} Bath ({}%)'.format(row['Symbol'], row['Market'], row['Profit%'])
+            print(text)
 
             # Do Sell
             count = port_df.loc[i, 'Count'] + 1
