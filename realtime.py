@@ -365,6 +365,8 @@ def Realtime(idName,sendNotify=True):
         if sell_signal or sell_profit or sell_loss or isReset : #Sell
             if sell_loss or isReset:
                 port_df.loc[i, 'Count'] = 0 #sell all
+                CreateSellOrder(idName, row['Symbol'], count=1)
+                time.sleep(1)
             else:
                 port_df.loc[i, 'Count'] -= 1
 
@@ -373,6 +375,7 @@ def Realtime(idName,sendNotify=True):
             # Do Sell
             count = port_df.loc[i, 'Count'] + 1
             CreateSellOrder(idName, row['Symbol'],count=count)
+            time.sleep(1)
             profit = (( row['Profit%'] / buySize ) * row['Count']) / portSize #real percentage of total cost
             Transaction(idName, 'Sell', row['Symbol'],
                         ((configJson[idName]['percentageComission'] / 100) * -1) + profit)
