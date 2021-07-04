@@ -45,10 +45,14 @@ def getBalance(idName):
     if balance['error'] == 0 :
         for sym in balance['result']:
             if balance['result'][sym]['available'] > 0 :
+                available = balance['result'][sym]['available']
                 data[sym] = {
-                    'available' : balance['result'][sym]['available'],
+                    'available' : available,
                     'reserved' : balance['result'][sym]['reserved']
                 }
+                #update balance data sheet
+                if sym == 'THB':
+                    gSheet.setValue('Config', findKey='idName', findValue=idName, key='balance', value=available)
     return data
 
 def CreateSellOrder(idName,symbol,count=1):
@@ -455,3 +459,11 @@ if __name__ == '__main__' :
     #Realtime('user1', sendNotify=False)
     #Realtime('user2', sendNotify=False)
     #Realtime('CryptoBot', sendNotify=False)
+
+    user = 'user1'
+    API_KEY = configJson[user]['bk_apiKey']
+    API_SECRET = configJson[user]['bk_apiSecret']
+    bitkub = Bitkub()
+    bitkub.set_api_key(API_KEY)
+    bitkub.set_api_secret(API_SECRET)
+    print(bitkub.)
