@@ -354,16 +354,17 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
     #df.to_csv(dataPath+os.sep+'test.csv',index=False)
     return df
 
-def getSignalAllPreset(*_):
-    #rec_date = dt.datetime.today().isoformat()
+def getSignalAllPreset():
     rec_date = dt.datetime.now().strftime('%Y-%m-%d %H:00:00')
     minute = int( dt.datetime.now().strftime('%M') )
-    if minute >= 15 and minute < 30:
-        rec_date = dt.datetime.now().strftime('%Y-%m-%d %H:15:00')
+    if minute >= 30 and minute < 60:
+        rec_date = dt.datetime.now().strftime('%Y-%m-%d %H:30:00')
+    """
     elif minute >= 30 and minute < 45:
         rec_date = dt.datetime.now().strftime('%Y-%m-%d %H:30:00')
     elif minute >= 45 and minute < 59:
         rec_date = dt.datetime.now().strftime('%Y-%m-%d %H:45:00')
+    """
 
 
     signal_df = pd.DataFrame()
