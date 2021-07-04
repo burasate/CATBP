@@ -147,6 +147,23 @@ def Reset(*_):
             gSheet.setValue('Config', findKey='idName', findValue=user, key='lastReport', value=time.time())
             print(text)
 
+            #Clear all real portfolio
+            API_KEY = configJson[user]['bk_apiKey']
+            API_SECRET = configJson[user]['bk_apiSecret']
+            bitkub = Bitkub()
+            bitkub.set_api_key(API_KEY)
+            bitkub.set_api_secret(API_SECRET)
+            balance = getBalance(user)
+            #print(balance)
+            for sym in balance:
+                if sym == 'THB':
+                    continue
+                symbol = 'THB_{}'.format(sym)
+                print(symbol)
+                print('Sell {} {}'.format(balance[sym]['available'],sym))
+                CreateSellOrder(user, symbol, count=1)
+
+
     for user in deleteList:
         print('delete [ {} ]'.format(user))
         m_df = m_df[m_df['User'] != user]
