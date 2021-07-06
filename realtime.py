@@ -46,13 +46,17 @@ def getBalance(idName):
         for sym in balance['result']:
             if balance['result'][sym]['available'] > 0 :
                 available = balance['result'][sym]['available']
+                available_h = max([available,configJson[idName]['available']])
+                p_drawdown = (abs(available_h-available)/available_h)*100
                 data[sym] = {
                     'available' : available,
                     'reserved' : balance['result'][sym]['reserved']
                 }
                 #update balance data sheet
                 if sym == 'THB':
-                    gSheet.setValue('Config', findKey='idName', findValue=idName, key='balance', value=available)
+                    gSheet.setValue( 'Config', findKey='idName', findValue=idName, key='available', value=available )
+                    gSheet.setValue( 'Config', findKey='idName', findValue=idName, key='availableHigh',value=available_h )
+                    gSheet.setValue( 'Config', findKey='idName', findValue=idName, key='percentageDrawdown',value=p_drawdown )
     return data
 
 def CreateSellOrder(idName,symbol,count=1):
