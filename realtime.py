@@ -52,6 +52,7 @@ def getBalance(idName):
                     configJson[idName]['availableHigh']
                 ])
                 p_drawdown = (abs(available_h-available)/available_h)*100
+                p_drawdown = round(p_drawdown,2)
                 data[sym] = {
                     'available' : available,
                     'reserved' : balance['result'][sym]['reserved']
