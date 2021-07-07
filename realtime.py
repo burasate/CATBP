@@ -46,7 +46,11 @@ def getBalance(idName):
         for sym in balance['result']:
             if balance['result'][sym]['available'] > 0 :
                 available = balance['result'][sym]['available']
-                available_h = max([available,configJson[idName]['available']])
+                available_h = max([
+                    available,
+                    configJson[idName]['available'],
+                    configJson[idName]['availableHigh']
+                ])
                 p_drawdown = (abs(available_h-available)/available_h)*100
                 data[sym] = {
                     'available' : available,
