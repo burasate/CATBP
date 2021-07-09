@@ -134,6 +134,10 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
     df['NDay_TrueRange%'] = (tr_percentage.sort_index(ascending=False)).rolling(ps_breakout_low).max()
     df['NDay_TrueRange%'] = df['NDay_TrueRange%'].sort_index(ascending=True).round(1)
 
+    #Risk
+    df['Risk%'] = df['Max_Drawdown%']-df['NDay_Drawdown%']
+    df['Risk%'] = df['Risk%'].abs().round(2)
+
     if saveImage or showImage:
         # Plot Figure
         pltColor = {
@@ -284,7 +288,7 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
         axes[4].plot(df['Day'][0], df['SMA_S'][0], color=(.5, .5, .5), linewidth=1, marker='o', markersize=5)
         axes[4].plot([0, 120], [df['Close'].mean(), df['Close'].mean()], linewidth=.7, color=pltColor['red'], linestyle='-')
 
-        axes[1].fill_between(df['Day'],  tr_percentage, linewidth=0, color=(.5, .5, .5), linestyle='-', alpha=0.2)
+        axes[1].fill_between(df['Day'], y1=df['Max_Drawdown%'], y2=df['NDay_Drawdown%'], color=pltColor['red'], linestyle='-', alpha=0.05)
         axes[1].fill_between(df['Day'],  df['Drawdown%'], linewidth=1, color=(.5, .5, .5), linestyle='-', alpha=0.2)
         axes[1].plot(df['Day'],  df['Drawdown%'], linewidth=.7, color=(.5, .5, .5), linestyle='-')
         axes[1].plot(df['Day'], df['NDay_Drawdown%'], linewidth=.7, color=pltColor['red'], linestyle='--')
@@ -339,8 +343,6 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
                      , size=10, ha='left', va='top', color=((.4, .4, .4)))
         axes[1].text(100, df['NDay_Drawdown%'][0], '  ' + str(df['NDay_Drawdown%'][0].round(1))+'%',
                      size=10, ha='left', va='center',color=pltColor['text'])
-        axes[1].text(100, df['NDay_TrueRange%'][0], '  ' + str(df['NDay_TrueRange%'][0].round(1)) + '%',
-                     size=10, ha='left', va='center', color=pltColor['text'])
 
         # Finally
         if saveImage:
@@ -458,7 +460,7 @@ if __name__ == '__main__' :
     presetPath = dataPath + '/preset.json'
     presetJson = json.load(open(presetPath))
 
-    #getAnalysis(histPath + 'THB_CRV' + '.csv', 'P4',saveImage=False,showImage=True)
+    getAnalysis(histPath + 'THB_CRV' + '.csv', 'P4',saveImage=False,showImage=True)
     #getSignalAllPreset()
 
     #Save All Image
