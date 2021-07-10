@@ -232,6 +232,7 @@ def Realtime(idName,sendNotify=True):
     triggerSell = systemJson[system]['triggerSell']
     triggerBuyPos = systemJson[system]['triggerBuyPosition']
     triggerSellPos = systemJson[system]['triggerSellPosition']
+    adaptiveLoss = bool(configJson[idName]['adaptiveLoss'])
     print('Portfolio Size : {} | Buy Position Size : {}'.format(portSize, buySize))
     print('Buy : {} | Sell : {}'.format(triggerBuy,triggerSell))
     print('Trigger Buy : {} | Trigger Sell : {}'.format(triggerBuyPos,triggerSellPos))
@@ -378,6 +379,10 @@ def Realtime(idName,sendNotify=True):
         sell_signal = False
         sell_profit = row['Profit%'] > profitTarget
         sell_loss = row['Profit%'] < lossTarget
+
+        #Adaptive Loss
+        if adaptiveLoss and sell_loss:
+            gSheet.setValue('Config', findKey='idName', findValue=idName, key='adaptiveLoss', value=abs(row['Profit%']))
 
         if triggerSellPos == 'Lower':
             sell_signal = (

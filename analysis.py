@@ -119,10 +119,13 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
     df['Max_Drawdown%'] =  round(df['Drawdown%'].max(),1)
     #df['Avg_Drawdown%'] =  round(df['Drawdown%'].mean(),2)
     #df['Min_Drawdown%'] =  round(df['Drawdown%'].min(),2)
+    """
     if ps_breakout_high > 30 :
         df['NDay_Drawdown%'] = (df['Drawdown%'].sort_index(ascending=False)).rolling(30).max()
     else:
         df['NDay_Drawdown%'] = (df['Drawdown%'].sort_index(ascending=False)).rolling(ps_breakout_high).max()
+    """
+    df['NDay_Drawdown%'] = (df['Drawdown%'].sort_index(ascending=False)).rolling(ps_breakout_low).max()
     df['NDay_Drawdown%'] = df['NDay_Drawdown%'].sort_index(ascending=True).round(1)
 
     #True Range
@@ -460,12 +463,12 @@ if __name__ == '__main__' :
     presetPath = dataPath + '/preset.json'
     presetJson = json.load(open(presetPath))
 
-    getAnalysis(histPath + 'THB_CRV' + '.csv', 'P4',saveImage=False,showImage=True)
+    getAnalysis(histPath + 'THB_CRV' + '.csv', 'P2',saveImage=False,showImage=True)
     #getSignalAllPreset()
 
     #Save All Image
     for file in histFileList:
-        getAnalysis(histPath + os.sep + file, 'P4', saveImage=True, showImage=False)
+        getAnalysis(histPath + os.sep + file, 'P2', saveImage=True, showImage=False)
 
     pass
 
