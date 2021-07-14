@@ -401,7 +401,7 @@ def getSignalAllPreset():
 
                 # Condition Setting
                 filter_condition = (
-                    df['SMA_L'][0] >= df['Close'].mean() and
+                    #df['SMA_L'][0] >= df['Close'].mean() and
                     df['Volume'][0] >= df['Volume'][1] and
                     df['GL_Ratio_Slow'][0] > 1
                     #True
