@@ -406,7 +406,7 @@ def Realtime(idName,sendNotify=True):
 
         if sell_signal or sell_profit or sell_loss or isReset : #Sell
             if isReset:
-                port_df.loc[i, 'Count'] = 0 #sell all
+                port_df.loc[i, 'Count'] = 0 # Sell All
             else:
                 port_df.loc[i, 'Count'] -= 1
 
