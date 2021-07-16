@@ -117,13 +117,13 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
     # drawdown
     df['Drawdown%'] = 100 * ((df['BreakOut_H']-df['Low'])/df['BreakOut_H'])
     df['Max_Drawdown%'] =  round(df['Drawdown%'].max(),1)
-    #df['Avg_Drawdown%'] =  round(df['Drawdown%'].mean(),2)
     #df['Min_Drawdown%'] =  round(df['Drawdown%'].min(),2)
     if ps_breakout_high > 30 :
         df['NDay_Drawdown%'] = (df['Drawdown%'].sort_index(ascending=False)).rolling(ps_breakout_low).max()
     else:
         df['NDay_Drawdown%'] = (df['Drawdown%'].sort_index(ascending=False)).rolling(ps_breakout_high).max()
     df['NDay_Drawdown%'] = df['NDay_Drawdown%'].sort_index(ascending=True).round(1)
+    df['Avg_Drawdown%'] = round(df['NDay_Drawdown%'].mean(), 2)
 
     #True Range
     # df['TrueRange'] = df['High'] - df['Low'] #true range
@@ -297,7 +297,7 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
         #axes[1].plot(df['Day'][0], df['NDay_TrueRange%'][0], color=pltColor['red'], linewidth=1, marker='o',markersize=4)
         axes[1].plot([0, 100], [df['Max_Drawdown%'][0], df['Max_Drawdown%'][0]], linewidth=.7, color=pltColor['red'],
                      linestyle='-')
-        #axes[1].plot([0, 120], [df['Avg_Drawdown%'][0], df['Avg_Drawdown%'][0]], linewidth=.7, color=pltColor['yellow'], linestyle='--')
+        axes[1].plot([0, 120], [df['Avg_Drawdown%'][0], df['Avg_Drawdown%'][0]], linewidth=.7, color=pltColor['red'], linestyle='-')
         #axes[1].plot([0, 120], [df['Min_Drawdown%'][0], df['Min_Drawdown%'][0]], linewidth=.7, color=pltColor['red'], linestyle='--')
 
         # Text Color By signal
@@ -338,8 +338,8 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
                      'Max Drawdown : {}%\n'.format(df['Max_Drawdown%'][0]) +
                      #'Avg Drawdown : {}%\n'.format(df['Avg_Drawdown%'][0]) +
                      #'Min Drawdown : {}%\n'.format(df['Min_Drawdown%'][0]) +
-                     'N Day Drawdown : {}%\n'.format(df['NDay_Drawdown%'][0]) +
-                     'N Day TrueRange : {}%\n'.format(df['NDay_TrueRange%'][0])
+                     'N Day Drawdown : {}%\n'.format(df['NDay_Drawdown%'][0]) #+
+                     #'N Day TrueRange : {}%\n'.format(df['NDay_TrueRange%'][0])
                      , size=10, ha='left', va='top', color=((.4, .4, .4)))
         axes[1].text(100, df['NDay_Drawdown%'][0], '  ' + str(df['NDay_Drawdown%'][0].round(1))+'%',
                      size=10, ha='left', va='center',color=pltColor['text'])
@@ -401,6 +401,7 @@ def getSignalAllPreset():
 
                 # Condition Setting
                 filter_condition = (
+                    #df['SMA_L'][0] >= df['Close'].mean() and
                     #df['SMA_L'][0] >= df['Close'].mean() and
                     df['Volume'][0] >= df['Volume'][1] and
                     df['GL_Ratio_Slow'][0] > 1
