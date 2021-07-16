@@ -285,17 +285,20 @@ def Realtime(idName,sendNotify=True):
     if triggerBuyPos == 'Lower':
         buy_df = signal_df[
                 (signal_df['Signal'] == triggerBuy) &
-                (signal_df['Market'] < signal_df['BreakOut_ML'])
+                (signal_df['Market'] < signal_df['BreakOut_ML']) &
+                (signal_df['NDay_Drawdown%'] > signal_df['Avg_Drawdown%'])
             ][colSelect]
     elif triggerBuyPos == 'Upper':
         buy_df = signal_df[
                 (signal_df['Signal'] == triggerBuy) &
-                (signal_df['Market'] > signal_df['BreakOut_MH'])
+                (signal_df['Market'] > signal_df['BreakOut_MH'])&
+                (signal_df['NDay_Drawdown%'] > signal_df['Avg_Drawdown%'])
             ][colSelect]
     elif triggerBuyPos == 'Middle':
         buy_df = signal_df[
                 (signal_df['Signal'] == triggerBuy) &
-                (signal_df['Market'] < signal_df['BreakOut_M'])
+                (signal_df['Market'] < signal_df['BreakOut_M'])&
+                (signal_df['NDay_Drawdown%'] > signal_df['Avg_Drawdown%'])
             ][colSelect]
 
     buy_df = buy_df.head(portSize)
