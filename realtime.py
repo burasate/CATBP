@@ -315,17 +315,18 @@ def Realtime(idName,sendNotify=True):
             symbol_index = port_df[port_df['Symbol'] == row['Symbol']].index.tolist()[0]
             if port_df.loc[symbol_index,'Count'] < buySize : #Buy position size is not full
                 if row['Rec_Date'] != port_df.loc[symbol_index,'Rec_Date']: #if Date Time not exist
-                    # Do Buy
-                    print('Buy {} more'.format(row['Symbol']))
-                    portfolioList = port_df['Symbol'].tolist()
-                    countLeft = (buySize * portSize) - (port_df['Count'].sum())
-                    CreateBuyOrder(idName, row['Symbol'], portfolioList, countLeft)
-                    Transaction(idName, 'Buy', row['Symbol'], (configJson[idName]['percentageComission'] / 100) * -1)
-                    if sendNotify:
-                        lineNotify.sendNotifyMassage(token, text)
-                    port_df.loc[symbol_index, 'Count'] += 1
-                    port_df.loc[symbol_index, 'Rec_Date'] = row['Rec_Date']
-                    port_df.loc[symbol_index, 'Buy'] = round((port_df.loc[symbol_index, 'Buy'] + row['Buy']) * 0.5, 2)
+                    if row['Market'] <= port_df.loc[symbol_index,'Buy']: #if Market less than port buy
+                        # Do Buy
+                        print('Buy {} more'.format(row['Symbol']))
+                        portfolioList = port_df['Symbol'].tolist()
+                        countLeft = (buySize * portSize) - (port_df['Count'].sum())
+                        CreateBuyOrder(idName, row['Symbol'], portfolioList, countLeft)
+                        Transaction(idName, 'Buy', row['Symbol'], (configJson[idName]['percentageComission'] / 100) * -1)
+                        if sendNotify:
+                            lineNotify.sendNotifyMassage(token, text)
+                        port_df.loc[symbol_index, 'Count'] += 1
+                        port_df.loc[symbol_index, 'Rec_Date'] = row['Rec_Date']
+                        port_df.loc[symbol_index, 'Buy'] = round((port_df.loc[symbol_index, 'Buy'] + row['Buy']) * 0.5, 2)
 
         elif not row['Symbol'] in port_df['Symbol'].tolist(): #Symbol isn't in portfolio
             #print('  Checking port is not full')
