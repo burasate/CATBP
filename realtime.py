@@ -189,8 +189,10 @@ def Reset(*_):
 def Transaction(idName,code,symbol,change):
     global transacFilePath
     date_time = str(dt.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+    epoch = time.time()
     data = {
         'dateTime' : [date_time],
+        'epoch' : [epoch],
         'User' : [idName],
         'Code' : [code],
         'Symbol' : [symbol],
@@ -470,6 +472,7 @@ def AllUser(*_):
         time.sleep(10)
 
 if __name__ == '__main__' :
+    """
     import update
     update.updateConfig()
     update.updatePreset()
@@ -477,7 +480,14 @@ if __name__ == '__main__' :
     configJson = json.load(open(configPath))
     presetJson = json.load(open(presetPath))
     systemJson = json.load(open(systemPath))
+    """
 
     #Realtime('user1', sendNotify=False)
     #Realtime('user2', sendNotify=False)
     #Realtime('CryptoBot', sendNotify=False)
+
+    #idName = 'user1'
+    #df = pd.read_csv(transacFilePath)
+    #df = df[df['User']==idName]
+    #df['Difference'] =
+    #print(df['dateTime'].dt.day)
