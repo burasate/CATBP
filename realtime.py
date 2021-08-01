@@ -42,6 +42,8 @@ def getBalance(idName):
     bitkub.set_api_secret(API_SECRET)
     balance = bitkub.balances()
     data = {}
+    if balance['error'] != 0:
+        return None
     if balance['error'] == 0 :
         for sym in balance['result']:
             if balance['result'][sym]['available'] > 0 :
@@ -446,7 +448,7 @@ def Realtime(idName,sendNotify=True):
                 if not symbol in portfolioList: #Not balace in mornitor
                     CreateSellOrder(idName, symbol, count=1)
                     if sendNotify:
-                        lineNotify.sendNotifyMassage(token, 'Clear {} in balance'.format(symbol))
+                        lineNotify.sendNotifyMassage(token, 'Clear {} in Balance'.format(symbol))
                     balanceList.append(symbol)
         for i in port_df.index.tolist(): #Check Mornitor
             row = port_df.loc[i]
@@ -454,6 +456,8 @@ def Realtime(idName,sendNotify=True):
                 dropList.append(row['Symbol'])
         for symbol in dropList: # Delete Fake Mornitor for User who have KeyAPI
             port_df = port_df[port_df['Symbol'] != symbol]
+            if sendNotify:
+                lineNotify.sendNotifyMassage(token, 'Clear {} in Mornitor'.format(symbol))
 
     print('---------------------\nAuto Preset\n---------------------')
     if autoPreset:
