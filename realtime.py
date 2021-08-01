@@ -462,24 +462,22 @@ def Realtime(idName,sendNotify=True):
             if sendNotify:
                 lineNotify.sendNotifyMassage(token, 'Change System to {}'.format(aSystem))
 
-    """
     print('---------------------\nBalance Checking\n---------------------')
     # Clear Wrong Balnace
     balance = getBalance(idName)
     if balance != None:  # Have Secret API
         portfolioList = port_df['Symbol'].tolist()
-        print(portfolioList)
         balanceList = []
         dropList = []
         for sym in balance:  # Check Real Balance
             if balance[sym]['available'] != 0 and sym != 'THB':  # if not THB and have available
                 symbol = 'THB_{}'.format(sym)
-                print(symbol)
                 if not symbol in portfolioList:  # Not balace in mornitor
                     CreateSellOrder(idName, symbol, count=1)
                     if sendNotify:
                         lineNotify.sendNotifyMassage(token, 'Clear {} in Balance'.format(symbol))
                     balanceList.append(symbol)
+        """
         for i in port_df.index.tolist():  # Check Mornitor
             row = port_df.loc[i]
             if not row['Symbol'] in balanceList:
@@ -488,7 +486,7 @@ def Realtime(idName,sendNotify=True):
             port_df = port_df[port_df['Symbol'] != symbol]
             if sendNotify:
                 lineNotify.sendNotifyMassage(token, 'Clear {} in Mornitor'.format(symbol))
-    """
+        """
 
     #Finish
     if 'index' in port_df.columns.tolist():
