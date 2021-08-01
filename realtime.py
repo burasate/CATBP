@@ -462,15 +462,7 @@ def Realtime(idName,sendNotify=True):
             if sendNotify:
                 lineNotify.sendNotifyMassage(token, 'Change System to {}'.format(aSystem))
 
-    #Finish
-    if 'index' in port_df.columns.tolist():
-        port_df.drop(columns=['index'],inplace=True)
-    alluser_df = pd.read_csv(mornitorFilePath)
-    alluser_df = alluser_df[alluser_df['User'] != idName]
-    alluser_df = alluser_df.append(port_df)
-    alluser_df.to_csv(mornitorFilePath,index=False)
-    #print('---------------------\nFinish\n---------------------\n')
-
+    """
     print('---------------------\nBalance Checking\n---------------------')
     # Clear Wrong Balnace
     balance = getBalance(idName)
@@ -496,6 +488,16 @@ def Realtime(idName,sendNotify=True):
             port_df = port_df[port_df['Symbol'] != symbol]
             if sendNotify:
                 lineNotify.sendNotifyMassage(token, 'Clear {} in Mornitor'.format(symbol))
+    """
+
+    #Finish
+    if 'index' in port_df.columns.tolist():
+        port_df.drop(columns=['index'],inplace=True)
+    alluser_df = pd.read_csv(mornitorFilePath)
+    alluser_df = alluser_df[alluser_df['User'] != idName]
+    alluser_df = alluser_df.append(port_df)
+    alluser_df.to_csv(mornitorFilePath,index=False)
+    print('---------------------\nFinish\n---------------------\n')
 
 def AllUser(*_):
     os.system('cls||clear')
