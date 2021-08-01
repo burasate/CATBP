@@ -460,7 +460,7 @@ def Realtime(idName,sendNotify=True):
         # Delete if Use Auto Preset
         for user in configJson:
             if bool(configJson[user]['autoPreset']):
-                tran_df = tran_df[df['User'] != user]
+                tran_df = tran_df[tran_df['User'] != user]
         # Select Top User
         topUser = tran_df.iloc[0]['User']
         aPreset = configJson[topUser]['preset']
