@@ -189,7 +189,7 @@ def Reset(*_):
 def Transaction(idName,code,symbol,change):
     global transacFilePath
     date_time = str(dt.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-    epoch = time.time()
+    epoch = round(time.time())
     data = {
         'dateTime' : [date_time],
         'epoch' : [epoch],
@@ -236,6 +236,7 @@ def Realtime(idName,sendNotify=True):
     triggerBuyPos = systemJson[system]['triggerBuyPosition']
     triggerSellPos = systemJson[system]['triggerSellPosition']
     adaptiveLoss = bool(configJson[idName]['adaptiveLoss'])
+    autoPreset = bool(configJson[idName]['autoPreset'])
     print('Portfolio Size : {} | Buy Position Size : {}'.format(portSize, buySize))
     print('Buy : {} | Sell : {}'.format(triggerBuy,triggerSell))
     print('Trigger Buy : {} | Trigger Sell : {}'.format(triggerBuyPos,triggerSellPos))
@@ -445,7 +446,34 @@ def Realtime(idName,sendNotify=True):
                     #print(balance[sym])
                     CreateSellOrder(idName, symbol, count=1)
                     if sendNotify:
-                        lineNotify.sendNotifyMassage(token, 'Clear {} in balance')
+                        lineNotify.sendNotifyMassage(token, 'Clear {} in balance'.format(symbol))
+
+    print('---------------------\nAuto Preset\n---------------------')
+    if autoPreset:
+        tran_df = pd.read_csv(transacFilePath)
+        tran_df = tran_df[
+            tran_df['epoch'] >= now - ((1 * 60 * 60 * 24) * 7)
+            ]
+        tran_df['Change%'] = tran_df.groupby(['User'])['Change%'].transform('sum')
+        tran_df.drop_duplicates(subset=['User'], keep='last', inplace=True)
+        tran_df = tran_df.sort_values(['Change%'], ascending=[False])
+        # Delete if Use Auto Preset
+        for user in configJson:
+            if bool(configJson[user]['autoPreset']):
+                tran_df = tran_df[df['User'] != user]
+        # Select Top User
+        topUser = tran_df.iloc[0]['User']
+        aPreset = configJson[topUser]['preset']
+        aSystem = configJson[topUser]['system']
+        # Apply New Preset and System
+        if configJson[topUser]['preset'] != configJson[idName]['preset']:
+            gSheet.setValue('Config', findKey='idName', findValue=idName, key='preset', value=aPreset)
+            if sendNotify:
+                lineNotify.sendNotifyMassage(token, 'Change Preset to {}'.format(aPreset))
+        if configJson[topUser]['system'] != configJson[idName]['system']:
+            gSheet.setValue('Config', findKey='idName', findValue=idName, key='system', value=aSystem)
+            if sendNotify:
+                lineNotify.sendNotifyMassage(token, 'Change System to {}'.format(aSystem))
 
     #Finish
     if 'index' in port_df.columns.tolist():
@@ -500,9 +528,3 @@ if __name__ == '__main__' :
     #Realtime('user1', sendNotify=False)
     #Realtime('user2', sendNotify=False)
     #Realtime('CryptoBot', sendNotify=False)
-
-    #idName = 'user2'
-    #df = pd.read_csv(transacFilePath)
-    #df = df[df['User']==idName]
-    #df['Difference'] =
-    #print(df['dateTime'].dt.day)
