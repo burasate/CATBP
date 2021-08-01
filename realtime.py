@@ -438,15 +438,22 @@ def Realtime(idName,sendNotify=True):
     balance = getBalance(idName)
     if balance != None: #Have Secret API
         portfolioList = port_df['Symbol'].tolist()
-        for sym in balance:
+        balanceList = []
+        dropList = []
+        for sym in balance: #Check Real Balance
             if balance[sym]['available'] != 0 and sym != 'THB': #if not THB and have available
                 symbol = 'THB_{}'.format(sym)
-                if not symbol in portfolioList:
-                    #print(symbol)
-                    #print(balance[sym])
+                if not symbol in portfolioList: #Not balace in mornitor
                     CreateSellOrder(idName, symbol, count=1)
                     if sendNotify:
                         lineNotify.sendNotifyMassage(token, 'Clear {} in balance'.format(symbol))
+                    balanceList.append(symbol)
+        for i in port_df.index.tolist(): #Check Mornitor
+            row = port_df.loc[i]
+            if not row['Symbol'] in balanceList:
+                dropList.append(row['Symbol'])
+        for symbol in dropList: # Delete Fake Mornitor for User who have KeyAPI
+            port_df = port_df[port_df['Symbol'] != symbol]
 
     print('---------------------\nAuto Preset\n---------------------')
     if autoPreset:
