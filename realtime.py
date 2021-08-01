@@ -435,32 +435,6 @@ def Realtime(idName,sendNotify=True):
         if port_df.loc[i, 'Count'] <= 0 : #Delete symbol if no count
             port_df = port_df[port_df['Symbol'] != row['Symbol']]
 
-    print('---------------------\nBalance Checking\n---------------------')
-    # Clear Wrong Balnace
-    balance = getBalance(idName)
-    if balance != None: #Have Secret API
-        portfolioList = port_df['Symbol'].tolist()
-        print(portfolioList)
-        balanceList = []
-        dropList = []
-        for sym in balance: #Check Real Balance
-            if balance[sym]['available'] != 0 and sym != 'THB': #if not THB and have available
-                symbol = 'THB_{}'.format(sym)
-                print(symbol)
-                if not symbol in portfolioList: #Not balace in mornitor
-                    CreateSellOrder(idName, symbol, count=1)
-                    if sendNotify:
-                        lineNotify.sendNotifyMassage(token, 'Clear {} in Balance'.format(symbol))
-                    balanceList.append(symbol)
-        for i in port_df.index.tolist(): #Check Mornitor
-            row = port_df.loc[i]
-            if not row['Symbol'] in balanceList:
-                dropList.append(row['Symbol'])
-        for symbol in dropList: # Delete Fake Mornitor for User who have KeyAPI
-            port_df = port_df[port_df['Symbol'] != symbol]
-            if sendNotify:
-                lineNotify.sendNotifyMassage(token, 'Clear {} in Mornitor'.format(symbol))
-
     print('---------------------\nAuto Preset\n---------------------')
     if autoPreset:
         tran_df = pd.read_csv(transacFilePath)
@@ -495,7 +469,33 @@ def Realtime(idName,sendNotify=True):
     alluser_df = alluser_df[alluser_df['User'] != idName]
     alluser_df = alluser_df.append(port_df)
     alluser_df.to_csv(mornitorFilePath,index=False)
-    print('---------------------\nFinish\n---------------------\n')
+    #print('---------------------\nFinish\n---------------------\n')
+
+    print('---------------------\nBalance Checking\n---------------------')
+    # Clear Wrong Balnace
+    balance = getBalance(idName)
+    if balance != None:  # Have Secret API
+        portfolioList = port_df['Symbol'].tolist()
+        print(portfolioList)
+        balanceList = []
+        dropList = []
+        for sym in balance:  # Check Real Balance
+            if balance[sym]['available'] != 0 and sym != 'THB':  # if not THB and have available
+                symbol = 'THB_{}'.format(sym)
+                print(symbol)
+                if not symbol in portfolioList:  # Not balace in mornitor
+                    CreateSellOrder(idName, symbol, count=1)
+                    if sendNotify:
+                        lineNotify.sendNotifyMassage(token, 'Clear {} in Balance'.format(symbol))
+                    balanceList.append(symbol)
+        for i in port_df.index.tolist():  # Check Mornitor
+            row = port_df.loc[i]
+            if not row['Symbol'] in balanceList:
+                dropList.append(row['Symbol'])
+        for symbol in dropList:  # Delete Fake Mornitor for User who have KeyAPI
+            port_df = port_df[port_df['Symbol'] != symbol]
+            if sendNotify:
+                lineNotify.sendNotifyMassage(token, 'Clear {} in Mornitor'.format(symbol))
 
 def AllUser(*_):
     os.system('cls||clear')
