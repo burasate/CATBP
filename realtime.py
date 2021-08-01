@@ -58,7 +58,7 @@ def getBalance(idName):
                     'reserved' : balance['result'][sym]['reserved']
                 }
                 #update balance data sheet
-                if sym == 'THB':
+                if sym == 'THB' and available != configJson[idName]['available']:
                     gSheet.setValue( 'Config', findKey='idName', findValue=idName, key='available', value=available )
                     gSheet.setValue( 'Config', findKey='idName', findValue=idName, key='availableHigh',value=available_h )
                     gSheet.setValue( 'Config', findKey='idName', findValue=idName, key='percentageDrawdown',value=p_drawdown )
@@ -432,6 +432,21 @@ def Realtime(idName,sendNotify=True):
         if port_df.loc[i, 'Count'] <= 0 : #Delete symbol if no count
             port_df = port_df[port_df['Symbol'] != row['Symbol']]
 
+    print('---------------------\nBalance Checking\n---------------------')
+    # Clear Wrong Balnace
+    balance = getBalance(idName)
+    if balance != None: #Have Secret API
+        portfolioList = port_df['Symbol'].tolist()
+        for sym in balance:
+            if balance[sym]['available'] != 0 and sym != 'THB': #if not THB and have available
+                symbol = 'THB_{}'.format(sym)
+                if not symbol in portfolioList:
+                    #print(symbol)
+                    #print(balance[sym])
+                    CreateSellOrder(idName, symbol, count=1)
+                    if sendNotify:
+                        lineNotify.sendNotifyMassage(token, 'Clear {} in balance')
+
     #Finish
     if 'index' in port_df.columns.tolist():
         port_df.drop(columns=['index'],inplace=True)
@@ -472,7 +487,7 @@ def AllUser(*_):
         time.sleep(10)
 
 if __name__ == '__main__' :
-    """
+    #"""
     import update
     update.updateConfig()
     update.updatePreset()
@@ -480,13 +495,13 @@ if __name__ == '__main__' :
     configJson = json.load(open(configPath))
     presetJson = json.load(open(presetPath))
     systemJson = json.load(open(systemPath))
-    """
+    #"""
 
     #Realtime('user1', sendNotify=False)
     #Realtime('user2', sendNotify=False)
     #Realtime('CryptoBot', sendNotify=False)
 
-    #idName = 'user1'
+    #idName = 'user2'
     #df = pd.read_csv(transacFilePath)
     #df = df[df['User']==idName]
     #df['Difference'] =
