@@ -255,7 +255,7 @@ def Realtime(idName,sendNotify=True):
         (signal_df['Rec_Date'] == signal_df['Rec_Date'].max()) &
         (signal_df['Preset'] == preset)
         ]
-    signal_df.sort_values(['Change4HR%','Volume','Risk%'], ascending=[True,False,True])
+    signal_df = signal_df.sort_values(['Change4HR%','Volume','Risk%'], ascending=[True,False,True])
     signal_df.reset_index(inplace=True)
 
     # New Column For Signal DF

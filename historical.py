@@ -154,6 +154,8 @@ def createSymbolHistory(symbol,timeFrame = 'minute'):
     allHistPath = dataPath + '/cryptoHist.csv'
     histDF = pd.read_csv(allHistPath)
     histDF = histDF[histDF['symbol'] == symbol]
+    histDF = histDF.sort_values(['epoch'], ascending=[True])
+    histDF.reset_index(inplace=True)
 
     #set timeframe
     if timeFrame == 'minute':
@@ -208,6 +210,11 @@ def loadAllHist(timeFrame = 'minute'):
 
 if __name__ == '__main__':
     #createSymbolHistory('THB_DOGE')
-    updateGSheetHistory()
-    loadAllHist(timeFrame='hour')
+    #updateGSheetHistory()
+    #loadAllHist(timeFrame='hour')
+
+    allHistPath = dataPath + '/cryptoHist.csv'
+    histDF = pd.read_csv(allHistPath)
+
+
     pass
