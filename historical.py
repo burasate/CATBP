@@ -95,8 +95,30 @@ def updateGSheetHistory(limit = 45000):
             'dateTime': date_time
         }
 
+        #bitkub api data
         for colName in ticker[sym]:
             rowData[colName] = [ticker[sym][colName]]
+
+        #signal data
+        #indicator (signal in metric)
+        try:
+            signal_df = pd.read_csv(dataPath + '/signal.csv')
+            signal_df = signal_df[
+                (signal_df['Rec_Date'] == signal_df['Rec_Date'].max()) &
+                (signal_df['Symbol'] == sym)
+                ]
+
+            sma = signal_df['SMA_L'].mean().round(2)
+            rowData['percentChangeAverage'] = ((rowData['last'] - sma) / sma) * 100  # is list
+            # print(sma)
+            # print(rowData['percentChangeAverage'])
+        except:
+            print('load indicator error')
+            pass
+        else:
+            pass
+
+        #append data row
         df = df.append(
             pd.DataFrame(rowData), ignore_index=True
         )
@@ -109,7 +131,7 @@ def updateGSheetHistory(limit = 45000):
     df['epoch'] = pd.to_numeric(df['epoch'], errors='coerce')
     df['dateTime'] = df['dateTime'].astype(str)
     df = df[df['dateTime'] != 'nan']
-    #df.sort_values(['epoch'], ascending=[True])
+    #df = df.sort_values(['epoch'], ascending=[True])
     df = df.sort_values(['epoch', 'date'], ascending=[True, True])
     df.sort_index(inplace=True)
     df = df.drop( df[(df['date'].str.isdigit() == True)].index )
@@ -117,6 +139,7 @@ def updateGSheetHistory(limit = 45000):
     df = df.drop( df[(df['epoch'] < epoch_limit)].index )
     #limit row
     df = df.tail(limit)
+    df.reset_index(inplace=True)
 
     print('Save Historical Data...')
     allHistPath = dataPath + '/cryptoHist.csv'
@@ -210,6 +233,6 @@ def loadAllHist(timeFrame = 'minute'):
 
 if __name__ == '__main__':
     #createSymbolHistory('THB_DOGE')
-    #updateGSheetHistory()
+    updateGSheetHistory()
     #loadAllHist(timeFrame='hour')
     pass
