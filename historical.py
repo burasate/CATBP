@@ -45,7 +45,6 @@ def updateGSheetHistory(limit = 45000):
 
     date = dt.now().strftime('%Y-%m-%d')
     hour = int(dt.now().strftime('%H'))
-    epoch = float(time.time())
     minute = int(dt.now().strftime('%M'))
     second = int(dt.now().strftime('%S'))
     date_time = str(dt.now().strftime('%Y-%m-%d %H:%M:%S'))
@@ -85,6 +84,7 @@ def updateGSheetHistory(limit = 45000):
 
         print('{}   {} Baht'.format(sym,ticker[sym]['last']))
 
+        epoch = float(time.time())
         rowData = {
             'epoch': epoch,
             'date': date,
