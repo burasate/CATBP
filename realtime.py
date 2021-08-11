@@ -398,19 +398,19 @@ def Realtime(idName,sendNotify=True):
             sell_signal = (
                 (row['Signal'] == triggerSell) and
                 (row['Market'] < row['BreakOut_ML']) and
-                (row['Profit%'] > 0.25*profitTarget)
+                (row['Profit%'] > 0.15*profitTarget)
             )
         elif triggerSellPos == 'Upper':
             sell_signal = (
                 (row['Signal'] == triggerSell) and
                 (row['Market'] > row['BreakOut_MH']) and
-                (row['Profit%'] > 0.25*profitTarget)
+                (row['Profit%'] > 0.15*profitTarget)
             )
         elif triggerSellPos == 'Middle':
             sell_signal = (
                 (row['Signal'] == triggerSell) and
                 (row['Market'] > row['BreakOut_M']) and
-                (row['Profit%'] > 0.25*profitTarget)
+                (row['Profit%'] > 0.15*profitTarget)
             )
 
         if sell_signal or sell_profit or sell_loss or isReset : #Sell
