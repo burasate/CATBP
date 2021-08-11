@@ -137,7 +137,6 @@ def updateGSheetHistory(limit = 45000):
     df = df.drop( df[(df['date'].str.isdigit() == True)].index )
     df = df.drop( df[(df['dateTime'].str.isdigit() == True)].index )
     df = df.drop( df[(df['epoch'] < epoch_limit)].index )
-    df['percentChangeAverage'] = df['percentChangeAverage'].fillna(method="ffill")
     #limit row
     df = df.tail(limit)
     df.reset_index(inplace=True)
