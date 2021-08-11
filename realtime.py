@@ -247,7 +247,8 @@ def Realtime(idName,sendNotify=True):
     colSelect = ['User', 'Symbol', 'Signal', 'Buy', 'Market',
                  'Profit%', 'Max_Drawdown%', 'Change4HR%',
                  'Volume', 'BreakOut_H', 'BreakOut_MH', 'BreakOut_M',
-                 'BreakOut_ML', 'BreakOut_L', 'Low', 'High', 'Rec_Date','Count']
+                 'BreakOut_ML', 'BreakOut_L', 'Low', 'High', 'Rec_Date','Count'
+                 ,'Last_Buy']
 
     #Signal Dataframe
     signal_df = pd.read_csv(dataPath + '/signal.csv')
@@ -265,6 +266,7 @@ def Realtime(idName,sendNotify=True):
     signal_df['Profit%'] = ((signal_df['Market'] - signal_df['Buy']) / signal_df['Buy']) * 100
     signal_df['Max_Drawdown%'] = 0.0
     signal_df['Count'] = 1
+    signal_df['Last_Buy'] = now
     for sym in ticker:
         signal_df.loc[(signal_df['Symbol'] == sym), 'Buy'] = ticker[sym]['last']
         signal_df.loc[(signal_df['Symbol'] == sym), 'Market'] = ticker[sym]['last']
@@ -309,12 +311,10 @@ def Realtime(idName,sendNotify=True):
     buy_df = buy_df.head(portSize)
     #print('Buy Data Frame')
     #print(buy_df[['Symbol','Signal','Market','BreakOut_MH','BreakOut_ML']])
-
     #Buy Condition
     for i in buy_df.index.tolist():
         row = buy_df.loc[i]
         text = '[ Buy ] {}\n{} Bath'.format(row['Symbol'], row['Buy'])
-        #print('Buying {} : {}'.format(row['Symbol'],row['Market']))
         if row['Symbol'] in port_df['Symbol'].tolist(): #Symbol is in portfolio already
             #print('  Checking buy count')
             symbol_index = port_df[port_df['Symbol'] == row['Symbol']].index.tolist()[0]
@@ -331,6 +331,7 @@ def Realtime(idName,sendNotify=True):
                             lineNotify.sendNotifyMassage(token, text)
                         port_df.loc[symbol_index, 'Count'] += 1
                         port_df.loc[symbol_index, 'Rec_Date'] = row['Rec_Date']
+                        port_df.loc[symbol_index, 'Last_Buy'] = row['Last_Buy']
                         port_df.loc[symbol_index, 'Buy'] = round((port_df.loc[symbol_index, 'Buy'] + row['Buy']) * 0.5, 2)
 
         elif not row['Symbol'] in port_df['Symbol'].tolist(): #Symbol isn't in portfolio
