@@ -80,9 +80,11 @@ def CreateSellOrder(idName,symbol,count=1):
     bitkub.set_api_secret(API_SECRET)
     balance = getBalance(idName)
     sym = symbol.replace('THB_','')
+
     if not sym in list(balance):
         print('not found [{}] in balance'.format(sym))
         return None
+
     amount = balance[sym]['available'] / count
     if count <= 1:
         amount = balance[sym]['available']
@@ -110,6 +112,18 @@ def CreateBuyOrder(idName,symbol,portfoiloList,countLeft):
     size = int(configJson[idName]['portSize'])
     portSize = len(list(balance))-1 #Real Port
     buySize = int(configJson[idName]['buySize'])
+    history = bitkub.my_open_history(sym=symbol)
+
+    if len(history['result']) != 0:
+        for data in history['result']:
+            data_select = history['result'][0]
+            buyHourDuration = (time.time() - data['ts']) / 60 / 60 #hour
+            #print(data['date'])
+            #print(data['side'])
+            #print(buyHourDuration)
+            if buyHourDuration < configJson[idName]['buyEveryHour'] and data['side'].lower() == 'buy':
+                print('Order Cancel')
+                return None
 
     portSymList = []
     for symbol in portfoiloList:  # Chane Symbol to Sym
@@ -534,7 +548,7 @@ def AllUser(*_):
         time.sleep(10)
 
 if __name__ == '__main__' :
-    #"""
+    """
     import update
     update.updateConfig()
     update.updatePreset()
@@ -542,9 +556,18 @@ if __name__ == '__main__' :
     configJson = json.load(open(configPath))
     presetJson = json.load(open(presetPath))
     systemJson = json.load(open(systemPath))
-    #"""
-    print(abs(0))
+    """
+
+    """
+    idName='user1'
+    API_KEY = configJson[idName]['bk_apiKey']
+    API_SECRET = configJson[idName]['bk_apiSecret']
+    bitkub = Bitkub()
+    bitkub.set_api_key(API_KEY)
+    bitkub.set_api_secret(API_SECRET)
+    """
 
     #Realtime('user1', sendNotify=False)
     #Realtime('user2', sendNotify=False)
     #Realtime('CryptoBot', sendNotify=False)
+    pass
