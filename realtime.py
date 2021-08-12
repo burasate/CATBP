@@ -511,6 +511,8 @@ def Realtime(idName,sendNotify=True):
     #Finish
     if 'index' in port_df.columns.tolist():
         port_df.drop(columns=['index'],inplace=True)
+    if 'level_0' in port_df.columns.tolist():
+        port_df.drop(columns=['level_0'], inplace=True)
     alluser_df = pd.read_csv(mornitorFilePath)
     alluser_df = alluser_df[alluser_df['User'] != idName]
     alluser_df = alluser_df.append(port_df)
