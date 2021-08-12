@@ -396,6 +396,7 @@ def getSignalAllPreset():
                                         ]
 
                 exit_condition_list = [df['SMA_S'][0] < df['SMA_L'][0],
+                                       df['%K'][0] < df['%D'][0],
                                        df['GL_Ratio'][0] < df['GL_Ratio_Slow'][0]
                                        ]
 
@@ -403,9 +404,9 @@ def getSignalAllPreset():
                 filter_condition = (
                     #df['SMA_L'][0] >= df['Close'].mean() and
                     #df['SMA_L'][0] >= df['Close'].mean() and
-                    df['Volume'][0] >= df['Volume'][1] and
-                    df['GL_Ratio_Slow'][0] > 1
-                    #True
+                    #df['Volume'][0] >= df['Volume'][1] and
+                    #df['GL_Ratio_Slow'][0] > 1
+                    True
                 )
                 entry_condition = (
                     entry_condition_list[0] and
@@ -414,7 +415,8 @@ def getSignalAllPreset():
                 )
                 exit_condition = (
                     exit_condition_list[0] and
-                    exit_condition_list[1]
+                    exit_condition_list[1] and
+                    exit_condition_list[2]
                 )
 
                 # Trade Entry
