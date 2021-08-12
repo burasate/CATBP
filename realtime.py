@@ -118,11 +118,11 @@ def CreateBuyOrder(idName,symbol,portfoiloList,countLeft):
         for data in history['result']:
             data_select = history['result'][0]
             buyHourDuration = (time.time() - data['ts']) / 60 / 60 #hour
-            #print(data['date'])
-            #print(data['side'])
-            #print(buyHourDuration)
             if buyHourDuration < configJson[idName]['buyEveryHour'] and data['side'].lower() == 'buy':
                 print('Order Cancel')
+                print(data['date'])
+                print(data['side'])
+                print(buyHourDuration)
                 return None
 
     portSymList = []
