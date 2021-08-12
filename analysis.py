@@ -461,12 +461,12 @@ if __name__ == '__main__' :
     presetPath = dataPath + '/preset.json'
     presetJson = json.load(open(presetPath))
 
-    getAnalysis(histPath + 'THB_CRV' + '.csv', 'P2',saveImage=False,showImage=True)
+    getAnalysis(histPath + 'THB_KUB' + '.csv', 'P4',saveImage=False,showImage=True)
     #getSignalAllPreset()
 
     #Save All Image
-    for file in histFileList:
-        getAnalysis(histPath + os.sep + file, 'P4', saveImage=True, showImage=False)
+    #for file in histFileList:
+        #getAnalysis(histPath + os.sep + file, 'P4', saveImage=True, showImage=False)
 
     pass
 
