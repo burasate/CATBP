@@ -4,11 +4,11 @@ rootPath = os.path.dirname(os.path.abspath(__file__))
 
 os.system('cls||clear')
 print('BitPy')
-time.sleep(15)
+time.sleep(2)
 import update
 
 if not os.name == 'nt':
-    time.sleep(15)
+    time.sleep(5)
     update.updateAllFile()
 
 while True:
