@@ -352,6 +352,8 @@ def Realtime(idName,sendNotify=True):
                     imgFilePath = imgPath + os.sep + '{}_{}.png'.format(preset, quote)
                     lineNotify.sendNotifyImageMsg(token, imgFilePath, text)
                 port_df = port_df.append(row, ignore_index=False)
+    #Finish Buy
+    port_df.reset_index(inplace=True)
 
     print('---------------------\nProfit Calulating\n---------------------')
     #Market Update and Calculate Profit
@@ -542,6 +544,7 @@ if __name__ == '__main__' :
     presetJson = json.load(open(presetPath))
     systemJson = json.load(open(systemPath))
     #"""
+    print(abs(0))
 
     #Realtime('user1', sendNotify=False)
     #Realtime('user2', sendNotify=False)
