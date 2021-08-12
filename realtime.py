@@ -316,7 +316,6 @@ def Realtime(idName,sendNotify=True):
     for i in buy_df.index.tolist():
         row = buy_df.loc[i]
         text = '[ Buy ] {}\n{} Bath'.format(row['Symbol'], row['Buy'])
-        print(row['Symbol'])
         if row['Symbol'] in port_df['Symbol'].tolist(): #Symbol is in portfolio already
             #print('  Checking buy count')
             symbol_index = port_df[port_df['Symbol'] == row['Symbol']].index.tolist()[0]
