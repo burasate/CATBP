@@ -316,11 +316,14 @@ def Realtime(idName,sendNotify=True):
     for i in buy_df.index.tolist():
         row = buy_df.loc[i]
         text = '[ Buy ] {}\n{} Bath'.format(row['Symbol'], row['Buy'])
-
+        print(row['Symbol'])
         if row['Symbol'] in port_df['Symbol'].tolist(): #Symbol is in portfolio already
             #print('  Checking buy count')
             symbol_index = port_df[port_df['Symbol'] == row['Symbol']].index.tolist()[0]
             buyHourDuration = round(float(((now - port_df.loc[symbol_index,'Last_Buy']) / 60) / 60), 2)
+            print('check port for add count')
+            print(buyHourDuration)
+            print(configJson[idName]['buyEveryHour'])
             if port_df.loc[symbol_index,'Count'] < buySize : #Buy position size is not full
                 #if row['Rec_Date'] != port_df.loc[symbol_index,'Rec_Date']: #if Date Time not exist
                 if buyHourDuration >= configJson[idName]['buyEveryHour']: #if Duration geater than Buy Hour
@@ -341,6 +344,9 @@ def Realtime(idName,sendNotify=True):
         elif not row['Symbol'] in port_df['Symbol'].tolist(): #Symbol isn't in portfolio
             #print('  Checking port is not full')
             buyHourDuration = round(float(((now - port_df['Last_Buy'].max()) / 60) / 60), 2)
+            print('check port for add sym')
+            print(buyHourDuration)
+            print(configJson[idName]['buyEveryHour'])
             if buyHourDuration >= configJson[idName]['buyEveryHour']:  # if Duration geater than Buy Hour
                 if port_df['Symbol'].count() < portSize:  #Portfolio isn't full
                     # Do Buy
