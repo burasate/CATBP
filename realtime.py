@@ -309,7 +309,7 @@ def Realtime(idName,sendNotify=True):
                 (signal_df['NDay_Drawdown%'] > signal_df['Avg_Drawdown%'])
             ][colSelect]
 
-    buy_df = buy_df.head(portSize)
+    #buy_df = buy_df.head(portSize)
     #print('Buy Data Frame')
     #print(buy_df[['Symbol','Signal','Market','BreakOut_MH','BreakOut_ML']])
     #Buy Condition
@@ -321,9 +321,6 @@ def Realtime(idName,sendNotify=True):
             #print('  Checking buy count')
             symbol_index = port_df[port_df['Symbol'] == row['Symbol']].index.tolist()[0]
             buyHourDuration = round(float(((now - port_df.loc[symbol_index,'Last_Buy']) / 60) / 60), 2)
-            print('check port for add count')
-            print(buyHourDuration)
-            print(configJson[idName]['buyEveryHour'])
             if port_df.loc[symbol_index,'Count'] < buySize : #Buy position size is not full
                 #if row['Rec_Date'] != port_df.loc[symbol_index,'Rec_Date']: #if Date Time not exist
                 if buyHourDuration >= configJson[idName]['buyEveryHour']: #if Duration geater than Buy Hour
@@ -343,23 +340,18 @@ def Realtime(idName,sendNotify=True):
 
         elif not row['Symbol'] in port_df['Symbol'].tolist(): #Symbol isn't in portfolio
             #print('  Checking port is not full')
-            buyHourDuration = round(float(((now - port_df['Last_Buy'].max()) / 60) / 60), 2)
-            print('check port for add sym')
-            print(buyHourDuration)
-            print(configJson[idName]['buyEveryHour'])
-            if buyHourDuration >= configJson[idName]['buyEveryHour']:  # if Duration geater than Buy Hour
-                if port_df['Symbol'].count() < portSize:  #Portfolio isn't full
-                    # Do Buy
-                    print('Buy {} as new symbol'.format(row['Symbol']))
-                    portfolioList = port_df['Symbol'].tolist()
-                    countLeft = (buySize * portSize) - (port_df['Count'].sum())
-                    CreateBuyOrder(idName, row['Symbol'], portfolioList, countLeft)
-                    Transaction(idName, 'Buy', row['Symbol'], (configJson[idName]['percentageComission'] / 100) * -1)
-                    if sendNotify:
-                        quote = row['Symbol'].split('_')[-1]
-                        imgFilePath = imgPath + os.sep + '{}_{}.png'.format(preset, quote)
-                        lineNotify.sendNotifyImageMsg(token, imgFilePath, text)
-                    port_df = port_df.append(row, ignore_index=False)
+            if port_df['Symbol'].count() < portSize:  #Portfolio isn't full
+                # Do Buy
+                print('Buy {} as new symbol'.format(row['Symbol']))
+                portfolioList = port_df['Symbol'].tolist()
+                countLeft = (buySize * portSize) - (port_df['Count'].sum())
+                CreateBuyOrder(idName, row['Symbol'], portfolioList, countLeft)
+                Transaction(idName, 'Buy', row['Symbol'], (configJson[idName]['percentageComission'] / 100) * -1)
+                if sendNotify:
+                    quote = row['Symbol'].split('_')[-1]
+                    imgFilePath = imgPath + os.sep + '{}_{}.png'.format(preset, quote)
+                    lineNotify.sendNotifyImageMsg(token, imgFilePath, text)
+                port_df = port_df.append(row, ignore_index=False)
 
     print('---------------------\nProfit Calulating\n---------------------')
     #Market Update and Calculate Profit
