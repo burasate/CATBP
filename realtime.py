@@ -284,9 +284,6 @@ def Realtime(idName,sendNotify=True):
     ]
     port_df.reset_index(inplace=True)
 
-    #temp
-    port_df['Last_Buy'] = port_df['Last_Buy'].fillna(0)
-
     print('Portfolio')
     print(port_df['Symbol'].tolist())
 

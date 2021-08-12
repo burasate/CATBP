@@ -147,11 +147,21 @@ def updateGSheetHistory(limit = 45000):
     df.to_csv(allHistPath, index=False)
     df.tail(5000).to_csv(backupPath, index=False)
 
+    #ticker update
+    print('Save Ticker Data...')
+    tickerPath = dataPath + '/ticker.csv'
+    ticker_df = df
+    ticker_df.drop_duplicates(subset=['symbol'], keep='last', inplace=True)
+    ticker_df = ticker_df[ticker_df['date'] == ticker_df['date'].max()]
+    ticker_df = ticker_df[ticker_df['hour'] == ticker_df['hour'].max()]
+    ticker_df.to_csv(tickerPath, index=False)
+
     while isInternetConnect():
         try:
             if not os.name == 'nt': #for raspi
                 print('uploading history data...')
                 gSheet.updateFromCSV(allHistPath, 'History')
+                gSheet.updateFromCSV(tickerPath, 'Ticker')
                 print('upload history data finish')
         except: pass
         time.sleep(10)
