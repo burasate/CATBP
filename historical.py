@@ -108,8 +108,9 @@ def updateGSheetHistory(limit = 45000):
                 (signal_df['Symbol'] == sym)
                 ]
 
-            sma = signal_df['SMA_L'].mean().round(2)
-            rowData['percentChangeAverage'] = ((rowData['last'] - sma) / sma) * 100  # is list
+            sma_s = signal_df['SMA_S'].min().round(2)
+            sma_l = signal_df['SMA_L'].mean().round(2)
+            rowData['percentChangeAverage'] = ((sma_s - sma_l) / sma_l) * 100
             # print(sma)
             # print(rowData['percentChangeAverage'])
         except:
