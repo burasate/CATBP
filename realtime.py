@@ -353,7 +353,7 @@ def Realtime(idName,sendNotify=True):
                     lineNotify.sendNotifyImageMsg(token, imgFilePath, text)
                 port_df = port_df.append(row, ignore_index=False)
     #Finish Buy
-    port_df.reset_index(inplace=True)
+    port_df.reset_index(drop=True,inplace=True)
 
     print('---------------------\nProfit Calulating\n---------------------')
     #Market Update and Calculate Profit
