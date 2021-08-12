@@ -111,10 +111,9 @@ def updateGSheetHistory(limit = 45000):
             sma_s = signal_df['SMA_S'].mean().round(2)
             sma_l = signal_df['SMA_L'].mean().round(2)
             rowData['percentChangeAverage'] = ((sma_s - sma_l) / sma_l) * 100
-            # print(sma)
-            # print(rowData['percentChangeAverage'])
+            print('  indicator macd {}/{}   {}%'.format(sma_s,sma_l,rowData['percentChangeAverage']))
         except:
-            print('load indicator error')
+            print('* load indicator error')
             pass
         else:
             pass
