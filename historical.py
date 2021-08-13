@@ -141,6 +141,14 @@ def updateGSheetHistory(limit = 45000):
     df = df.tail(limit)
     df.reset_index(inplace=True)
 
+    #top gain
+    topGain = df.drop_duplicates(subset=['symbol'], keep='last').dropna()
+    topGain = topGain.sort_values(['percentChangeAverage'], ascending=[False])
+    topGain = topGain.head(5)['symbol'].tolist()
+    df['isTopGain'] = 'No'
+    for symbol in topGain:
+        df.loc[df['symbol'] == symbol, 'isTopGain'] = 'Yes'
+
     print('Save Historical Data...')
     allHistPath = dataPath + '/cryptoHist.csv'
     df = df[list(rowData)]

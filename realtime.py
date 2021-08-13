@@ -572,4 +572,5 @@ if __name__ == '__main__' :
     #Realtime('user1', sendNotify=False)
     #Realtime('user2', sendNotify=False)
     #Realtime('CryptoBot', sendNotify=False)
+
     pass
