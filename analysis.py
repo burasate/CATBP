@@ -146,6 +146,7 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
             'red' : (0.8, 0.4, 0),
             'green' : (0.4, 0.8, 0),
             'blue' : (0, 0.7, 0.9),
+            'cyan' : (0.1,0.5,1),
             'yellow' : (.9, .6, 0)
         }
         fig, axes = plt.subplots(nrows=6, ncols=1, figsize=(11, 11), dpi=100,
@@ -161,7 +162,7 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
         #Plot Setup
         #plotTrimMin = 52
         plotTrimMin = df['Day'].tail(1).tolist()[0]
-        plotTrimMax = 110
+        plotTrimMax = 113
         xTicks = [52,76,88,96,100]
         xTicksLabel = ['48H','24H','12H','4H','0H']
         plt.xticks(xTicks,xTicksLabel)
@@ -211,6 +212,26 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
         axes[1].set_title('Drawdown %', color=pltColor['text'], pad=2, size=10, y=0)
         axes[1].yaxis.tick_right()
 
+        # """
+        # Resistance Density
+        for i in df.index.tolist():
+            row = df.loc[i]
+            axes[0].fill_between([101, 103], y1=row['High'], y2=max([row['Open'], row['Close']]),
+                                 # where=df['%K'] >= df['%D'],
+                                 linewidth=1, color=pltColor['green'],
+                                 linestyle='-', alpha=(row['Volume'] / df['Volume'].max()) / 2
+                                 )
+        # """
+
+        # Support Density
+        for i in df.index.tolist():
+            row = df.loc[i]
+            axes[0].fill_between([101, 103], y1=row['Low'], y2=min([row['Open'], row['Close']]),
+                                 # where=df['%K'] >= df['%D'],
+                                 linewidth=1, color=pltColor['red'],
+                                 linestyle='-', alpha=(row['Volume']/df['Volume'].max())/2
+                                 )
+
         # Line Plot
         axes[0].plot(df['Day'], df['BreakOut_H'], linewidth=.7, color=pltColor['green'], linestyle='-')
         axes[0].plot(df['Day'], df['BreakOut_L'], linewidth=.7, color=pltColor['red'], linestyle='-')
@@ -237,20 +258,20 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
         # Test Signal
         buyMark = df[(df['SMA_S'] > df['SMA_L']) &
                      (df['%K'] > df['%D']) &
-                     (df['GL_Ratio'] > df['GL_Ratio_Slow']) #&
-                     #(df['Volume_Break_H'][0] >= df['Volume_Break_H'][1])
+                     (df['GL_Ratio'] > df['GL_Ratio_Slow'])
                      ]
         sellMark = df[(df['SMA_S'] < df['SMA_L']) &
                       (df['%K'] < df['%D']) &
-                      (df['GL_Ratio'] < df['GL_Ratio_Slow']) #&
-                      #(df['Volume_Break_H'][0] >= df['Volume_Break_H'][1])
+                      (df['GL_Ratio'] < df['GL_Ratio_Slow'])
                       ]
+        """
         axes[0].plot(buyMark['Day'],
                      buyMark['Close'],
                      linewidth=0, color=pltColor['green'], linestyle='-', marker='o', markersize=4)
         axes[0].plot(sellMark['Day'],
                      sellMark['Close'],
                      linewidth=0, color=pltColor['red'], linestyle='-', marker='o', markersize=4)
+        """
 
         #STO Plot
         axes[5].fill_between(df['Day'], y1=df['%K'], y2=df['%D'],
@@ -307,12 +328,12 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
         # Text
         axes[0].text(plotTrimMax-3, min(df['Low']), 'by Burasate.U', size=12, ha='right', va='top', color=(.5,.5,.5))
         close_l_percenttage = round(((df['Close'][0]-df['BreakOut_L'][0])/df['Close'][0])*100,2)
-        axes[0].text(100+1, df['BreakOut_L'][0],
+        axes[0].text(100+4, df['BreakOut_L'][0],
                      '  ' + '{} \n(-{}%)'.format( df['BreakOut_L'][0],close_l_percenttage ),
                      size=10, ha='left', va='center',
                      color=pltColor['text'])
         close_h_percenttage = round(((df['BreakOut_H'][0]-df['Close'][0])/df['Close'][0])*100,2)
-        axes[0].text(100+1, df['BreakOut_H'][0],
+        axes[0].text(100+4, df['BreakOut_H'][0],
                      '  ' + '{} \n(+{}%)'.format( df['BreakOut_H'][0],close_h_percenttage ),
                      size=10, ha='left', va='center',
                      color=pltColor['text'])
@@ -458,10 +479,10 @@ def getSignalAllPreset():
         gSheet.updateFromCSV(gsheet_csvPath, 'SignalRecord')
 
 if __name__ == '__main__' :
-    import update
-    update.updatePreset()
-    presetPath = dataPath + '/preset.json'
-    presetJson = json.load(open(presetPath))
+    #import update
+    #update.updatePreset()
+    #presetPath = dataPath + '/preset.json'
+    #presetJson = json.load(open(presetPath))
 
     getAnalysis(histPath + 'THB_XRP' + '.csv', 'P3',saveImage=False,showImage=True)
     #getSignalAllPreset()

@@ -229,7 +229,10 @@ def createSymbolHistory(symbol,timeFrame = 'minute'):
     df['Open'] = histDF['open'].round(2)
     df['Low'] = histDF['low'].round(2)
     df['High'] = histDF['high'].round(2)
-    df['Volume'] = histDF['baseVolume'].diff(4).abs()
+    df['Volume'] = histDF['baseVolume'].diff(1).abs()
+    df['Volume'] = df['Volume'].fillna(0)
+    #df['Volume'] = histDF['baseVolume']-histDF['baseVolume'].abs()
+    #df['Volume'] = df['Volume'].abs()
     #df['Volume'] = histDF['baseVolume']
     df['Day'] = histDF.index
 
@@ -253,7 +256,7 @@ def loadAllHist(timeFrame = 'minute'):
         createSymbolHistory(sym,timeFrame)
 
 if __name__ == '__main__':
-    #createSymbolHistory('THB_DOGE')
-    updateGSheetHistory()
+    createSymbolHistory('THB_XRP','hour')
+    #updateGSheetHistory()
     #loadAllHist(timeFrame='hour')
     pass
