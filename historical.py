@@ -116,6 +116,7 @@ def updateGSheetHistory(limit = 45000):
             print('* load indicator error')
             pass
         else:
+            rowData['isTopGain'] = 'No'
             pass
 
         #append data row
@@ -164,6 +165,7 @@ def updateGSheetHistory(limit = 45000):
     ticker_df = ticker_df[ticker_df['hour'] == ticker_df['hour'].max()]
     ticker_df.to_csv(tickerPath, index=False)
 
+    st_time = time.time()
     while isInternetConnect():
         try:
             if not os.name == 'nt': #for raspi
@@ -175,6 +177,7 @@ def updateGSheetHistory(limit = 45000):
         time.sleep(10)
         if gSheet.getAllDataS('History') != []:
             break
+    print('uploading duration {} minute'.format( (time.time() - st_time)/60 ))
 
 def createSymbolHistory(symbol,timeFrame = 'minute'):
     os.system('cls||clear')
