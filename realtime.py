@@ -325,7 +325,7 @@ def Realtime(idName,sendNotify=True):
 
     #buy_df = buy_df.head(portSize)
     #print('Buy Data Frame')
-    #print(buy_df[['Symbol','Signal','Market','BreakOut_MH','BreakOut_ML']])
+    print(buy_df[['Symbol','Signal','Market','BreakOut_MH','BreakOut_ML']])
     #Buy Condition
     for i in buy_df.index.tolist():
         row = buy_df.loc[i]
