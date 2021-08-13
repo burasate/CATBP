@@ -178,6 +178,7 @@ def updateGSheetHistory(limit = 45000):
         if gSheet.getAllDataS('History') != []:
             break
     print('uploading duration {} minute'.format( (time.time() - st_time)/60 ))
+    time.sleep(2)
 
 def createSymbolHistory(symbol,timeFrame = 'minute'):
     os.system('cls||clear')
