@@ -212,25 +212,39 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
         axes[1].set_title('Drawdown %', color=pltColor['text'], pad=2, size=10, y=0)
         axes[1].yaxis.tick_right()
 
-        # """
         # Resistance Density
         for i in df.index.tolist():
             row = df.loc[i]
-            axes[0].fill_between([101, 103], y1=row['High'], y2=max([row['Open'], row['Close']]),
+            axes[0].fill_between([row['Day'], plotTrimMax], y1=row['High'], y2=max([row['Open'], row['Close']]),
                                  # where=df['%K'] >= df['%D'],
-                                 linewidth=1, color=pltColor['green'],
-                                 linestyle='-', alpha=(row['Volume'] / df['Volume'].max()) / 2
+                                 linewidth=0, color=pltColor['red'],
+                                 linestyle='-', alpha=(row['Volume'] / df['Volume'].max()) / 7
                                  )
-        # """
 
         # Support Density
         for i in df.index.tolist():
             row = df.loc[i]
-            axes[0].fill_between([101, 103], y1=row['Low'], y2=min([row['Open'], row['Close']]),
+            axes[0].fill_between([row['Day'], plotTrimMax], y1=row['Low'], y2=min([row['Open'], row['Close']]),
                                  # where=df['%K'] >= df['%D'],
-                                 linewidth=1, color=pltColor['red'],
-                                 linestyle='-', alpha=(row['Volume']/df['Volume'].max())/2
+                                 linewidth=0, color=pltColor['blue'],
+                                 linestyle='-', alpha=(row['Volume']/df['Volume'].max()) / 7
                                  )
+
+        # Stick
+        for i in df.index.tolist():
+            row = df.loc[i]
+            if row['Open'] >= row['Close']:  # Red
+                axes[0].bar(x=row['Day'], height=row['Open'] - row['Close'], bottom=row['Close'],
+                            linewidth=0, color=pltColor['red'], linestyle=':', alpha=1
+                            )
+                axes[0].vlines(row['Day'], row['Open'], row['High'], linewidth=.8, color=(.5, .5, .5))
+                axes[0].vlines(row['Day'], row['Low'], row['Close'], linewidth=.8, color=(.5, .5, .5))
+            else:
+                axes[0].bar(x=row['Day'], height=row['Open'] - row['Close'], bottom=row['Close'],
+                            linewidth=0, color=pltColor['green'], linestyle=':', alpha=1
+                            )
+                axes[0].vlines(row['Day'], row['Close'], row['High'], linewidth=.8, color=(.5, .5, .5))
+                axes[0].vlines(row['Day'], row['Low'], row['Open'], linewidth=.8, color=(.5, .5, .5))
 
         # Line Plot
         axes[0].plot(df['Day'], df['BreakOut_H'], linewidth=.7, color=pltColor['green'], linestyle='-')
@@ -249,10 +263,10 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
         axes[0].fill_between(df['Day'], y1=h_plt, y2=l_plt, linewidth=1, color=(.5, .5, .5),
                              linestyle='-', alpha=0.1)
 
-        axes[0].plot(df['Day'], clh, color=(.4,.4,.4), linewidth=.7, marker='', markersize=1)
-        axes[0].plot(df['Day'][0], clh[0], color=(.5,.5,.5), linewidth=1, marker='o', markersize=5)
-        axes[0].plot(df['Day'], h_plt, color=(0.25, 0.25, 0.25), linewidth=.4, linestyle=':', marker='', markersize=.5)
-        axes[0].plot(df['Day'], l_plt, color=(0.25, 0.25, 0.25), linewidth=.4, linestyle=':', marker='', markersize=.5)
+        #axes[0].plot(df['Day'], clh, color=(.4,.4,.4), linewidth=.7, marker='', markersize=1)
+        #axes[0].plot(df['Day'][0], clh[0], color=(.5,.5,.5), linewidth=1, marker='o', markersize=5)
+        #axes[0].plot(df['Day'], h_plt, color=(0.25, 0.25, 0.25), linewidth=.4, linestyle=':', marker='', markersize=.5)
+        #axes[0].plot(df['Day'], l_plt, color=(0.25, 0.25, 0.25), linewidth=.4, linestyle=':', marker='', markersize=.5)
         #axes[0].plot(df['Day'], clh_np, linewidth=.5, color=(0.25, 0.25, 0.25), linestyle=':')
 
         # Test Signal
@@ -484,7 +498,7 @@ if __name__ == '__main__' :
     #presetPath = dataPath + '/preset.json'
     #presetJson = json.load(open(presetPath))
 
-    getAnalysis(histPath + 'THB_XRP' + '.csv', 'P3',saveImage=False,showImage=True)
+    getAnalysis(histPath + 'THB_'+'WAN' + '.csv', 'P3',saveImage=False,showImage=True)
     #getSignalAllPreset()
 
     #Save All Image

@@ -256,7 +256,7 @@ def loadAllHist(timeFrame = 'minute'):
         createSymbolHistory(sym,timeFrame)
 
 if __name__ == '__main__':
-    createSymbolHistory('THB_XRP','hour')
+    createSymbolHistory('THB_WAN','hour')
     #updateGSheetHistory()
     #loadAllHist(timeFrame='hour')
     pass

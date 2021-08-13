@@ -137,7 +137,7 @@ def CreateBuyOrder(idName,symbol,portfoiloList,countLeft):
     #sizedBudget = ( (budget / (size-portSize)) /countLeft) * (percentageBalanceUsing/100)
     sizedBudget =  ( budget/countLeft ) * (percentageBalanceUsing/100)
     print('sizedBudget {}'.format(sizedBudget))
-    print('send order {}'.format(symbol))
+    print('sending order for buy {}'.format(symbol))
     result = bitkub.place_bid(sym=symbol, amt=sizedBudget, typ='market')
     print(result)
 
