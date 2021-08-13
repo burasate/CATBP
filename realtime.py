@@ -126,8 +126,8 @@ def CreateBuyOrder(idName,symbol,portfoiloList,countLeft):
                 return None
 
     portSymList = []
-    for symbol in portfoiloList:  # Chane Symbol to Sym
-        q = symbol.replace('THB_', '')
+    for sym in portfoiloList:  # Chane Symbol to Sym
+        q = sym.replace('THB_', '')
         portSymList.append(q)
 
     #print('size {}'.format(size))
@@ -137,6 +137,7 @@ def CreateBuyOrder(idName,symbol,portfoiloList,countLeft):
     #sizedBudget = ( (budget / (size-portSize)) /countLeft) * (percentageBalanceUsing/100)
     sizedBudget =  ( budget/countLeft ) * (percentageBalanceUsing/100)
     print('sizedBudget {}'.format(sizedBudget))
+    print('send order {}'.format(symbol))
     result = bitkub.place_bid(sym=symbol, amt=sizedBudget, typ='market')
     print(result)
 
@@ -567,6 +568,20 @@ if __name__ == '__main__' :
     bitkub = Bitkub()
     bitkub.set_api_key(API_KEY)
     bitkub.set_api_secret(API_SECRET)
+    """
+    #result = bitkub.place_bid(sym='THB_NEAR', amt=100, typ='market')
+    #print(result)
+    """
+    CreateBuyOrder('user10', 'THB_WAN',
+                   [
+                       'THB_USDT',
+                       'THB_USDC',
+                       'THB_WAN',
+                       'THB_AAVE',
+                       'THB_NEAR',
+                       'THB_XLM'
+                   ]
+    , 80)
     """
 
     #Realtime('user1', sendNotify=False)
