@@ -155,8 +155,8 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
         fig.patch.set_facecolor((.9, .9, .9))
         plt.rcParams['figure.facecolor'] = (.9, .9, .9)
         fig.patch.set_alpha(1)
-        fig.suptitle('{}  ( {} )\n{}'.format(quote,info,df['Date'][0]),
-                  fontsize=15, color=pltColor['text'])
+        fig.suptitle('{}  ( {} )\n{}\n{} THB'.format(quote,info,df['Date'][0],df['Close'][0]),
+                  fontsize=15, color=pltColor['text']) #quote + ' : ' + str(df['Close'][0])
         plt.subplots_adjust(left=0.05, bottom=0.05, right=0.95, top=0.90, wspace=0.20, hspace=0.00)
 
         #Plot Setup
@@ -215,18 +215,18 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
         # Resistance Density
         for i in df.index.tolist():
             row = df.loc[i]
-            axes[0].fill_between([row['Day'], plotTrimMax], y1=row['High'], y2=max([row['Open'], row['Close']]),
+            axes[0].fill_between([row['Day'], 100], y1=row['High'], y2=max([row['Open'], row['Close']]),
                                  # where=df['%K'] >= df['%D'],
-                                 linewidth=0, color=pltColor['red'],
+                                 linewidth=0, color=(.8,0.1,0.7),
                                  linestyle='-', alpha=(row['Volume'] / df['Volume'].max()) / 7
                                  )
 
         # Support Density
         for i in df.index.tolist():
             row = df.loc[i]
-            axes[0].fill_between([row['Day'], plotTrimMax], y1=row['Low'], y2=min([row['Open'], row['Close']]),
+            axes[0].fill_between([row['Day'], 100], y1=row['Low'], y2=min([row['Open'], row['Close']]),
                                  # where=df['%K'] >= df['%D'],
-                                 linewidth=0, color=pltColor['blue'],
+                                 linewidth=0, color=pltColor['cyan'],
                                  linestyle='-', alpha=(row['Volume']/df['Volume'].max()) / 7
                                  )
 
@@ -335,12 +335,12 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
         axes[1].plot([0, 120], [df['Avg_Drawdown%'][0], df['Avg_Drawdown%'][0]], linewidth=.7, color=pltColor['red'], linestyle='-')
         #axes[1].plot([0, 120], [df['Min_Drawdown%'][0], df['Min_Drawdown%'][0]], linewidth=.7, color=pltColor['red'], linestyle='--')
 
-        # Text Color By signal
-        axes[0].text(plotTrimMax-3, min(df['Low']), quote + ' : ' + str(df['Close'][0]), size=40, ha='right', va='bottom',
-            color=(.5,.5,.5),alpha = .5)
+        # Text Price
+        #axes[0].text(plotTrimMax-3, min(df['Low']), quote + ' : ' + str(df['Close'][0]), size=40, ha='right', va='bottom',
+            #color=(.5,.5,.5),alpha = .5)
 
         # Text
-        axes[0].text(plotTrimMax-3, min(df['Low']), 'by Burasate.U', size=12, ha='right', va='top', color=(.5,.5,.5))
+        axes[0].text(plotTrimMax-3, min(df['Low']), 'Signal by \n Burasate.U', size=12, ha='right', va='bottom', color=(.5,.5,.5))
         close_l_percenttage = round(((df['Close'][0]-df['BreakOut_L'][0])/df['Close'][0])*100,2)
         axes[0].text(100+4, df['BreakOut_L'][0],
                      '  ' + '{} \n(-{}%)'.format( df['BreakOut_L'][0],close_l_percenttage ),
@@ -361,7 +361,7 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
                      'Breakout Low : {}\n'.format(ps_breakout_low)+
                      'STO Fast : {}\n'.format(ps_sto_fast)+
                      'STO Slow : {}\n'.format(ps_sto_slow)
-                 , size=10, ha='left', va='top', color=((.4, .4, .4)))
+                 , size=10, ha='left', va='top', color=(.4, .4, .4),alpha=0.5)
 
         axes[5].text(100, df['%K'][0], '  ' + str(df['%K'][0].round(2)),
                      size=10, ha='left', va='center', color=pltColor['text'])
@@ -498,7 +498,7 @@ if __name__ == '__main__' :
     #presetPath = dataPath + '/preset.json'
     #presetJson = json.load(open(presetPath))
 
-    getAnalysis(histPath + 'THB_'+'WAN' + '.csv', 'P3',saveImage=False,showImage=True)
+    getAnalysis(histPath + 'THB_'+'BTC' + '.csv', 'P3',saveImage=False,showImage=True)
     #getSignalAllPreset()
 
     #Save All Image
