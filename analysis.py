@@ -215,7 +215,7 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
         # Resistance Density
         for i in df.index.tolist():
             row = df.loc[i]
-            axes[0].fill_between([row['Day'], 100], y1=row['High'], y2=max([row['Open'], row['Close']]),
+            axes[0].fill_between([row['Day'], plotTrimMax], y1=row['High'], y2=max([row['Open'], row['Close']]),
                                  # where=df['%K'] >= df['%D'],
                                  linewidth=0, color=(.8,0.1,0.7),
                                  linestyle='-', alpha=(row['Volume'] / df['Volume'].max()) / 7
@@ -224,7 +224,7 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
         # Support Density
         for i in df.index.tolist():
             row = df.loc[i]
-            axes[0].fill_between([row['Day'], 100], y1=row['Low'], y2=min([row['Open'], row['Close']]),
+            axes[0].fill_between([row['Day'], plotTrimMax], y1=row['Low'], y2=min([row['Open'], row['Close']]),
                                  # where=df['%K'] >= df['%D'],
                                  linewidth=0, color=pltColor['cyan'],
                                  linestyle='-', alpha=(row['Volume']/df['Volume'].max()) / 7
@@ -265,6 +265,7 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
 
         #axes[0].plot(df['Day'], clh, color=(.4,.4,.4), linewidth=.7, marker='', markersize=1)
         #axes[0].plot(df['Day'][0], clh[0], color=(.5,.5,.5), linewidth=1, marker='o', markersize=5)
+        axes[0].plot(102, clh[0], color=(.3,.3,.3), linewidth=1, marker='<', markersize=6)
         #axes[0].plot(df['Day'], h_plt, color=(0.25, 0.25, 0.25), linewidth=.4, linestyle=':', marker='', markersize=.5)
         #axes[0].plot(df['Day'], l_plt, color=(0.25, 0.25, 0.25), linewidth=.4, linestyle=':', marker='', markersize=.5)
         #axes[0].plot(df['Day'], clh_np, linewidth=.5, color=(0.25, 0.25, 0.25), linestyle=':')
@@ -280,10 +281,10 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
                       ]
         """
         axes[0].plot(buyMark['Day'],
-                     buyMark['Close'],
+                     buyMark['BreakOut_H'],
                      linewidth=0, color=pltColor['green'], linestyle='-', marker='o', markersize=4)
         axes[0].plot(sellMark['Day'],
-                     sellMark['Close'],
+                     sellMark['BreakOut_L'],
                      linewidth=0, color=pltColor['red'], linestyle='-', marker='o', markersize=4)
         """
 
@@ -498,12 +499,12 @@ if __name__ == '__main__' :
     #presetPath = dataPath + '/preset.json'
     #presetJson = json.load(open(presetPath))
 
-    getAnalysis(histPath + 'THB_'+'BTC' + '.csv', 'P3',saveImage=False,showImage=True)
+    #getAnalysis(histPath + 'THB_'+'BTC' + '.csv', 'P3',saveImage=False,showImage=True)
     #getSignalAllPreset()
 
     #Save All Image
-    #for file in histFileList:
-        #getAnalysis(histPath + os.sep + file, 'P4', saveImage=True, showImage=False)
+    for file in histFileList:
+        getAnalysis(histPath + os.sep + file, 'P3', saveImage=True, showImage=False)
 
     pass
 
