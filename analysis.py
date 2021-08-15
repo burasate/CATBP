@@ -507,7 +507,7 @@ if __name__ == '__main__' :
 
     #Save All Image
     for file in histFileList:
-        getAnalysis(histPath + os.sep + file, 'P3', saveImage=True, showImage=False)
+        getAnalysis(histPath + os.sep + file, 'P2', saveImage=True, showImage=False)
 
     pass
 

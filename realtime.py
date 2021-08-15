@@ -396,9 +396,18 @@ def Realtime(idName,sendNotify=True):
     # Portfolio report
     if port_df['Symbol'].count() != 0 and reportHourDuration >= configJson[idName]['reportEveryHour']:
         gSheet.setValue('Config', findKey='idName', findValue=idName, key='lastReport', value=time.time())
+        symbolTextList = port_df['Symbol'].tolist()
+        profitTextList = port_df['Profit%'].tolist()
+        spList = []
+        for i in range(len(symbolTextList)):
+            sp = '  {}  profit {}%'.format(
+                symbolTextList[i],
+                profitTextList[i]
+            )
+            spList.append(sp)
         text = '[ Report ]\n' + \
-               '{}\n'.format(' , '.join(port_df['Symbol'].tolist())) + \
-               'Avg Profit {}%'.format(port_df['Profit%'].mean().round(2))
+               '{}'.format('\n'.join(spList)) + \
+               '\nAvg Profit {}%'.format(port_df['Profit%'].mean().round(2))
         print(text)
         if sendNotify:
             lineNotify.sendNotifyMassage(token, text)
@@ -419,19 +428,22 @@ def Realtime(idName,sendNotify=True):
             sell_signal = (
                 (row['Signal'] == triggerSell) and
                 (row['Market'] < row['BreakOut_ML']) and
-                (row['Profit%'] > 0.15*profitTarget)
+                (row['Profit%'] > 0.15*profitTarget) and
+                (row['Profit%'] > 1)
             )
         elif triggerSellPos == 'Upper':
             sell_signal = (
                 (row['Signal'] == triggerSell) and
                 (row['Market'] > row['BreakOut_MH']) and
-                (row['Profit%'] > 0.15*profitTarget)
+                (row['Profit%'] > 0.15*profitTarget) and
+                (row['Profit%'] > 1)
             )
         elif triggerSellPos == 'Middle':
             sell_signal = (
                 (row['Signal'] == triggerSell) and
                 (row['Market'] > row['BreakOut_M']) and
-                (row['Profit%'] > 0.15*profitTarget)
+                (row['Profit%'] > 0.15*profitTarget) and
+                (row['Profit%'] > 1)
             )
 
         if sell_signal or sell_profit or sell_loss or isReset : #Sell
