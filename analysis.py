@@ -253,6 +253,13 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
         axes[0].plot(df['Day'], df['BreakOut_MH'], linewidth=.7, color=pltColor['green'], linestyle='--',alpha=0.5)
         axes[0].plot(df['Day'], df['BreakOut_ML'], linewidth=.7, color=pltColor['red'], linestyle='--',alpha=0.5)
 
+        # Text Quote
+        axes[0].text(
+            (plotTrimMin + plotTrimMax) * .5,
+            (df['Low'].min() + df['High'].max()) * .5, quote,
+            size=275, ha='center', va='center', color='white', alpha=.2
+        )
+
         #ATR Cut
         #axes[0].plot(df['Day'], clh-(clh*(df['NDay_TrueRange%']/100)).mean(), color=(.4, .4, .4), linewidth=.7, linestyle='--')
 
@@ -335,10 +342,6 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
                      linestyle='-')
         axes[1].plot([0, 120], [df['Avg_Drawdown%'][0], df['Avg_Drawdown%'][0]], linewidth=.7, color=pltColor['red'], linestyle='-')
         #axes[1].plot([0, 120], [df['Min_Drawdown%'][0], df['Min_Drawdown%'][0]], linewidth=.7, color=pltColor['red'], linestyle='--')
-
-        # Text Price
-        #axes[0].text(plotTrimMax-3, min(df['Low']), quote + ' : ' + str(df['Close'][0]), size=40, ha='right', va='bottom',
-            #color=(.5,.5,.5),alpha = .5)
 
         # Text
         axes[0].text(plotTrimMax-3, min(df['Low']), 'Signal by \n Burasate.U', size=12, ha='right', va='bottom', color=(.5,.5,.5))
