@@ -363,7 +363,12 @@ def Realtime(idName,sendNotify=True):
 
         elif not row['Symbol'] in port_df['Symbol'].tolist(): #Symbol isn't in portfolio
             #print('  Checking port is not full')
-            if port_df['Symbol'].count() < portSize:  #Portfolio isn't full
+            newPortSize = portSize
+            if not row['Symbol'] in favoriteList:
+                newPortSize = portSize - len(favoriteList)
+                if newPortSize < 0 :
+                    newPortSize = 0
+            if port_df['Symbol'].count() < newPortSize:  #Portfolio isn't full
                 # Do Buy
                 print('Buy {} as new symbol'.format(row['Symbol']))
                 portfolioList = port_df['Symbol'].tolist()
