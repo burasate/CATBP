@@ -456,7 +456,7 @@ def Realtime(idName,sendNotify=True):
                 (row['Profit%'] > 1)
             )
 
-        if sell_signal or sell_profit or sell_loss or isReset : #Sell
+        if sell_signal or sell_profit or sell_loss or isReset or sell_dislike : #Sell
             if isReset or sell_dislike:
                 port_df.loc[i, 'Count'] = 0 # Sell All
             else:
