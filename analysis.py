@@ -277,6 +277,7 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
         #axes[0].plot(df['Day'], l_plt, color=(0.25, 0.25, 0.25), linewidth=.4, linestyle=':', marker='', markersize=.5)
         #axes[0].plot(df['Day'], clh_np, linewidth=.5, color=(0.25, 0.25, 0.25), linestyle=':')
 
+        """
         # Test Signal
         buyMark = df[(df['SMA_S'] > df['SMA_L']) &
                      (df['%K'] > df['%D']) &
@@ -286,7 +287,7 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
                       (df['%K'] < df['%D']) &
                       (df['GL_Ratio'] < df['GL_Ratio_Slow'])
                       ]
-        """
+        
         axes[0].plot(buyMark['Day'],
                      buyMark['BreakOut_H'],
                      linewidth=0, color=pltColor['green'], linestyle='-', marker='o', markersize=4)
@@ -502,12 +503,12 @@ if __name__ == '__main__' :
     #presetPath = dataPath + '/preset.json'
     #presetJson = json.load(open(presetPath))
 
-    #getAnalysis(histPath + 'THB_'+'BTC' + '.csv', 'P3',saveImage=False,showImage=True)
+    getAnalysis(histPath + 'THB_'+'BTC' + '.csv', 'P3',saveImage=False,showImage=True)
     #getSignalAllPreset()
 
     #Save All Image
-    for file in histFileList:
-        getAnalysis(histPath + os.sep + file, 'P2', saveImage=True, showImage=False)
+    #for file in histFileList:
+        #getAnalysis(histPath + os.sep + file, 'P2', saveImage=True, showImage=False)
 
     pass
 
