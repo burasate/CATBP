@@ -257,7 +257,14 @@ def Realtime(idName,sendNotify=True):
     print('Portfolio Size : {} | Buy Position Size : {}'.format(portSize, buySize))
     print('Buy : {} | Sell : {}'.format(triggerBuy,triggerSell))
     print('Trigger Buy : {} | Trigger Sell : {}'.format(triggerBuyPos,triggerSellPos))
-    #print(ticker)
+    favoriteList = []
+    dislikeList = []
+    try:favoriteList = configJson[idName]['favorite'].split(',')
+    except:print('favorite isn\'t readable!')
+    try:dislikeList = configJson[idName]['dislike'].split(',')
+    except:print('dislike isn\'t readable!')
+    print('Favorite : {}\nDislike : {}'.format(favoriteList, dislikeList))
+
 
     colSelect = ['User', 'Symbol', 'Signal', 'Buy', 'Market',
                  'Profit%', 'Max_Drawdown%', 'Change4HR%',
@@ -331,6 +338,8 @@ def Realtime(idName,sendNotify=True):
     for i in buy_df.index.tolist():
         row = buy_df.loc[i]
         text = '[ Buy ] {}\n{} Bath'.format(row['Symbol'], row['Buy'])
+        if row['Symbol'] in dislikeList:
+            continue
         if row['Symbol'] in port_df['Symbol'].tolist(): #Symbol is in portfolio already
             #print('  Checking buy count')
             symbol_index = port_df[port_df['Symbol'] == row['Symbol']].index.tolist()[0]
@@ -419,6 +428,7 @@ def Realtime(idName,sendNotify=True):
         sell_signal = False
         sell_profit = row['Profit%'] > profitTarget
         sell_loss = row['Profit%'] < lossTarget
+        sell_dislike = row['Profit%'] in dislikeList
 
         #Adaptive Loss
         if adaptiveLoss and sell_loss:
@@ -447,7 +457,7 @@ def Realtime(idName,sendNotify=True):
             )
 
         if sell_signal or sell_profit or sell_loss or isReset : #Sell
-            if isReset:
+            if isReset or sell_dislike:
                 port_df.loc[i, 'Count'] = 0 # Sell All
             else:
                 port_df.loc[i, 'Count'] -= 1
@@ -595,9 +605,6 @@ if __name__ == '__main__' :
                    ]
     , 80)
     """
-
-    #Realtime('user1', sendNotify=False)
-    #Realtime('user2', sendNotify=False)
     #Realtime('CryptoBot', sendNotify=False)
 
     pass
