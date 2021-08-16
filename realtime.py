@@ -263,6 +263,10 @@ def Realtime(idName,sendNotify=True):
     except:print('favorite isn\'t readable!')
     try:dislikeList = configJson[idName]['dislike'].split(',')
     except:print('dislike isn\'t readable!')
+    if favoriteList == ['']:
+        favoriteList = []
+    if dislikeList == ['']:
+        dislikeList = []
     print('Favorite : {}\nDislike : {}'.format(favoriteList, dislikeList))
 
 
@@ -433,7 +437,7 @@ def Realtime(idName,sendNotify=True):
         sell_signal = False
         sell_profit = row['Profit%'] > profitTarget
         sell_loss = row['Profit%'] < lossTarget
-        sell_dislike = row['Profit%'] in dislikeList
+        sell_dislike = row['Symbol'] in dislikeList
 
         #Adaptive Loss
         if adaptiveLoss and sell_loss:
