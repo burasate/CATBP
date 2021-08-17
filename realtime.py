@@ -317,7 +317,7 @@ def Realtime(idName,sendNotify=True):
 
     print('Portfolio')
     print(port_df['Symbol'].tolist())
-    
+
     print('---------------------\nBuying\n---------------------')
     #Find New Buy
     buy_df = None
@@ -423,7 +423,7 @@ def Realtime(idName,sendNotify=True):
         profitTextList = port_df['Profit%'].tolist()
         spList = []
         for i in range(len(symbolTextList)):
-            sp = '  {}  profit {}%'.format(
+            sp = '  - {}  profit {}%'.format(
                 symbolTextList[i],
                 profitTextList[i]
             )
