@@ -310,9 +310,14 @@ def Realtime(idName,sendNotify=True):
     ]
     port_df.reset_index(inplace=True)
 
+    # Update Favorite Symbol
+    for symbol in port_df['Symbol'].tolist():
+        if symbol in favoriteList:
+            favoriteList.remove(symbol)
+
     print('Portfolio')
     print(port_df['Symbol'].tolist())
-
+    
     print('---------------------\nBuying\n---------------------')
     #Find New Buy
     buy_df = None
