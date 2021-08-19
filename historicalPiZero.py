@@ -50,8 +50,8 @@ def updateGSheetHistory(*_):
             'second': int(dt.now().strftime('%S')),
             'symbol' : sym,
             'dateTime' : dt.now().strftime('%Y-%m-%d %H:%M:%S'),
-            'percentChangeAverage' : '',
-            'isTopGain' : ''
+            #'percentChangeAverage' : '',
+            #'isTopGain' : ''
         }
 
         for i in ticker[sym]:
@@ -60,13 +60,17 @@ def updateGSheetHistory(*_):
 
         row = []
         for col in header:
-            row.append(data[col])
+            if not col in list(data):
+                row.append('')
+            else:
+                row.append(data[col])
         print(row)
 
         gSheet.addRow('History',row)
 
+print('BitPy Price Updater')
 if not os.name == 'nt':
-    time.sleep(80)
+    time.sleep(30)
     import update
     update.updateAllFile()
     update.updateConfig()
@@ -76,9 +80,14 @@ if not os.name == 'nt':
     while True:
         try:
             updateGSheetHistory()
-        except:
-            time.sleep(15)
+        except Exception as e:
+            print('!!!! ==========================')
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            print('Error Type {}\nFile {}\n Line {}'.format(exc_type, fname, exc_tb.tb_lineno))
+            print('!!!! ==========================')
+            time.sleep(5)
         else:
-            time.sleep(300)
+            time.sleep(60)
 
 
