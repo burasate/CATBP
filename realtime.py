@@ -440,8 +440,6 @@ def Realtime(idName,sendNotify=True):
             lineNotify.sendNotifyMassage(token, text)
 
     print('---------------------\nSelling\n---------------------')
-    print(signal_df_all[signal_df_all['Symbol'].isin(port_df['Symbol'].tolist())]['Max_Drawdown%'].mean())
-    print(signal_df_all['NDay_Drawdown%'].mean())
     #Sell Condition
     for i in port_df.index.tolist():
         row = port_df.loc[i]
@@ -454,7 +452,7 @@ def Realtime(idName,sendNotify=True):
         if adaptiveLoss and sell_loss:
             #new_lossTarget = abs(row['Profit%'])
             #new_lossTarget = ( abs(port_df['Max_Drawdown%'].mean()) + abs(row['Profit%']) ) * 0.5
-            new_lossTarget = signal_df_all[signal_df_all['Symbol'].isin(port_df['Symbol'].tolist())]['Max_Drawdown%'].mean()
+            new_lossTarget = signal_df_all['NDay_Drawdown%'].mean()
             new_lossTarget = round(new_lossTarget,1)
             gSheet.setValue('Config', findKey='idName', findValue=idName, key='percentageLossTarget', value=new_lossTarget)
 
