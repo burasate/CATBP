@@ -40,5 +40,6 @@ while True:
         print('Error Type {}\nFile {}\n Line {}'.format(exc_type, fname, exc_tb.tb_lineno))
         print('!!!! ==========================')
     finally:
+        print('Ending of Process')
         time.sleep(60*2)
         pass
