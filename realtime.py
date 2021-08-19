@@ -440,6 +440,7 @@ def Realtime(idName,sendNotify=True):
             lineNotify.sendNotifyMassage(token, text)
 
     print('---------------------\nSelling\n---------------------')
+    print(signal_df_all[signal_df_all['Symbol'].isin(port_df['Symbol'].tolist())]['Max_Drawdown%'].mean())
     #Sell Condition
     for i in port_df.index.tolist():
         row = port_df.loc[i]
