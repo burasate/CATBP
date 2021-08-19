@@ -474,10 +474,13 @@ def Realtime(idName,sendNotify=True):
             )
 
         if sell_signal or sell_profit or sell_loss or isReset or sell_dislike : #Sell
-            if isReset or sell_dislike:
+            if isReset or sell_dislike or sell_profit:
                 port_df.loc[i, 'Count'] = 0 # Sell All
             else:
                 port_df.loc[i, 'Count'] -= 1
+
+            if port_df.loc[i, 'Count'] < 0:
+                port_df.loc[i, 'Count'] = 0
 
             text = '[ Sell ] {}\n{} Bath ({}%)'.format(row['Symbol'], row['Market'], row['Profit%'])
             print(text)
