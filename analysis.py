@@ -267,8 +267,8 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
         #axes[0].plot([100, 120], [df['BreakOut_L'][0], df['BreakOut_L'][0]], linewidth=.7, color=pltColor['red'], linestyle='-',alpha = 1)
         #axes[0].plot([100, 120], [df['BreakOut_M'][0], df['BreakOut_M'][0]], linewidth=.7, color=pltColor['yellow'], linestyle=':',alpha = 1)
 
-        axes[0].fill_between(df['Day'], y1=h_plt, y2=l_plt, linewidth=1, color=(.5, .5, .5),
-                             linestyle='-', alpha=0.1)
+        #axes[0].fill_between(df['Day'], y1=h_plt, y2=l_plt, linewidth=1, color=(.5, .5, .5),
+                             #linestyle='-', alpha=0.1)
 
         #axes[0].plot(df['Day'], clh, color=(.4,.4,.4), linewidth=.7, marker='', markersize=1)
         #axes[0].plot(df['Day'][0], clh[0], color=(.5,.5,.5), linewidth=1, marker='o', markersize=5)
@@ -276,25 +276,6 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
         #axes[0].plot(df['Day'], h_plt, color=(0.25, 0.25, 0.25), linewidth=.4, linestyle=':', marker='', markersize=.5)
         #axes[0].plot(df['Day'], l_plt, color=(0.25, 0.25, 0.25), linewidth=.4, linestyle=':', marker='', markersize=.5)
         #axes[0].plot(df['Day'], clh_np, linewidth=.5, color=(0.25, 0.25, 0.25), linestyle=':')
-
-        """
-        # Test Signal
-        buyMark = df[(df['SMA_S'] > df['SMA_L']) &
-                     (df['%K'] > df['%D']) &
-                     (df['GL_Ratio'] > df['GL_Ratio_Slow'])
-                     ]
-        sellMark = df[(df['SMA_S'] < df['SMA_L']) &
-                      (df['%K'] < df['%D']) &
-                      (df['GL_Ratio'] < df['GL_Ratio_Slow'])
-                      ]
-        
-        axes[0].plot(buyMark['Day'],
-                     buyMark['BreakOut_H'],
-                     linewidth=0, color=pltColor['green'], linestyle='-', marker='o', markersize=4)
-        axes[0].plot(sellMark['Day'],
-                     sellMark['BreakOut_L'],
-                     linewidth=0, color=pltColor['red'], linestyle='-', marker='o', markersize=4)
-        """
 
         #STO Plot
         axes[5].fill_between(df['Day'], y1=df['%K'], y2=df['%D'],
@@ -309,17 +290,9 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
         axes[5].plot([0,120], [50,50], linewidth=.7, color=(.5,.5,.5), linestyle='--')
 
         axes[2].bar(df['Day'], df['Volume'], linewidth=.5, color=(.5, .5, .5), linestyle=':',alpha=.2)
-        #axes[2].bar(df[df['Close'] >= df['Open']]['Day'], df[df['Close'] >= df['Open']]['Volume'], linewidth=.5,
-                    #color=pltColor['green'], linestyle=':', alpha=.2)
-        #axes[2].bar(df[df['Close'] < df['Open']]['Day'], df[df['Close'] < df['Open']]['Volume'], linewidth=.5,
-                    #color=pltColor['red'], linestyle=':', alpha=.2)
-        #axes[2].plot(df['Day'], df['Volume_SMA_S'], linewidth=1, color=(.5, .5, .5), linestyle='-')
-        #axes[2].plot(df['Day'], df['Volume_SMA_L'], linewidth=.5, color=(.5, .5, .5), linestyle='-')
         axes[2].plot(df['Day'], df['Volume_Break_H'], linewidth=1, color=(.5, .5, .5), linestyle='-')
-        #axes[2].plot([0, 120], [df['Volume_Avg'][0],df['Volume_Avg'][0]], linewidth=.7, color=pltColor['red'],linestyle='--')
         axes[2].plot(df['Day'][0], df['Volume_Break_H'][0], color=(.5, .5, .5), linewidth=1, marker='o', markersize=5)
 
-        #axes[3].fill_between(df['Day'], df['GL_Ratio'], linewidth=1, color=(.5, .5, .5), linestyle='-',alpha=0.2)
         axes[3].fill_between(df['Day'], y1=df['GL_Ratio'], y2=df['GL_Ratio_Slow'], where=df['GL_Ratio']>=df['GL_Ratio_Slow'], linewidth=1, color=(.5, .5, .5), linestyle='-',alpha=0.2)
         axes[3].plot(df['Day'], df['GL_Ratio'], linewidth=.7, color=(.5, .5, .5), linestyle='-')
         axes[3].plot(df['Day'], df['GL_Ratio_Slow'], linewidth=.7, color=(.5,.5,.5), linestyle=':')
@@ -337,12 +310,9 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
         axes[1].plot(df['Day'],  df['Drawdown%'], linewidth=.7, color=(.5, .5, .5), linestyle='-')
         axes[1].plot(df['Day'], df['NDay_Drawdown%'], linewidth=.7, color=pltColor['red'], linestyle='--')
         axes[1].plot(df['Day'][0], df['NDay_Drawdown%'][0], color=pltColor['red'], linewidth=1, marker='o', markersize=5)
-        #axes[1].plot(df['Day'], df['NDay_TrueRange%'], linewidth=.7, color=pltColor['red'], linestyle='--')
-        #axes[1].plot(df['Day'][0], df['NDay_TrueRange%'][0], color=pltColor['red'], linewidth=1, marker='o',markersize=4)
         axes[1].plot([0, 100], [df['Max_Drawdown%'][0], df['Max_Drawdown%'][0]], linewidth=.7, color=pltColor['red'],
                      linestyle='-')
         axes[1].plot([0, 120], [df['Avg_Drawdown%'][0], df['Avg_Drawdown%'][0]], linewidth=.7, color=pltColor['red'], linestyle='-')
-        #axes[1].plot([0, 120], [df['Min_Drawdown%'][0], df['Min_Drawdown%'][0]], linewidth=.7, color=pltColor['red'], linestyle='--')
 
         # Text
         axes[0].text(plotTrimMax-3, min(df['Low']), 'Signal by \n Burasate.U', size=12, ha='right', va='bottom', color=(.5,.5,.5))
@@ -356,8 +326,6 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
                      '  ' + '{} \n(+{}%)'.format( df['BreakOut_H'][0],close_h_percenttage ),
                      size=10, ha='left', va='center',
                      color=pltColor['text'])
-        #axes[0].text(100, df['BreakOut_M'][0], '  ' + str(df['BreakOut_M'][0]), size=10, ha='left', va='center',
-                     #color=pltColor['text'])
         axes[0].text(plotTrimMin+1, df['High'].max(),
                      'Preset Name: {}\n'.format(preset)+
                      'Preset Description : {}\n'.format(ps_description)+
@@ -393,7 +361,6 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
         if showImage:
             plt.show()
         plt.close()
-    #df.to_csv(dataPath+os.sep+'test.csv',index=False)
     return df
 
 def getSignalAllPreset():
@@ -508,8 +475,7 @@ if __name__ == '__main__' :
 
     #Save All Image
     #for file in histFileList:
-        #getAnalysis(histPath + os.sep + file, 'P2', saveImage=True, showImage=False)
-
+        #getAnalysis(histPath + os.sep + file, 'P3', saveImage=True, showImage=False)
     pass
 
 
