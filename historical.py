@@ -174,7 +174,7 @@ def updateGSheetHistory(limit = 45000):
                 gSheet.updateFromCSV(tickerPath, 'Ticker')
                 print('upload history data finish')
         except: pass
-        time.sleep(5)
+        time.sleep(8)
         if gSheet.getAllDataS('History') != []:
             break
     print('uploading duration {} minute'.format( (time.time() - st_time)/60 ))
