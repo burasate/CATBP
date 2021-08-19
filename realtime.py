@@ -254,6 +254,7 @@ def Realtime(idName,sendNotify=True):
     triggerSellPos = systemJson[system]['triggerSellPosition']
     adaptiveLoss = bool(configJson[idName]['adaptiveLoss'])
     autoPreset = bool(configJson[idName]['autoPreset'])
+    dipTraget = configJson[idName]['percentageBuyDip']
     print('Portfolio Size : {} | Buy Position Size : {}'.format(portSize, buySize))
     print('Buy : {} | Sell : {}'.format(triggerBuy,triggerSell))
     print('Trigger Buy : {} | Trigger Sell : {}'.format(triggerBuyPos,triggerSellPos))
@@ -356,7 +357,8 @@ def Realtime(idName,sendNotify=True):
             if port_df.loc[symbol_index,'Count'] < buySize : #Buy position size is not full
                 #if row['Rec_Date'] != port_df.loc[symbol_index,'Rec_Date']: #if Date Time not exist
                 if buyHourDuration >= configJson[idName]['buyEveryHour']: #if Duration geater than Buy Hour
-                    if row['Market'] <= port_df.loc[symbol_index,'Buy']: #if Market less than port buy
+                    dipPrice =  port_df.loc[symbol_index,'Buy'] - (port_df.loc[symbol_index,'Buy'] * (dipTraget/100))
+                    if row['Market'] <= dipPrice: #Buy on Dip
                         # Do Buy
                         print('Buy {} more'.format(row['Symbol']))
                         portfolioList = port_df['Symbol'].tolist()
@@ -494,7 +496,7 @@ def Realtime(idName,sendNotify=True):
 
     print('---------------------\nAuto Preset\n---------------------')
     if autoPreset:
-        dayScore = 3
+        dayScore = 5
         tran_df = pd.read_csv(transacFilePath)
         tran_df = tran_df[
             tran_df['epoch'] >= now - ((1 * 60 * 60 * 24) * dayScore)
