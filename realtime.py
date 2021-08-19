@@ -494,9 +494,10 @@ def Realtime(idName,sendNotify=True):
 
     print('---------------------\nAuto Preset\n---------------------')
     if autoPreset:
+        dayScore = 3
         tran_df = pd.read_csv(transacFilePath)
         tran_df = tran_df[
-            tran_df['epoch'] >= now - ((1 * 60 * 60 * 24) * 7)
+            tran_df['epoch'] >= now - ((1 * 60 * 60 * 24) * dayScore)
             ]
         tran_df['Change%'] = tran_df.groupby(['User'])['Change%'].transform('sum')
         tran_df.drop_duplicates(subset=['User'], keep='last', inplace=True)
@@ -513,11 +514,11 @@ def Realtime(idName,sendNotify=True):
         if configJson[topUser]['preset'] != configJson[idName]['preset']:
             gSheet.setValue('Config', findKey='idName', findValue=idName, key='preset', value=aPreset)
             if sendNotify:
-                lineNotify.sendNotifyMassage(token, 'Change Preset to {}'.format(aPreset))
+                lineNotify.sendNotifyMassage(token, 'Change Preset to {}\n{}'.format(aPreset,presetJson[aPreset]['description']))
         if configJson[topUser]['system'] != configJson[idName]['system']:
             gSheet.setValue('Config', findKey='idName', findValue=idName, key='system', value=aSystem)
             if sendNotify:
-                lineNotify.sendNotifyMassage(token, 'Change System to {}'.format(aSystem))
+                lineNotify.sendNotifyMassage(token, 'Change System to {}\n{}'.format(aSystem,systemJson[aSystem]['description']))
 
     print('---------------------\nBalance Checking\n---------------------')
     # Clear Wrong Balnace
