@@ -254,7 +254,7 @@ def Realtime(idName,sendNotify=True):
     triggerSellPos = systemJson[system]['triggerSellPosition']
     adaptiveLoss = bool(configJson[idName]['adaptiveLoss'])
     autoPreset = bool(configJson[idName]['autoPreset'])
-    dipTraget = configJson[idName]['percentageBuyDip']
+    dipTraget = systemJson[system]['dipPercentage']
     print('Portfolio Size : {} | Buy Position Size : {}'.format(portSize, buySize))
     print('Buy : {} | Sell : {}'.format(triggerBuy,triggerSell))
     print('Trigger Buy : {} | Trigger Sell : {}'.format(triggerBuyPos,triggerSellPos))
