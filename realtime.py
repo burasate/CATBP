@@ -285,6 +285,7 @@ def Realtime(idName,sendNotify=True):
         ]
     signal_df = signal_df.sort_values(['Change4HR%','Volume','Risk%'], ascending=[True,False,True])
     signal_df.reset_index(inplace=True)
+    signal_df_all = signal_df
 
     # New Column For Signal DF
     signal_df['User'] = idName
@@ -451,7 +452,8 @@ def Realtime(idName,sendNotify=True):
         if adaptiveLoss and sell_loss:
             #new_lossTarget = abs(row['Profit%'])
             #new_lossTarget = ( abs(port_df['Max_Drawdown%'].mean()) + abs(row['Profit%']) ) * 0.5
-            new_lossTarget = signal_df[signal_df['Symbol'].isin(port_df['Symbol'].tolist())]['Max_Drawdown%'].mean()
+            new_lossTarget = signal_df_all[signal_df_all['Symbol'].isin(port_df['Symbol'].tolist())]['Max_Drawdown%'].mean()
+            new_lossTarget = round(new_lossTarget,1)
             gSheet.setValue('Config', findKey='idName', findValue=idName, key='percentageLossTarget', value=new_lossTarget)
 
         if triggerSellPos == 'Lower':
