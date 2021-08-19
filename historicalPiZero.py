@@ -49,7 +49,9 @@ def updateGSheetHistory(*_):
             'minute': int(dt.now().strftime('%M')),
             'second': int(dt.now().strftime('%S')),
             'symbol' : sym,
-            'dateTime' : dt.now().strftime('%Y-%m-%d %H:%M:%S')
+            'dateTime' : dt.now().strftime('%Y-%m-%d %H:%M:%S'),
+            'percentChangeAverage' : '',
+            'isTopGain' : ''
         }
 
         for i in ticker[sym]:
