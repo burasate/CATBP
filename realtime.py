@@ -449,7 +449,9 @@ def Realtime(idName,sendNotify=True):
 
         #Adaptive Loss
         if adaptiveLoss and sell_loss:
-            gSheet.setValue('Config', findKey='idName', findValue=idName, key='percentageLossTarget', value=abs(row['Profit%']))
+            #new_lossTarget = abs(row['Profit%'])
+            new_lossTarget = ( abs(port_df['Max_Drawdown%'].mean()) + abs(row['Profit%']) ) * 0.5
+            gSheet.setValue('Config', findKey='idName', findValue=idName, key='percentageLossTarget', value=new_lossTarget)
 
         if triggerSellPos == 'Lower':
             sell_signal = (
