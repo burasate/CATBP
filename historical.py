@@ -166,7 +166,8 @@ def updateGSheetHistory(limit = 45000):
     ticker_df.to_csv(tickerPath, index=False)
 
     st_time = time.time()
-    while isInternetConnect():
+    while True:
+        print('Uploading.....')
         try:
             if not os.name == 'nt': #for raspi
                 print('uploading history data...')
@@ -174,7 +175,7 @@ def updateGSheetHistory(limit = 45000):
                 gSheet.updateFromCSV(tickerPath, 'Ticker')
                 print('upload history data finish')
         except: pass
-        time.sleep(8)
+        time.sleep(15) #Waiting Upload
         if gSheet.getAllDataS('History') != []:
             break
     print('uploading duration {} minute'.format( (time.time() - st_time)/60 ))
