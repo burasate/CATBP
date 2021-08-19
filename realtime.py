@@ -426,7 +426,7 @@ def Realtime(idName,sendNotify=True):
         profitTextList = port_df['Profit%'].tolist()
         spList = []
         for i in range(len(symbolTextList)):
-            sp = '  - {}  profit {}%'.format(
+            sp = '  - {}      ({}%)'.format(
                 symbolTextList[i],
                 profitTextList[i]
             )
