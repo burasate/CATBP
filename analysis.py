@@ -48,7 +48,7 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
     #Fix Day Axis
     df['Day'] = df['Day'] + (100 - df['Day'][0])
 
-    clh = df['Close']
+    clh = (df['Close'] + df['High'] + df['Low'])/3
     h_plt = df['High']
     l_plt = df['Low']
     clh_np = np.linspace(df['Close'][0], df['Close'][df['Day'].count() - 1], df['Day'].count())
@@ -123,7 +123,7 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
     else:
         df['NDay_Drawdown%'] = (df['Drawdown%'].sort_index(ascending=False)).rolling(ps_breakout_high).max()
     df['NDay_Drawdown%'] = df['NDay_Drawdown%'].sort_index(ascending=True).round(1)
-    df['Avg_Drawdown%'] = round(df['NDay_Drawdown%'].mean(), 2)
+    df['Avg_Drawdown%'] = round( (df['NDay_Drawdown%'].mean() + df['Drawdown%'].mean())*0.5 , 2)
 
     #True Range
     # df['TrueRange'] = df['High'] - df['Low'] #true range
@@ -250,7 +250,7 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
         # Line Plot
         axes[0].plot(df['Day'], df['BreakOut_H'], linewidth=.7, color=pltColor['green'], linestyle='-')
         axes[0].plot(df['Day'], df['BreakOut_L'], linewidth=.7, color=pltColor['red'], linestyle='-')
-        #axes[0].plot(df['Day'], df['BreakOut_M'], linewidth=.7, color=pltColor['yellow'], linestyle='--',alpha=0.5)
+        axes[0].plot(df['Day'], df['BreakOut_M'], linewidth=.7, color=pltColor['yellow'], linestyle='--',alpha=0.5)
         axes[0].plot(df['Day'], df['BreakOut_MH'], linewidth=.7, color=pltColor['green'], linestyle='--',alpha=0.5)
         axes[0].plot(df['Day'], df['BreakOut_ML'], linewidth=.7, color=pltColor['red'], linestyle='--',alpha=0.5)
 
@@ -471,7 +471,7 @@ if __name__ == '__main__' :
     #presetPath = dataPath + '/preset.json'
     #presetJson = json.load(open(presetPath))
 
-    getAnalysis(histPath + 'THB_'+'BTC' + '.csv', 'P3',saveImage=False,showImage=True)
+    getAnalysis(histPath + 'THB_'+'ALPHA' + '.csv', 'P3',saveImage=False,showImage=True)
     #getSignalAllPreset()
 
     #Save All Image
