@@ -229,7 +229,7 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
                                  linewidth=0, color=pltColor['cyan'],
                                  linestyle='-', alpha=(row['Volume']/df['Volume'].max()) / 7
                                  )
-
+        """
         # Stick
         for i in df.index.tolist():
             row = df.loc[i]
@@ -245,6 +245,7 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
                             )
                 axes[0].vlines(row['Day'], row['Close'], row['High'], linewidth=.8, color=(.5, .5, .5))
                 axes[0].vlines(row['Day'], row['Low'], row['Open'], linewidth=.8, color=(.5, .5, .5))
+        """
 
         # Line Plot
         axes[0].plot(df['Day'], df['BreakOut_H'], linewidth=.7, color=pltColor['green'], linestyle='-')
@@ -267,11 +268,11 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
         #axes[0].plot([100, 120], [df['BreakOut_L'][0], df['BreakOut_L'][0]], linewidth=.7, color=pltColor['red'], linestyle='-',alpha = 1)
         #axes[0].plot([100, 120], [df['BreakOut_M'][0], df['BreakOut_M'][0]], linewidth=.7, color=pltColor['yellow'], linestyle=':',alpha = 1)
 
-        #axes[0].fill_between(df['Day'], y1=h_plt, y2=l_plt, linewidth=1, color=(.5, .5, .5),
-                             #linestyle='-', alpha=0.1)
+        axes[0].fill_between(df['Day'], y1=h_plt, y2=l_plt, linewidth=1, color=(.5, .5, .5),
+                             linestyle='-', alpha=0.2)
 
-        #axes[0].plot(df['Day'], clh, color=(.4,.4,.4), linewidth=.7, marker='', markersize=1)
-        #axes[0].plot(df['Day'][0], clh[0], color=(.5,.5,.5), linewidth=1, marker='o', markersize=5)
+        axes[0].plot(df['Day'], clh, color=(.4,.4,.4), linewidth=1.0, marker='', markersize=1)
+        axes[0].plot(df['Day'][0], clh[0], color=(.5,.5,.5), linewidth=1, marker='o', markersize=6)
         axes[0].plot(102, clh[0], color=(.3,.3,.3), linewidth=1, marker='<', markersize=6)
         #axes[0].plot(df['Day'], h_plt, color=(0.25, 0.25, 0.25), linewidth=.4, linestyle=':', marker='', markersize=.5)
         #axes[0].plot(df['Day'], l_plt, color=(0.25, 0.25, 0.25), linewidth=.4, linestyle=':', marker='', markersize=.5)
