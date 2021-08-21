@@ -275,7 +275,7 @@ def Realtime(idName,sendNotify=True):
                  'Profit%', 'Max_Drawdown%', 'Change4HR%',
                  'Volume', 'BreakOut_H', 'BreakOut_MH', 'BreakOut_M',
                  'BreakOut_ML', 'BreakOut_L', 'Low', 'High', 'Rec_Date','Count'
-                 ,'Last_Buy']
+                 ,'Last_Buy','Max_Profit%']
 
     #Signal Dataframe
     signal_df = pd.read_csv(dataPath + '/signal.csv')
@@ -294,6 +294,7 @@ def Realtime(idName,sendNotify=True):
     signal_df['Market'] = signal_df['Close']
     signal_df['Profit%'] = ((signal_df['Market'] - signal_df['Buy']) / signal_df['Buy']) * 100
     signal_df['Max_Drawdown%'] = 0.0
+    signal_df['Max_Profit%'] = 0.0
     signal_df['Count'] = 1
     signal_df['Last_Buy'] = now
     for sym in ticker:
@@ -371,6 +372,7 @@ def Realtime(idName,sendNotify=True):
                         port_df.loc[symbol_index, 'Count'] += 1
                         port_df.loc[symbol_index, 'Rec_Date'] = row['Rec_Date']
                         port_df.loc[symbol_index, 'Last_Buy'] = row['Last_Buy']
+                        port_df.loc[symbol_index, 'Max_Profit%'] = max( [ row['Profit%'], port_df.loc[symbol_index, 'Max_Profit%'] ])
                         port_df.loc[symbol_index, 'Buy'] = round((port_df.loc[symbol_index, 'Buy'] + row['Buy']) * 0.5, 2)
 
         elif not row['Symbol'] in port_df['Symbol'].tolist(): #Symbol isn't in portfolio
@@ -447,6 +449,13 @@ def Realtime(idName,sendNotify=True):
         sell_profit = row['Profit%'] > profitTarget
         sell_loss = row['Profit%'] < lossTarget
         sell_dislike = row['Symbol'] in dislikeList
+        sell_trailing = (
+            (row['Profit%'] > 1) and
+            (row['Profit%'] > 0.15*profitTarget) and
+            (row['Profit%'] < profitTarget) and
+            (row['Count'] >= buySize) and
+            ((row['Max_Profit%'] - row['Profit%']) > profitTarget*0.5)
+        )
 
         #Adaptive Loss
         if adaptiveLoss and sell_loss:
@@ -478,8 +487,11 @@ def Realtime(idName,sendNotify=True):
                 (row['Profit%'] > 1)
             )
 
-        if sell_signal or sell_profit or sell_loss or isReset or sell_dislike : #Sell
-            if isReset or sell_dislike or sell_profit:
+        if sell_signal or sell_profit or sell_loss or isReset or sell_dislike or sell_trailing : #Sell
+            text = '[ Sell ] {}\n{} Bath ({}%)'.format(row['Symbol'], row['Market'], row['Profit%'])
+            print(text)
+
+            if isReset or sell_dislike or sell_profit or sell_trailing:
                 port_df.loc[i, 'Count'] = 0 # Sell All
             else:
                 port_df.loc[i, 'Count'] -= 1
@@ -487,8 +499,19 @@ def Realtime(idName,sendNotify=True):
             if port_df.loc[i, 'Count'] < 0:
                 port_df.loc[i, 'Count'] = 0
 
-            text = '[ Sell ] {}\n{} Bath ({}%)'.format(row['Symbol'], row['Market'], row['Profit%'])
-            print(text)
+            #text condition
+            if isReset:
+                text = text + '\nby Reset'
+            elif sell_signal:
+                text = text + '\nby Signal'
+            elif sell_profit:
+                text = text + '\nby Profit'
+            elif sell_loss:
+                text = text + '\nby Stop Loss'
+            elif sell_dislike:
+                text = text + '\nby Dislike'
+            elif sell_trailing:
+                text = text + '\nby Trailing Stop'
 
             # Do Sell
             count = port_df.loc[i, 'Count'] + 1
