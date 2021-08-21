@@ -372,7 +372,6 @@ def Realtime(idName,sendNotify=True):
                         port_df.loc[symbol_index, 'Count'] += 1
                         port_df.loc[symbol_index, 'Rec_Date'] = row['Rec_Date']
                         port_df.loc[symbol_index, 'Last_Buy'] = row['Last_Buy']
-                        port_df.loc[symbol_index, 'Max_Profit%'] = max( [ row['Profit%'], port_df.loc[symbol_index, 'Max_Profit%'] ])
                         port_df.loc[symbol_index, 'Buy'] = round((port_df.loc[symbol_index, 'Buy'] + row['Buy']) * 0.5, 2)
 
         elif not row['Symbol'] in port_df['Symbol'].tolist(): #Symbol isn't in portfolio
@@ -421,6 +420,10 @@ def Realtime(idName,sendNotify=True):
             port_df.loc[symbol_index, 'Low'] = row['Low']
             port_df.loc[symbol_index, 'High'] = row['High']
             port_df.loc[symbol_index, 'Signal'] = row['Signal']
+            port_df.loc[symbol_index, 'Max_Profit%'] = max([
+                port_df.loc[symbol_index, 'Profit%'],
+                port_df.loc[symbol_index, 'Max_Profit%']
+            ])
 
     # Portfolio report
     if port_df['Symbol'].count() != 0 and reportHourDuration >= configJson[idName]['reportEveryHour']:
