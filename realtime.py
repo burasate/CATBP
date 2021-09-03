@@ -490,7 +490,7 @@ def Realtime(idName,sendNotify=True):
                 (row['Profit%'] > 1)
             )
 
-        if sell_signal or sell_profit or sell_loss or isReset or sell_dislike or sell_trailing : #Sell
+        if sell_profit or sell_signal or sell_loss or isReset or sell_dislike or sell_trailing : #Sell
             text = '[ Sell ] {}\n{} Bath ({}%)'.format(row['Symbol'], row['Market'], row['Profit%'])
             print(text)
 
