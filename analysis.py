@@ -117,11 +117,10 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
     # drawdown
     df['Drawdown%'] = 100 * ((df['BreakOut_H']-df['Low'])/df['BreakOut_H'])
     df['Max_Drawdown%'] =  round(df['Drawdown%'].max(),1)
-    #df['Min_Drawdown%'] =  round(df['Drawdown%'].min(),2)
-    if ps_breakout_high > 30 :
-        df['NDay_Drawdown%'] = (df['Drawdown%'].sort_index(ascending=False)).rolling(ps_breakout_low).max()
-    else:
-        df['NDay_Drawdown%'] = (df['Drawdown%'].sort_index(ascending=False)).rolling(ps_breakout_high).max()
+    df['NDay_Drawdown%'] = (df['Drawdown%'].sort_index(ascending=False)).rolling(ps_breakout_low).max()
+    if np.isnan(df['NDay_Drawdown%'][0]):
+        new_n = round(df['Drawdown%'].dropna().count()/2)
+        df['NDay_Drawdown%'] = (df['Drawdown%'].sort_index(ascending=False)).rolling(new_n).max()
     df['NDay_Drawdown%'] = df['NDay_Drawdown%'].sort_index(ascending=True).round(1)
     df['Avg_Drawdown%'] = round( (df['NDay_Drawdown%'].mean() + df['Drawdown%'].mean())*0.5 , 2)
 
@@ -471,12 +470,12 @@ if __name__ == '__main__' :
     #presetPath = dataPath + '/preset.json'
     #presetJson = json.load(open(presetPath))
 
-    #getAnalysis(histPath + 'THB_'+'ALPHA' + '.csv', 'P3',saveImage=False,showImage=True)
-    #getSignalAllPreset()
+    #getAnalysis(histPath + 'THB_'+'POW' + '.csv', 'P2',saveImage=False,showImage=True)
+    getSignalAllPreset()
 
     #Save All Image
-    for file in histFileList:
-        getAnalysis(histPath + os.sep + file, 'P3', saveImage=True, showImage=False)
+    #for file in histFileList:
+        #(histPath + os.sep + file, 'P3', saveImage=True, showImage=False)
     pass
 
 
