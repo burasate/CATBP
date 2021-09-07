@@ -464,11 +464,11 @@ def Realtime(idName,sendNotify=True):
         if adaptiveLoss and sell_loss:
             #new_lossTarget = abs(row['Profit%'])
             #new_lossTarget = ( abs(port_df['Max_Drawdown%'].mean()) + abs(row['Profit%']) ) * 0.5
-            signal_df_all['NDay_Drawdown%'].fillna(method='ffill',inplace=True)
-            print(signal_df_all['NDay_Drawdown%'])
-            new_lossTarget = signal_df_all['NDay_Drawdown%'].mean()
+            new_lossTarget = signal_df_all['Max_Drawdown%'].mean()
             new_lossTarget = round(new_lossTarget,1) + 1.0
-            gSheet.setValue('Config', findKey='idName', findValue=idName, key='percentageLossTarget', value=new_lossTarget)
+            print('new loss target = {}'.format(new_lossTarget))
+            if not np.isnan(signal_df_all['NDay_Drawdown%'].mean()): # new_lossTarget Not Nan
+                gSheet.setValue('Config', findKey='idName', findValue=idName, key='percentageLossTarget', value=new_lossTarget)
 
         if triggerSellPos == 'Lower':
             sell_signal = (
@@ -659,6 +659,6 @@ if __name__ == '__main__' :
                    ]
     , 80)
     """
-    #Realtime('CryptoBot', sendNotify=False)
+    Realtime('user1', sendNotify=False)
 
     pass
