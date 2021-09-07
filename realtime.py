@@ -287,6 +287,11 @@ def Realtime(idName,sendNotify=True):
     signal_df.reset_index(inplace=True)
     # Signal All Dataframe
     signal_df_all = signal_df
+    print('drawdown')
+    print(signal_df_all['Drawdown%'].mean())
+    print(signal_df_all['NDay_Drawdown%'].mean())
+    print(signal_df_all['Avg_Drawdown%'].mean())
+
 
     # New Column For Signal DF
     signal_df['User'] = idName
@@ -465,9 +470,9 @@ def Realtime(idName,sendNotify=True):
             #new_lossTarget = abs(row['Profit%'])
             #new_lossTarget = ( abs(port_df['Max_Drawdown%'].mean()) + abs(row['Profit%']) ) * 0.5
             new_lossTarget = signal_df_all['Max_Drawdown%'].mean()
-            new_lossTarget = round(new_lossTarget,1) + 1.0
+            print('new loss target = {}'.format(new_lossTarget))
             if not np.isnan(new_lossTarget): # new_lossTarget Not Nan
-                print('new loss target = {}'.format(new_lossTarget))
+                new_lossTarget = round(new_lossTarget, 1) + 1.0
                 gSheet.setValue('Config', findKey='idName', findValue=idName, key='percentageLossTarget', value=new_lossTarget)
 
         if triggerSellPos == 'Lower':
