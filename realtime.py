@@ -464,6 +464,7 @@ def Realtime(idName,sendNotify=True):
         if adaptiveLoss and sell_loss:
             #new_lossTarget = abs(row['Profit%'])
             #new_lossTarget = ( abs(port_df['Max_Drawdown%'].mean()) + abs(row['Profit%']) ) * 0.5
+            signal_df_all['NDay_Drawdown%'].fillna(method='ffill',inplace=True)
             new_lossTarget = signal_df_all['NDay_Drawdown%'].mean()
             new_lossTarget = round(new_lossTarget,1) + 1.0
             gSheet.setValue('Config', findKey='idName', findValue=idName, key='percentageLossTarget', value=new_lossTarget)
