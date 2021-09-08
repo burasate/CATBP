@@ -228,7 +228,7 @@ def Transaction(idName,code,symbol,change):
             entry_df[c] = None
     rec = pd.DataFrame(data)
     entry_df = entry_df.append(rec,ignore_index=True)
-    entry_df = entry_df.tail(8000)
+    entry_df = entry_df.tail(10000)
     entry_df.to_csv(transacFilePath,index=False)
 
 def Realtime(idName,sendNotify=True):
@@ -287,10 +287,10 @@ def Realtime(idName,sendNotify=True):
     signal_df.reset_index(inplace=True)
     # Signal All Dataframe
     signal_df_all = signal_df
-    print('drawdown')
-    print(signal_df_all['Drawdown%'].mean())
-    print(signal_df_all['NDay_Drawdown%'].mean())
-    print(signal_df_all['Avg_Drawdown%'].mean())
+    print('drawdown% mean {}'.format(signal_df_all['Drawdown%'].mean()))
+    #print(signal_df_all['Drawdown%'].mean())
+    #print(signal_df_all['NDay_Drawdown%'].mean())
+    #print(signal_df_all['Avg_Drawdown%'].mean())
 
 
     # New Column For Signal DF
