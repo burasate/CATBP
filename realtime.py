@@ -469,7 +469,7 @@ def Realtime(idName,sendNotify=True):
         if adaptiveLoss and sell_loss:
             #new_lossTarget = abs(row['Profit%'])
             #new_lossTarget = ( abs(port_df['Max_Drawdown%'].mean()) + abs(row['Profit%']) ) * 0.5
-            new_lossTarget = signal_df_all['Avg_Drawdown%'].mean()
+            new_lossTarget = signal_df_all['Avg_Drawdown%'].max()
             print('new loss target = {}'.format(new_lossTarget))
             if not np.isnan(new_lossTarget): # new_lossTarget Not Nan
                 new_lossTarget = round(new_lossTarget, 1) + 1.0
@@ -501,7 +501,7 @@ def Realtime(idName,sendNotify=True):
             text = '[ Sell ] {}\n{} Bath ({}%)'.format(row['Symbol'], row['Market'], row['Profit%'])
             print(text)
 
-            if isReset or sell_dislike or sell_profit or sell_trailing:
+            if isReset or sell_dislike or sell_profit or sell_trailing or sell_loss:
                 port_df.loc[i, 'Count'] = 0 # Sell All
             else:
                 port_df.loc[i, 'Count'] -= 1
