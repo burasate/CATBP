@@ -377,7 +377,12 @@ def Realtime(idName,sendNotify=True):
                         port_df.loc[symbol_index, 'Count'] += 1
                         port_df.loc[symbol_index, 'Rec_Date'] = row['Rec_Date']
                         port_df.loc[symbol_index, 'Last_Buy'] = row['Last_Buy']
-                        port_df.loc[symbol_index, 'Buy'] = round((port_df.loc[symbol_index, 'Buy'] + row['Buy']) * 0.5, 2)
+                        if port_df.loc[symbol_index, 'Count'] > 2 : # Price Average
+                            port_df.loc[symbol_index, 'Buy'] = round(
+                                ((port_df.loc[symbol_index, 'Buy']*2) + row['Buy']) * (1/3), 2)
+                        else:
+                            port_df.loc[symbol_index, 'Buy'] = round(
+                                (port_df.loc[symbol_index, 'Buy'] + row['Buy']) * (1/2), 2)
 
         elif not row['Symbol'] in port_df['Symbol'].tolist(): #Symbol isn't in portfolio
             #print('  Checking port is not full')
