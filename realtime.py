@@ -476,7 +476,7 @@ def Realtime(idName,sendNotify=True):
             #new_lossTarget = ( abs(port_df['Max_Drawdown%'].mean()) + abs(row['Profit%']) ) * 0.5
             new_lossTarget = signal_df_all['Avg_Drawdown%'].max()
             print('new loss target = {}'.format(new_lossTarget))
-            if new_lossTarget <= 10.0 :
+            if not np.isnan(new_lossTarget) and new_lossTarget <= 10.0 :
                 new_lossTarget = 10.0
             if not np.isnan(new_lossTarget): # new_lossTarget Not Nan
                 new_lossTarget = round(new_lossTarget, 1) + 1.0
