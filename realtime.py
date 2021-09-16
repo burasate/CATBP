@@ -233,7 +233,6 @@ def Transaction(idName,code,symbol,change):
 
 def Realtime(idName,sendNotify=True):
     isActive = bool(configJson[idName]['active'])
-    isActive = True
     isReset = bool(configJson[idName]['reset'])
     if isActive == False:
         return None
