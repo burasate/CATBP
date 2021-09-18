@@ -228,7 +228,7 @@ def Transaction(idName,code,symbol,change):
             entry_df[c] = None
     rec = pd.DataFrame(data)
     entry_df = entry_df.append(rec,ignore_index=True)
-    entry_df = entry_df.tail(10000)
+    entry_df = entry_df.tail(12000)
     entry_df.to_csv(transacFilePath,index=False)
 
 def Realtime(idName,sendNotify=True):
