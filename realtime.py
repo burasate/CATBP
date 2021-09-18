@@ -140,6 +140,7 @@ def CreateBuyOrder(idName,symbol,portfoiloList,countLeft):
     print('sending order for buy {}'.format(symbol))
     result = bitkub.place_bid(sym=symbol, amt=sizedBudget, typ='market')
     print(result)
+    return result
 
 def Reset(*_):
     print('---------------------\nReset\n---------------------')
@@ -368,7 +369,9 @@ def Realtime(idName,sendNotify=True):
                         print('Buy {} more'.format(row['Symbol']))
                         portfolioList = port_df['Symbol'].tolist()
                         countLeft = (buySize * portSize) - (port_df['Count'].sum())
-                        CreateBuyOrder(idName, row['Symbol'], portfolioList, countLeft)
+                        buyOrder = CreateBuyOrder(idName, row['Symbol'], portfolioList, countLeft)
+                        if buyOrder is None:
+                            continue
                         Transaction(idName, 'Buy', row['Symbol'], (configJson[idName]['percentageComission'] / 100) * -1)
                         if sendNotify:
                             lineNotify.sendNotifyMassage(token, text)
@@ -394,7 +397,9 @@ def Realtime(idName,sendNotify=True):
                 print('Buy {} as new symbol'.format(row['Symbol']))
                 portfolioList = port_df['Symbol'].tolist()
                 countLeft = (buySize * portSize) - (port_df['Count'].sum())
-                CreateBuyOrder(idName, row['Symbol'], portfolioList, countLeft)
+                buyOrder = CreateBuyOrder(idName, row['Symbol'], portfolioList, countLeft)
+                if buyOrder is None:
+                    continue
                 Transaction(idName, 'Buy', row['Symbol'], (configJson[idName]['percentageComission'] / 100) * -1)
                 if sendNotify:
                     quote = row['Symbol'].split('_')[-1]
