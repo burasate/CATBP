@@ -269,7 +269,6 @@ def Realtime(idName,sendNotify=True):
         dislikeList = []
     print('Favorite : {}\nDislike : {}'.format(favoriteList, dislikeList))
 
-
     colSelect = ['User', 'Symbol', 'Signal', 'Buy', 'Market',
                  'Profit%', 'Max_Drawdown%', 'Change4HR%',
                  'Volume', 'BreakOut_H', 'BreakOut_MH', 'BreakOut_M',
@@ -286,7 +285,7 @@ def Realtime(idName,sendNotify=True):
     signal_df.reset_index(inplace=True)
     # Signal All Dataframe
     signal_df_all = signal_df
-    print('drawdown% mean {}'.format(signal_df_all['Drawdown%'].mean()))
+
     #print(signal_df_all['Drawdown%'].mean())
     #print(signal_df_all['NDay_Drawdown%'].mean())
     #print(signal_df_all['Avg_Drawdown%'].mean())
@@ -363,7 +362,7 @@ def Realtime(idName,sendNotify=True):
             buyHourDuration = round(float(((now - port_df.loc[symbol_index,'Last_Buy']) / 60) / 60), 2)
             if port_df.loc[symbol_index,'Count'] < buySize : #Buy position size is not full
                 if buyHourDuration >= configJson[idName]['buyEveryHour']: #if Duration geater than Buy Hour
-                    dipPrice =  port_df.loc[symbol_index,'Buy'] - (port_df.loc[symbol_index,'Buy'] * (dipTraget/100))
+                    dipPrice = port_df.loc[symbol_index, 'Buy'] - (port_df.loc[symbol_index, 'Buy'] * (dipTraget / 100))
                     if row['Market'] <= dipPrice or dipTraget == 0: #Buy on Dip or Not Dip
                         # Do Buy
                         print('Buy {} more'.format(row['Symbol']))
