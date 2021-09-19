@@ -254,7 +254,7 @@ def Realtime(idName,sendNotify=True):
     triggerSellPos = systemJson[system]['triggerSellPosition']
     adaptiveLoss = bool(configJson[idName]['adaptiveLoss'])
     autoPreset = bool(configJson[idName]['autoPreset'])
-    dipTraget = systemJson[system]['dipPercentage']
+    dipTarget = systemJson[system]['dipPercentage']
     print('Portfolio Size : {} | Buy Position Size : {}'.format(portSize, buySize))
     print('Buy : {} | Sell : {}'.format(triggerBuy,triggerSell))
     print('Trigger Buy : {} | Trigger Sell : {}'.format(triggerBuyPos,triggerSellPos))
@@ -368,8 +368,8 @@ def Realtime(idName,sendNotify=True):
             buyHourDuration = round(float(((now - port_df.loc[symbol_index,'Last_Buy']) / 60) / 60), 2)
             if port_df.loc[symbol_index,'Count'] < buySize : #Buy position size is not full
                 if buyHourDuration >= configJson[idName]['buyEveryHour']: #if Duration geater than Buy Hour
-                    dipTraget = ( dipTraget + ( abs(lossTarget)/buySize ) ) / 2
-                    dipPrice = port_df.loc[symbol_index, 'Buy'] - (port_df.loc[symbol_index, 'Buy'] * (dipTraget / 100))
+                    dipTarget = ( dipTarget + ( abs(lossTarget)/buySize ) ) / 2
+                    dipPrice = port_df.loc[symbol_index, 'Buy'] - (port_df.loc[symbol_index, 'Buy'] * (dipTarget / 100))
                     if row['Market'] <= dipPrice: #Buy on Dip or Not Dip
                         # Do Buy
                         print('Buy {} more'.format(row['Symbol']))
@@ -380,7 +380,7 @@ def Realtime(idName,sendNotify=True):
                             continue
                         Transaction(idName, 'Buy', row['Symbol'], (configJson[idName]['percentageComission'] / 100) * -1)
                         if sendNotify:
-                            lineNotify.sendNotifyMassage(token, text)
+                            lineNotify.sendNotifyMassage(token, text + '\nOn Dip {}%'.format(dipTarget))
                         port_df.loc[symbol_index, 'Count'] += 1
                         port_df.loc[symbol_index, 'Rec_Date'] = row['Rec_Date']
                         port_df.loc[symbol_index, 'Last_Buy'] = row['Last_Buy']
