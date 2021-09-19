@@ -468,7 +468,7 @@ def Realtime(idName,sendNotify=True):
             gSheet.setValue('Config', findKey='idName', findValue=idName, key='percentageLossTarget',
                             value=new_lossTarget)
             if sendNotify:
-                lineNotify.sendNotifyMassage(token, 'New Loss Target : {}'.format(new_lossTarget))
+                lineNotify.sendNotifyMassage(token, 'New Loss Target : {}%'.format(new_lossTarget))
 
 
     print('---------------------\nSelling\n---------------------')
@@ -498,7 +498,7 @@ def Realtime(idName,sendNotify=True):
             gSheet.setValue('Config', findKey='idName', findValue=idName, key='percentageLossTarget',
                             value=new_lossTarget)
             if sendNotify:
-                lineNotify.sendNotifyMassage(token, 'New Loss Target : {}'.format(new_lossTarget))
+                lineNotify.sendNotifyMassage(token, 'New Loss Target : {}%'.format(new_lossTarget))
 
         if triggerSellPos == 'Lower':
             sell_signal = (
