@@ -467,6 +467,8 @@ def Realtime(idName,sendNotify=True):
         if adaptiveLoss and abs(lossTarget) > new_lossTarget:
             gSheet.setValue('Config', findKey='idName', findValue=idName, key='percentageLossTarget',
                             value=new_lossTarget)
+            if sendNotify:
+                lineNotify.sendNotifyMassage(token, 'New Loss Target : {}'.format(new_lossTarget))
 
 
     print('---------------------\nSelling\n---------------------')
@@ -495,6 +497,8 @@ def Realtime(idName,sendNotify=True):
             #new_lossTarget = round(new_lossTarget, 2)
             gSheet.setValue('Config', findKey='idName', findValue=idName, key='percentageLossTarget',
                             value=new_lossTarget)
+            if sendNotify:
+                lineNotify.sendNotifyMassage(token, 'New Loss Target : {}'.format(new_lossTarget))
 
         if triggerSellPos == 'Lower':
             sell_signal = (
