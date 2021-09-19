@@ -286,6 +286,11 @@ def Realtime(idName,sendNotify=True):
     signal_df.reset_index(inplace=True)
     # Signal All Dataframe
     signal_df_all = signal_df
+    new_lossTarget = signal_df_all['Avg_Drawdown%'].max()
+    if np.isnan(new_lossTarget):
+        print('adaptive loss error !! new loss target is {}'.format(new_lossTarget))
+        new_lossTarget = 10.0
+    new_lossTarget = round(new_lossTarget, 2)
 
     #print(signal_df_all['Drawdown%'].mean())
     #print(signal_df_all['NDay_Drawdown%'].mean())
@@ -439,6 +444,7 @@ def Realtime(idName,sendNotify=True):
             ])
 
     # Portfolio report
+    print('---------------------\nReport\n---------------------')
     if port_df['Symbol'].count() != 0 and reportHourDuration >= configJson[idName]['reportEveryHour']:
         gSheet.setValue('Config', findKey='idName', findValue=idName, key='lastReport', value=time.time())
         symbolTextList = port_df['Symbol'].tolist()
@@ -457,6 +463,12 @@ def Realtime(idName,sendNotify=True):
         if sendNotify:
             lineNotify.sendNotifyMassage(token, text)
 
+        #Adaptive Loss Update
+        if adaptiveLoss and abs(lossTarget) > new_lossTarget:
+            gSheet.setValue('Config', findKey='idName', findValue=idName, key='percentageLossTarget',
+                            value=new_lossTarget)
+
+
     print('---------------------\nSelling\n---------------------')
     #Sell Condition
     for i in port_df.index.tolist():
@@ -473,17 +485,16 @@ def Realtime(idName,sendNotify=True):
             ((row['Max_Profit%'] - row['Profit%']) > profitTarget*0.5)
         )
 
-        #Adaptive Loss
+        #Adaptive Loss After Selling
         if adaptiveLoss and sell_loss:
             #new_lossTarget = abs(row['Profit%'])
             #new_lossTarget = ( abs(port_df['Max_Drawdown%'].mean()) + abs(row['Profit%']) ) * 0.5
-            new_lossTarget = signal_df_all['Avg_Drawdown%'].max()
-            print('new loss target = {}'.format(new_lossTarget))
-            if not np.isnan(new_lossTarget) and new_lossTarget <= 10.0 :
-                new_lossTarget = 10.0
-            if not np.isnan(new_lossTarget): # new_lossTarget Not Nan
-                new_lossTarget = round(new_lossTarget, 1) + 1.0
-                gSheet.setValue('Config', findKey='idName', findValue=idName, key='percentageLossTarget', value=new_lossTarget)
+            #new_lossTarget = signal_df_all['Avg_Drawdown%'].max()
+            #print('new loss target = {}'.format(new_lossTarget))
+            #if not np.isnan(new_lossTarget): # new_lossTarget Not Nan
+            #new_lossTarget = round(new_lossTarget, 2)
+            gSheet.setValue('Config', findKey='idName', findValue=idName, key='percentageLossTarget',
+                            value=new_lossTarget)
 
         if triggerSellPos == 'Lower':
             sell_signal = (
