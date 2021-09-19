@@ -368,8 +368,9 @@ def Realtime(idName,sendNotify=True):
             buyHourDuration = round(float(((now - port_df.loc[symbol_index,'Last_Buy']) / 60) / 60), 2)
             if port_df.loc[symbol_index,'Count'] < buySize : #Buy position size is not full
                 if buyHourDuration >= configJson[idName]['buyEveryHour']: #if Duration geater than Buy Hour
+                    dipTraget = ( dipTraget + ( abs(lossTarget)/buySize ) ) / 2
                     dipPrice = port_df.loc[symbol_index, 'Buy'] - (port_df.loc[symbol_index, 'Buy'] * (dipTraget / 100))
-                    if row['Market'] <= dipPrice or dipTraget == 0: #Buy on Dip or Not Dip
+                    if row['Market'] <= dipPrice: #Buy on Dip or Not Dip
                         # Do Buy
                         print('Buy {} more'.format(row['Symbol']))
                         portfolioList = port_df['Symbol'].tolist()
