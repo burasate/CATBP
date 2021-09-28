@@ -94,15 +94,15 @@ def CreateSellOrder(idName,symbol,count=1):
 def CreateBuyOrder(idName,symbol,portfoiloList,countLeft):
     if countLeft <= 0 :
         print('count left = 0')
-        return None
+        return False
     if not symbol.__contains__('THB_'):
         print('symbol name need contains THB_')
-        return None
+        return False
     API_KEY = configJson[idName]['bk_apiKey']
     API_SECRET = configJson[idName]['bk_apiSecret']
     if API_KEY == '' or API_SECRET == '' :
         print('this user have no API KEY or API SECRET to send order')
-        return None
+        return True #True When Bot is using
     bitkub = Bitkub()
     bitkub.set_api_key(API_KEY)
     bitkub.set_api_secret(API_SECRET)
@@ -123,7 +123,7 @@ def CreateBuyOrder(idName,symbol,portfoiloList,countLeft):
                 print(data['date'])
                 print(data['side'])
                 print(buyHourDuration)
-                return None
+                return False
 
     portSymList = []
     for sym in portfoiloList:  # Chane Symbol to Sym
@@ -140,7 +140,7 @@ def CreateBuyOrder(idName,symbol,portfoiloList,countLeft):
     print('sending order for buy {}'.format(symbol))
     result = bitkub.place_bid(sym=symbol, amt=sizedBudget, typ='market')
     print(result)
-    return result
+    return True
 
 def Reset(*_):
     print('---------------------\nReset\n---------------------')
@@ -378,7 +378,7 @@ def Realtime(idName,sendNotify=True):
                         portfolioList = port_df['Symbol'].tolist()
                         countLeft = (buySize * portSize) - (port_df['Count'].sum())
                         buyOrder = CreateBuyOrder(idName, row['Symbol'], portfolioList, countLeft)
-                        if buyOrder is None:
+                        if not buyOrder:
                             continue
                         Transaction(idName, 'Buy', row['Symbol'], (configJson[idName]['percentageComission'] / 100) * -1)
                         if sendNotify:
@@ -406,7 +406,7 @@ def Realtime(idName,sendNotify=True):
                 portfolioList = port_df['Symbol'].tolist()
                 countLeft = (buySize * portSize) - (port_df['Count'].sum())
                 buyOrder = CreateBuyOrder(idName, row['Symbol'], portfolioList, countLeft)
-                if buyOrder is None:
+                if not buyOrder:
                     continue
                 Transaction(idName, 'Buy', row['Symbol'], (configJson[idName]['percentageComission'] / 100) * -1)
                 if sendNotify:
