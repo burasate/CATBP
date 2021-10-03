@@ -290,8 +290,8 @@ def Realtime(idName,sendNotify=True):
     if np.isnan(new_lossTarget):
         print('adaptive loss error !! new loss target is {}'.format(new_lossTarget))
         new_lossTarget = 12.0
-    if new_lossTarget <= 10.0:
-        new_lossTarget = 10.0
+    if new_lossTarget <= 5.0:
+        new_lossTarget = 5.0
     new_lossTarget = round(new_lossTarget, 2)
 
     #print(signal_df_all['Drawdown%'].mean())
