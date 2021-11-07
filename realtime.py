@@ -456,7 +456,7 @@ def Realtime(idName,sendNotify=True):
         profitTextList = port_df['Profit%'].tolist()
         spList = []
         for i in range(len(symbolTextList)):
-            sp = '  - {}     ({}/{}) ({}%)'.format(
+            sp = '  - {}   ({}/{}) ({}%)'.format(
                 symbolTextList[i],
                 countTextList[i],
                 buySize,
@@ -465,6 +465,7 @@ def Realtime(idName,sendNotify=True):
             spList.append(sp)
         text = '[ Report ]\n' + \
                '{}'.format('\n'.join(spList)) + \
+               '\n' + \
                '\nAvg Profit {}%'.format(port_df['Profit%'].mean().round(2)) + \
                '\nLoss Target {}%'.format(abs(lossTarget))
         print(text)
