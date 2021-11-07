@@ -451,17 +451,21 @@ def Realtime(idName,sendNotify=True):
     if port_df['Symbol'].count() != 0 and reportHourDuration >= configJson[idName]['reportEveryHour']:
         gSheet.setValue('Config', findKey='idName', findValue=idName, key='lastReport', value=time.time())
         symbolTextList = port_df['Symbol'].tolist()
+        countTextList = port_df['Count'].tolist()
         profitTextList = port_df['Profit%'].tolist()
         spList = []
         for i in range(len(symbolTextList)):
-            sp = '  - {}      ({}%)'.format(
+            sp = '  - {}     ({}/{}) ({}%)'.format(
                 symbolTextList[i],
+                countTextList[i],
+                buySize,
                 profitTextList[i]
             )
             spList.append(sp)
         text = '[ Report ]\n' + \
                '{}'.format('\n'.join(spList)) + \
-               '\nAvg Profit {}%'.format(port_df['Profit%'].mean().round(2))
+               '\nAvg Profit {}%'.format(port_df['Profit%'].mean().round(2)) + \
+               '\nLoss Target {}%'.format(abs(lossTarget))
         print(text)
         if sendNotify:
             lineNotify.sendNotifyMassage(token, text)
@@ -492,12 +496,6 @@ def Realtime(idName,sendNotify=True):
 
         #Adaptive Loss After Selling
         if adaptiveLoss and sell_loss:
-            #new_lossTarget = abs(row['Profit%'])
-            #new_lossTarget = ( abs(port_df['Max_Drawdown%'].mean()) + abs(row['Profit%']) ) * 0.5
-            #new_lossTarget = signal_df_all['Avg_Drawdown%'].max()
-            #print('new loss target = {}'.format(new_lossTarget))
-            #if not np.isnan(new_lossTarget): # new_lossTarget Not Nan
-            #new_lossTarget = round(new_lossTarget, 2)
             gSheet.setValue('Config', findKey='idName', findValue=idName, key='percentageLossTarget',
                             value=new_lossTarget)
             if sendNotify:
@@ -604,19 +602,9 @@ def Realtime(idName,sendNotify=True):
                 symbol = 'THB_{}'.format(sym)
                 if not symbol in portfolioList:  # Not balace in mornitor
                     CreateSellOrder(idName, symbol, count=1)
-                    if sendNotify:
-                        lineNotify.sendNotifyMassage(token, 'Clear {} in Balance'.format(symbol))
+                    #if sendNotify:
+                        #lineNotify.sendNotifyMassage(token, 'Clear {} in Balance'.format(symbol))
                     balanceList.append(symbol)
-        """
-        for i in port_df.index.tolist():  # Check Mornitor
-            row = port_df.loc[i]
-            if not row['Symbol'] in balanceList:
-                dropList.append(row['Symbol'])
-        for symbol in dropList:  # Delete Fake Mornitor for User who have KeyAPI
-            port_df = port_df[port_df['Symbol'] != symbol]
-            if sendNotify:
-                lineNotify.sendNotifyMassage(token, 'Clear {} in Mornitor'.format(symbol))
-        """
 
     #Finish
     if 'index' in port_df.columns.tolist():
@@ -660,38 +648,4 @@ def AllUser(*_):
         time.sleep(10)
 
 if __name__ == '__main__' :
-    """
-    import update
-    update.updateConfig()
-    update.updatePreset()
-    update.updateSystem()
-    configJson = json.load(open(configPath))
-    presetJson = json.load(open(presetPath))
-    systemJson = json.load(open(systemPath))
-    """
-
-    """
-    idName='user1'
-    API_KEY = configJson[idName]['bk_apiKey']
-    API_SECRET = configJson[idName]['bk_apiSecret']
-    bitkub = Bitkub()
-    bitkub.set_api_key(API_KEY)
-    bitkub.set_api_secret(API_SECRET)
-    """
-    #result = bitkub.place_bid(sym='THB_NEAR', amt=100, typ='market')
-    #print(result)
-    """
-    CreateBuyOrder('user10', 'THB_WAN',
-                   [
-                       'THB_USDT',
-                       'THB_USDC',
-                       'THB_WAN',
-                       'THB_AAVE',
-                       'THB_NEAR',
-                       'THB_XLM'
-                   ]
-    , 80)
-    """
-    Realtime('user1', sendNotify=False)
-
     pass
