@@ -649,42 +649,4 @@ def AllUser(*_):
         time.sleep(10)
 
 if __name__ == '__main__' :
-<<<<<<< HEAD
     pass
-=======
-    """
-    import update
-    update.updateConfig()
-    update.updatePreset()
-    update.updateSystem()
-    configJson = json.load(open(configPath))
-    presetJson = json.load(open(presetPath))
-    systemJson = json.load(open(systemPath))
-    """
-
-    """
-    idName='user1'
-    API_KEY = configJson[idName]['bk_apiKey']
-    API_SECRET = configJson[idName]['bk_apiSecret']
-    bitkub = Bitkub()
-    bitkub.set_api_key(API_KEY)
-    bitkub.set_api_secret(API_SECRET)
-    """
-    #result = bitkub.place_bid(sym='THB_NEAR', amt=100, typ='market')
-    #print(result)
-    """
-    CreateBuyOrder('user10', 'THB_WAN',
-                   [
-                       'THB_USDT',
-                       'THB_USDC',
-                       'THB_WAN',
-                       'THB_AAVE',
-                       'THB_NEAR',
-                       'THB_XLM'
-                   ]
-    , 80)
-    """
-    Realtime('user1', sendNotify=False)
-
-    pass
->>>>>>> 47ed26e5f89bd6bd6dd2d2a7fb7b286cc77d8213
