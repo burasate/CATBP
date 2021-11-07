@@ -36,7 +36,7 @@ def getHistDataframe(*_):
         df = pd.DataFrame.from_records(sheetData)
     return df
 
-def updateGSheetHistory(limit = 45000):
+def updateGSheetHistory(limit = 47000):
     ticker = kbApi.getTicker()
     symbols = kbApi.getSymbol()
 
