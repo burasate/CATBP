@@ -124,6 +124,9 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
     df['NDay_Drawdown%'] = df['NDay_Drawdown%'].sort_index(ascending=True).round(1)
     df['Avg_Drawdown%'] = round( (df['NDay_Drawdown%'].mean() + df['Drawdown%'].mean())*0.5 , 2)
 
+    # profit
+    df['Profit%'] = 100 * ((df['High'] - df['BreakOut_L']) / df['BreakOut_L'])
+
     #True Range
     # df['TrueRange'] = df['High'] - df['Low'] #true range
     # avg_true_range = round(df['TrueRange'].mean(), 2)
@@ -313,6 +316,7 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
         axes[1].plot([0, 100], [df['Max_Drawdown%'][0], df['Max_Drawdown%'][0]], linewidth=.7, color=pltColor['red'],
                      linestyle='-')
         axes[1].plot([0, 120], [df['Avg_Drawdown%'][0], df['Avg_Drawdown%'][0]], linewidth=.7, color=pltColor['red'], linestyle='-')
+        axes[1].plot(df['Day'], df['Profit%'], linewidth = .7, color = pltColor['green'], linestyle = '-')
 
         # Text
         axes[0].text(plotTrimMax-3, min(df['Low']), 'Signal by \n Burasate.U', size=12, ha='right', va='bottom', color=(.5,.5,.5))
@@ -470,8 +474,8 @@ if __name__ == '__main__' :
     #presetPath = dataPath + '/preset.json'
     #presetJson = json.load(open(presetPath))
 
-    #getAnalysis(histPath + 'THB_'+'POW' + '.csv', 'P2',saveImage=False,showImage=True)
-    getSignalAllPreset()
+    getAnalysis(histPath + 'THB_'+'DOGE' + '.csv', 'P4',saveImage=False,showImage=True)
+    #getSignalAllPreset()
 
     #Save All Image
     #for file in histFileList:
