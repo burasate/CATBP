@@ -145,7 +145,7 @@ def updateGSheetHistory(limit = 47000):
     #top gain
     topGain = df.drop_duplicates(subset=['symbol'], keep='last').dropna()
     topGain = topGain.sort_values(['percentChangeAverage'], ascending=[False])
-    topGain = topGain.head(5)['symbol'].tolist()
+    topGain = topGain.head(10)['symbol'].tolist()
     df['isTopGain'] = 'No'
     for symbol in topGain:
         df.loc[df['symbol'] == symbol, 'isTopGain'] = 'Yes'
