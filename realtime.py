@@ -471,6 +471,9 @@ def Realtime(idName,sendNotify=True):
         countTextList = port_df['Count'].tolist()
         profitTextList = port_df['Profit%'].tolist()
         spList = []
+        available = round(configJson[idName]['available'])
+        total = round(configJson[idName]['totalValue'])
+        unrealize = round(total - available)
         for i in range(len(symbolTextList)):
             sp = '{}   ({}/{}) ({}%)'.format(
                 symbolTextList[i],
@@ -483,7 +486,12 @@ def Realtime(idName,sendNotify=True):
                '{}'.format('\n'.join(spList)) + \
                '\n' + \
                '\nAvg Profit {}%'.format(port_df['Profit%'].mean().round(2)) + \
-               '\nLoss Target {}%'.format(abs(lossTarget))
+               '\nLoss Target {}%'.format(abs(lossTarget)) + \
+               '\n' + \
+               '\nAvailable {} B.'.format(available) + \
+               '\nTotal Value {} B.'.format(total) + \
+               '\nUnrealized {} B.'.format(unrealize)
+
         print(text)
         if sendNotify:
             lineNotify.sendNotifyMassage(token, text)
