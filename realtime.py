@@ -41,29 +41,41 @@ def getBalance(idName):
     bitkub.set_api_key(API_KEY)
     bitkub.set_api_secret(API_SECRET)
     balance = bitkub.balances()
+    ticker = bitkub.ticker()
+    print(ticker)
     data = {}
     if balance['error'] != 0:
         return None
     if balance['error'] == 0 :
+        total = 0.0
         for sym in balance['result']:
             if balance['result'][sym]['available'] > 0 :
                 available = balance['result'][sym]['available']
+                """
                 available_h = max([
                     available,
                     configJson[idName]['available'],
                     configJson[idName]['availableHigh']
                 ])
-                p_drawdown = (abs(available_h-available)/available_h)*100
-                p_drawdown = round(p_drawdown,2)
+                """
+                #p_drawdown = (abs(available_h-available)/available_h)*100
+                #p_drawdown = round(p_drawdown,2)
                 data[sym] = {
                     'available' : available,
                     'reserved' : balance['result'][sym]['reserved']
                 }
+                # calulate total value
+                if sym == 'THB':
+                    total += available
+                else:
+                    total += ( ticker['{}_{}'.format('THB',sym)]['last'] * available )
                 #update balance data sheet
                 if sym == 'THB' and available != configJson[idName]['available']:
                     gSheet.setValue( 'Config', findKey='idName', findValue=idName, key='available', value=available )
-                    gSheet.setValue( 'Config', findKey='idName', findValue=idName, key='availableHigh',value=available_h )
-                    gSheet.setValue( 'Config', findKey='idName', findValue=idName, key='percentageDrawdown',value=p_drawdown )
+                    gSheet.setValue( 'Config', findKey='idName', findValue=idName, key='totalValue', value=total )
+                    #gSheet.setValue( 'Config', findKey='idName', findValue=idName, key='availableHigh',value=available_h )
+                    #gSheet.setValue( 'Config', findKey='idName', findValue=idName, key='percentageDrawdown',value=p_drawdown )
+    print(data)
     return data
 
 def CreateSellOrder(idName,symbol,count=1):
@@ -215,7 +227,8 @@ def Transaction(idName,code,symbol,change):
         'Code' : [code],
         'Symbol' : [symbol],
         'Change%' : [change],
-        'CashBalance' : [configJson[idName]['available']]
+        'CashBalance' : [configJson[idName]['available']],
+        'TotalValue' : [configJson[idName]['totalValue']]
     }
     #col = ['dateTime']
     if not os.path.exists(transacFilePath):
@@ -238,7 +251,8 @@ def Realtime(idName,sendNotify=True):
     if isActive == False:
         return None
     print('---------------------\n[ {} ]  Monitoring\n---------------------'.format(idName))
-    ticker = kbApi.getTicker()
+    bitkub = Bitkub()
+    ticker = bitkub.ticker()
     now = round(time.time())
     reportHourDuration = round(float(((now - configJson[idName]['lastReport']) / 60) / 60), 2)
     preset = configJson[idName]['preset']
@@ -650,4 +664,5 @@ def AllUser(*_):
         time.sleep(10)
 
 if __name__ == '__main__' :
+    getBalance('user1')
     pass
