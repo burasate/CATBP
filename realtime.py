@@ -42,7 +42,6 @@ def getBalance(idName):
     bitkub.set_api_secret(API_SECRET)
     balance = bitkub.balances()
     ticker = bitkub.ticker()
-    print(ticker)
     data = {}
     if balance['error'] != 0:
         return None
@@ -75,7 +74,6 @@ def getBalance(idName):
                     gSheet.setValue( 'Config', findKey='idName', findValue=idName, key='totalValue', value=total )
                     #gSheet.setValue( 'Config', findKey='idName', findValue=idName, key='availableHigh',value=available_h )
                     #gSheet.setValue( 'Config', findKey='idName', findValue=idName, key='percentageDrawdown',value=p_drawdown )
-    print(data)
     return data
 
 def CreateSellOrder(idName,symbol,count=1):
@@ -664,5 +662,4 @@ def AllUser(*_):
         time.sleep(10)
 
 if __name__ == '__main__' :
-    getBalance('user1')
     pass

@@ -125,7 +125,7 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
     df['Avg_Drawdown%'] = round( (df['NDay_Drawdown%'].mean() + df['Drawdown%'].mean())*0.5 , 2)
 
     # profit
-    df['Profit%'] = 100 * ((df['High'] - df['BreakOut_L']) / df['BreakOut_L'])
+    df['Profit%'] = 100 * ((df['High'] - df['Low']) / df['Low'])
 
     #True Range
     # df['TrueRange'] = df['High'] - df['Low'] #true range
