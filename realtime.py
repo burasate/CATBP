@@ -428,9 +428,9 @@ def Realtime(idName,sendNotify=True):
                 Transaction(idName, 'Buy', row['Symbol'], (configJson[idName]['percentageComission'] / 100) * -1)
                 if sendNotify:
                     quote = row['Symbol'].split('_')[-1]
-                    imgFilePath = imgPath + os.sep + '{}_{}.png'.format(preset, quote)
-                    lineNotify.sendNotifyImageMsg(token, imgFilePath, text)
-                    #lineNotify.sendNotifyMassage(token, text)
+                    #imgFilePath = imgPath + os.sep + '{}_{}.png'.format(preset, quote)
+                    #lineNotify.sendNotifyImageMsg(token, imgFilePath, text)
+                    lineNotify.sendNotifyMassage(token, text)
                 port_df = port_df.append(row, ignore_index=False)
     #Finish Buy
     port_df.reset_index(drop=True,inplace=True)
