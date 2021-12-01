@@ -66,14 +66,18 @@ def getBalance(idName):
                 # calulate total value
                 if sym == 'THB':
                     total += available
+                elif not '{}_{}'.format('THB',sym) in ticker :
+                    continue
                 else:
                     total += ( ticker['{}_{}'.format('THB',sym)]['last'] * available )
                 #update balance data sheet
                 if sym == 'THB' and available != configJson[idName]['available']:
                     gSheet.setValue( 'Config', findKey='idName', findValue=idName, key='available', value=available )
-                    gSheet.setValue( 'Config', findKey='idName', findValue=idName, key='totalValue', value=total )
                     #gSheet.setValue( 'Config', findKey='idName', findValue=idName, key='availableHigh',value=available_h )
                     #gSheet.setValue( 'Config', findKey='idName', findValue=idName, key='percentageDrawdown',value=p_drawdown )
+        #update total value sheet
+        if configJson[idName]['totalValue'] != total:
+            gSheet.setValue('Config', findKey='idName', findValue=idName, key='totalValue', value=total)
     return data
 
 def CreateSellOrder(idName,symbol,count=1):
