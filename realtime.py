@@ -566,7 +566,7 @@ def Realtime(idName,sendNotify=True):
 
     print('---------------------\nAuto Preset\n---------------------')
     if autoPreset:
-        dayScore = 5
+        dayScore = 10
         tran_df = pd.read_csv(transacFilePath)
         tran_df = tran_df[
             tran_df['epoch'] >= now - ((1 * 60 * 60 * 24) * dayScore)
