@@ -488,11 +488,10 @@ def Realtime(idName,sendNotify=True):
                '\nAvg Profit {}%'.format(port_df['Profit%'].mean().round(2)) + \
                '\nLoss Target {}%'.format(abs(lossTarget)) + \
                '\n' + \
-               '\nAvailable {} B.'.format(available) + \
-               '\nTotal Value {} B.'.format(total) + \
-               '\nUnrealized {} B.'.format(unrealize)
+               '\nAvailable {:,.2f} B.'.format(available) + \
+               '\nUnrealized {:,.2f} B.'.format(unrealize) + \
+               '\nTotal Value {:,.2f} B.'.format(total)
 
-        print(text)
         if sendNotify:
             lineNotify.sendNotifyMassage(token, text)
 
