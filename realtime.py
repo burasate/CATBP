@@ -270,7 +270,8 @@ def Realtime(idName,sendNotify=True):
     triggerSellPos = systemJson[system]['triggerSellPosition']
     adaptiveLoss = bool(configJson[idName]['adaptiveLoss'])
     autoPreset = bool(configJson[idName]['autoPreset'])
-    dipTarget = systemJson[system]['dipPercentage']
+    maxAdaptiveLoss = configJson[idName]['maxAdaptiveLoss']
+    #dipTarget = systemJson[system]['dipPercentage']
     print('Portfolio Size : {} | Buy Position Size : {}'.format(portSize, buySize))
     print('Buy : {} | Sell : {}'.format(triggerBuy,triggerSell))
     print('Trigger Buy : {} | Trigger Sell : {}'.format(triggerBuyPos,triggerSellPos))
@@ -306,8 +307,8 @@ def Realtime(idName,sendNotify=True):
     if np.isnan(new_lossTarget):
         print('adaptive loss error !! new loss target is {}'.format(new_lossTarget))
         new_lossTarget = 15.0
-    if new_lossTarget <= 20.0:
-        new_lossTarget = 20.0
+    if new_lossTarget <= maxAdaptiveLoss:
+        new_lossTarget = maxAdaptiveLoss
     new_lossTarget = round(new_lossTarget, 2)
 
     #print(signal_df_all['Drawdown%'].mean())
@@ -386,8 +387,9 @@ def Realtime(idName,sendNotify=True):
             buyHourDuration = round(float(((now - port_df.loc[symbol_index,'Last_Buy']) / 60) / 60), 2)
             if port_df.loc[symbol_index,'Count'] < buySize : #Buy position size is not full
                 if buyHourDuration >= configJson[idName]['buyEveryHour']: #if Duration geater than Buy Hour
-                    dipTarget = ( dipTarget + ( abs(lossTarget)/buySize ) ) / 2
-                    dipTarget = round(dipTarget)
+                    #dipTarget = ( dipTarget + ( abs(lossTarget)/buySize ) ) / 2
+                    dipTarget = abs(lossTarget) / (buySize - 1)
+                    dipTarget = round(dipTarget, 2)
                     dipPrice = port_df.loc[symbol_index, 'Buy'] - (port_df.loc[symbol_index, 'Buy'] * (dipTarget / 100))
                     if row['Market'] <= dipPrice: #Buy on Dip or Not Dip
                         # Do Buy
