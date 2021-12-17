@@ -388,7 +388,7 @@ def Realtime(idName,sendNotify=True):
             if port_df.loc[symbol_index,'Count'] < buySize : #Buy position size is not full
                 if buyHourDuration >= configJson[idName]['buyEveryHour']: #if Duration geater than Buy Hour
                     #dipTarget = ( dipTarget + ( abs(lossTarget)/buySize ) ) / 2
-                    dipTarget = abs(lossTarget) / (buySize - 1)
+                    dipTarget = abs(lossTarget) / 2
                     dipTarget = round(dipTarget, 2)
                     dipPrice = port_df.loc[symbol_index, 'Buy'] - (port_df.loc[symbol_index, 'Buy'] * (dipTarget / 100))
                     if row['Market'] <= dipPrice: #Buy on Dip or Not Dip
@@ -503,7 +503,6 @@ def Realtime(idName,sendNotify=True):
                             value=new_lossTarget)
             if sendNotify:
                 lineNotify.sendNotifyMassage(token, 'New Loss Target : {}%'.format(new_lossTarget))
-
 
     print('---------------------\nSelling\n---------------------')
     #Sell Condition
