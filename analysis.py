@@ -474,7 +474,7 @@ if __name__ == '__main__' :
     #presetPath = dataPath + '/preset.json'
     #presetJson = json.load(open(presetPath))
 
-    getAnalysis(histPath + 'THB_'+'DOGE' + '.csv', 'P4',saveImage=False,showImage=True)
+    getAnalysis(histPath + 'THB_'+'ETH' + '.csv', 'P4',saveImage=False,showImage=True)
     #getSignalAllPreset()
 
     #Save All Image
