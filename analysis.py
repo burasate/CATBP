@@ -368,10 +368,11 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
     return df
 
 def getSignalAllPreset():
-    rec_date = dt.datetime.now().strftime('%Y-%m-%d %H:00:00')
+    #rec_date = dt.datetime.now().strftime('%Y-%m-%d %H:00:00')
+    rec_date = dt.datetime.now().strftime('%Y-%m-%d 00:00:00')
     minute = int( dt.datetime.now().strftime('%M') )
-    if minute >= 30 and minute < 60:
-        rec_date = dt.datetime.now().strftime('%Y-%m-%d %H:30:00')
+    #if minute >= 30 and minute < 60:
+        #rec_date = dt.datetime.now().strftime('%Y-%m-%d %H:30:00')
     """
     elif minute >= 30 and minute < 45:
         rec_date = dt.datetime.now().strftime('%Y-%m-%d %H:30:00')
