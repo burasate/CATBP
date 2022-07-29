@@ -103,6 +103,8 @@ def updateGSheetHistory(limit = 47000):
         #indicator (signal in metric)
         try:
             signal_df = pd.read_csv(dataPath + '/signal.csv')
+            if signal_df.empty:
+                signal_df = pd.read_csv(dataPath + '/signal_gsheet.csv')
             signal_df = signal_df[
                 (signal_df['Rec_Date'] == signal_df['Rec_Date'].max()) &
                 (signal_df['Symbol'] == sym)
@@ -112,8 +114,10 @@ def updateGSheetHistory(limit = 47000):
             sma_l = signal_df['SMA_L'].mean().round(2)
             rowData['percentChangeAverage'] = ((sma_s - sma_l) / sma_l) * 100
             #print('macd {}/{}   {}%'.format(sma_s,sma_l,rowData['percentChangeAverage']))
-        except:
+        except Exception as e:
+            import traceback
             print('* load indicator error')
+            print(str(traceback.format_exc()))
             pass
         else:
             rowData['isTopGain'] = 'No'
