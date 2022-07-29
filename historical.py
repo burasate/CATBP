@@ -103,8 +103,7 @@ def updateGSheetHistory(limit = 47000):
         #indicator (signal in metric)
         try:
             signal_df = pd.read_csv(dataPath + '/signal.csv')
-            print(signal_df.empty)
-            break
+            print('sinal csv is EMPTY : ',signal_df.empty)
             if signal_df.empty:
                 signal_df = pd.read_csv(dataPath + '/signal_gsheet.csv')
             signal_df = signal_df[
