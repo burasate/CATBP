@@ -103,6 +103,8 @@ def updateGSheetHistory(limit = 47000):
         #indicator (signal in metric)
         try:
             signal_df = pd.read_csv(dataPath + '/signal.csv')
+            print(signal_df.empty)
+            break
             if signal_df.empty:
                 signal_df = pd.read_csv(dataPath + '/signal_gsheet.csv')
             signal_df = signal_df[
@@ -117,7 +119,7 @@ def updateGSheetHistory(limit = 47000):
         except Exception as e:
             import traceback
             print('* load indicator error')
-            print(str(traceback.format_exc()))
+            print(str(traceback.format_exc()).split('\n')[-1])
             pass
         else:
             rowData['isTopGain'] = 'No'
@@ -264,5 +266,5 @@ def loadAllHist(timeFrame = 'minute'):
 if __name__ == '__main__':
     #createSymbolHistory('THB_WAN','hour')
     updateGSheetHistory()
-    loadAllHist(timeFrame='hour')
+    #loadAllHist(timeFrame='hour')
     pass
