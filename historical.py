@@ -103,9 +103,11 @@ def updateGSheetHistory(limit = 47000):
         #indicator (signal in metric)
         try:
             signal_df = pd.read_csv(dataPath + '/signal.csv')
-            print('sinal csv is EMPTY : ',signal_df.empty)
-            if signal_df.empty:
-                signal_df = pd.read_csv(dataPath + '/signal_gsheet.csv')
+            print('sinal csv is EMPTY : ', signal_df.empty)
+        except:
+            signal_df = pd.read_csv(dataPath + '/signal_gsheet.csv')
+
+        try:
             signal_df = signal_df[
                 (signal_df['Rec_Date'] == signal_df['Rec_Date'].max()) &
                 (signal_df['Symbol'] == sym)
@@ -118,6 +120,7 @@ def updateGSheetHistory(limit = 47000):
         except Exception as e:
             import traceback
             print('* load indicator error')
+            rowData['percentChangeAverage'] = 0.0
             #print(str(traceback.format_exc()).split('\n')[-1])
             pass
         else:
