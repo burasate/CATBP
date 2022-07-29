@@ -34,11 +34,13 @@ while True:
         realtime.Reset()
 
     except Exception as e:
-        print('!!!! ==========================')
+        import traceback
+        #print('!!!! ==========================')
         exc_type, exc_obj, exc_tb = sys.exc_info()
         fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-        print('Error Type {}\nFile {}\n Line {}'.format(exc_type, fname, exc_tb.tb_lineno))
-        print('!!!! ==========================')
+        #print('Error Type {}\nFile {}\n Line {}'.format(exc_type, fname, exc_tb.tb_lineno))
+        print(str(traceback.format_exc()))
+        #print('!!!! ==========================')
     finally:
         print('Ending of Process')
         time.sleep(60*2)
