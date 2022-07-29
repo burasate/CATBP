@@ -451,8 +451,8 @@ def getSignalAllPreset():
 
     signal_df = signal_df.sort_values(['Signal','Preset','Value_M','GL_Ratio'], ascending=[True,True,False,False])
     csvPath = dataPath + os.sep + 'signal.csv'
-    if not os.path.exists(csvPath):
-        signal_df.to_csv(csvPath,index=False)
+    #if not os.path.exists(csvPath):
+    signal_df.to_csv(csvPath,index=False)
 
     # New Signal DataFrame (All Signal Record)
     new_signal_df = pd.read_csv(csvPath)

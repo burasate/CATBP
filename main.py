@@ -17,15 +17,15 @@ while True:
         update.updatePreset()
         update.updateSystem()
 
-        import analysis
-        importlib.reload(analysis)
-        analysis.getSignalAllPreset()
-
         import historical
         importlib.reload(historical)
         historical.updateGSheetHistory()
         historical.loadAllHist(timeFrame='hour')
         #historical.loadAllHist(timeFrame='minute')
+
+        import analysis
+        importlib.reload(analysis)
+        analysis.getSignalAllPreset()
 
         import realtime
         update.updateConfig()
