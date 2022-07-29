@@ -118,7 +118,7 @@ def updateGSheetHistory(limit = 47000):
         except Exception as e:
             import traceback
             print('* load indicator error')
-            print(str(traceback.format_exc()).split('\n')[-1])
+            #print(str(traceback.format_exc()).split('\n')[-1])
             pass
         else:
             rowData['isTopGain'] = 'No'
