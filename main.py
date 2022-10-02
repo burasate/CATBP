@@ -41,6 +41,7 @@ while True:
         #print('Error Type {}\nFile {}\n Line {}'.format(exc_type, fname, exc_tb.tb_lineno))
         print(str(traceback.format_exc()))
         #print('!!!! ==========================')
+        time.sleep(120)
     finally:
         print('Ending of Process')
         time.sleep(60*2)
