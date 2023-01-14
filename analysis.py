@@ -1,3 +1,5 @@
+#import matplotlib
+#matplotlib.use('TkAgg')
 from matplotlib import pyplot as plt
 import pandas as pd
 import numpy as np
@@ -8,18 +10,18 @@ from shutil import copyfile
 import gSheet
 import kbApi
 
-rootPath = os.path.dirname(os.path.abspath(__file__))
-dataPath = rootPath+'/data'
-histPath = dataPath+'/hist/'
-configPath = dataPath + '/config.json'
-configJson = json.load(open(configPath))
-presetPath = dataPath + '/preset.json'
-presetJson = json.load(open(presetPath))
-histFileList = os.listdir(histPath)
-analysisHistPath = dataPath + '/analysis_hist'
+base_path = os.path.dirname(os.path.abspath(__file__))
+data_path = base_path+'/data'
+hist_path = data_path+'/hist/'
+config_path = data_path + '/config.json'
+config_json = json.load(open(config_path))
+preset_path = data_path + '/preset.json'
+preset_json = json.load(open(preset_path))
+histFileList = os.listdir(hist_path)
+analysishist_path = data_path + '/analysis_hist'
 symbols = kbApi.getSymbol()
 
-def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
+def get_analysis(csvPath,preset,saveImage=False,showImage=False):
     # Plot Indicator
     quote = os.path.splitext(os.path.basename(csvPath))[0]
     info = ''
@@ -33,14 +35,14 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
     quote = quote.split('_')[-1]
 
     #Load Preset
-    ps_description = presetJson[preset]["description"]
-    ps_sma_s = presetJson[preset]["smaS"]
-    ps_sma_l = presetJson[preset]["smaL"]
-    ps_breakout_high = presetJson[preset]["breakOutH"]
-    ps_breakout_low = presetJson[preset]["breakOutL"]
-    ps_sto_fast = presetJson[preset]["stoFast"]
-    ps_sto_slow = presetJson[preset]["stoSlow"]
-    ps_gain_loss = presetJson[preset]["gainLost"]
+    ps_description = preset_json[preset]["description"]
+    ps_sma_s = preset_json[preset]["smaS"]
+    ps_sma_l = preset_json[preset]["smaL"]
+    ps_breakout_high = preset_json[preset]["breakOutH"]
+    ps_breakout_low = preset_json[preset]["breakOutL"]
+    ps_sto_fast = preset_json[preset]["stoFast"]
+    ps_sto_slow = preset_json[preset]["stoSlow"]
+    ps_gain_loss = preset_json[preset]["gainLost"]
 
     # Read Data Frame
     df = pd.read_csv(csvPath)
@@ -359,7 +361,7 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
         # Finally
         if saveImage:
             imgName = '_'.join([preset,quote])+'.png'
-            savePath = dataPath+'/analysis_img/' + imgName
+            savePath = data_path+'/analysis_img/' + imgName
             print(imgName)
             plt.savefig(savePath,facecolor=fig.get_facecolor())
         if showImage:
@@ -367,7 +369,7 @@ def getAnalysis(csvPath,preset,saveImage=False,showImage=False):
         plt.close()
     return df
 
-def getSignalAllPreset():
+def get_all_analysis():
     #rec_date = dt.datetime.now().strftime('%Y-%m-%d %H:00:00')
     rec_date = dt.datetime.now().strftime('%Y-%m-%d 00:00:00')
     minute = int( dt.datetime.now().strftime('%M') )
@@ -383,7 +385,7 @@ def getSignalAllPreset():
 
     signal_df = pd.DataFrame()
     # Clear Directory
-    imgPath = dataPath + '/analysis_img/'
+    imgPath = data_path + '/analysis_img/'
     oldImgFiles = os.listdir(imgPath)
     for f in oldImgFiles:
         os.remove(imgPath + f)
@@ -394,9 +396,9 @@ def getSignalAllPreset():
         count += 1
         os.system('cls||clear')
         print('{}/{}  {}'.format(count,len(histFileList),quote))
-        for ps in presetJson:
+        for ps in preset_json:
             try:
-                df = getAnalysis(histPath+os.sep+file, ps,saveImage=False,showImage=False)
+                df = get_analysis(hist_path+os.sep+file, ps,saveImage=False,showImage=False)
                 df['Preset'] = ps
                 df['Symbol'] = quote
                 df['Rec_Date'] = rec_date
@@ -436,13 +438,13 @@ def getSignalAllPreset():
                     print('Preset : {} | Entry : {}'.format(ps,file))
                     df['Signal'] = 'Entry'
                     signal_df = signal_df.append(df.iloc[0])
-                    #getAnalysis(histPath + os.sep + file, ps, saveImage=True, showImage=False)
+                    #get_analysis(hist_path + os.sep + file, ps, saveImage=True, showImage=False)
                 # Trade Exit
                 elif filter_condition and exit_condition:
                     print('Preset : {} | Exit : {}'.format(ps, file))
                     df['Signal'] = 'Exit'
                     signal_df = signal_df.append(df.iloc[0])
-                    #getAnalysis(histPath + os.sep + file, ps, saveImage=True, showImage=False)
+                    #get_analysis(hist_path + os.sep + file, ps, saveImage=True, showImage=False)
                 else:
                     df['Signal'] = ''
                     signal_df = signal_df.append(df.iloc[0])
@@ -450,7 +452,7 @@ def getSignalAllPreset():
                 pass
 
     signal_df = signal_df.sort_values(['Signal','Preset','Value_M','GL_Ratio'], ascending=[True,True,False,False])
-    csvPath = dataPath + os.sep + 'signal.csv'
+    csvPath = data_path + os.sep + 'signal.csv'
     #if not os.path.exists(csvPath):
     signal_df.to_csv(csvPath,index=False)
 
@@ -465,24 +467,20 @@ def getSignalAllPreset():
 
     if not os.name == 'nt':
         # Update G Sheet
-        gsheet_csvPath = dataPath + os.sep + 'signal_gsheet.csv'
+        gsheet_csvPath = data_path + os.sep + 'signal_gsheet.csv'
         new_signal_df.to_csv(gsheet_csvPath, index=False)
         gSheet.updateFromCSV(gsheet_csvPath, 'SignalRecord')
 
 if __name__ == '__main__' :
     #import update
     #update.updatePreset()
-    #presetPath = dataPath + '/preset.json'
-    #presetJson = json.load(open(presetPath))
+    #preset_path = data_path + '/preset.json'
+    #preset_json = json.load(open(preset_path))
 
-    getAnalysis(histPath + 'THB_'+'ETH' + '.csv', 'P4',saveImage=False,showImage=True)
-    #getSignalAllPreset()
+    get_analysis(hist_path + 'THB_'+'ETH' + '.csv', 'P4',saveImage=False,showImage=True)
+    #get_all_analysis()
 
     #Save All Image
     #for file in histFileList:
-        #(histPath + os.sep + file, 'P3', saveImage=True, showImage=False)
+        #(hist_path + os.sep + file, 'P3', saveImage=True, showImage=False)
     pass
-
-
-
-

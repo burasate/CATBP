@@ -25,7 +25,7 @@ while True:
 
         import analysis
         importlib.reload(analysis)
-        analysis.getSignalAllPreset()
+        analysis.get_all_analysis()
 
         import realtime
         update.updateConfig()
