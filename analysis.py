@@ -493,7 +493,7 @@ analysis.get_analysis(r\'{3}\', \'{4}\', saveImage=True, showImage=False)
 
     is_posix = os.name == 'posix' #raspi os
     if is_posix:
-        subprocess.call(['bash', '-c', 'python -c \"{}\"'.format(command)])
+        subprocess.call(['bash', '-c', 'python3 -c \"{}\"'.format(command)])
     else:
         subprocess.call(
             [r'D:\GDrive\Documents\2021\bitkubPy\venv\Scripts\python.exe','-c', command]
