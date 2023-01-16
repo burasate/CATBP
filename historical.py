@@ -65,13 +65,13 @@ def updateGSheetHistory(limit = 47000):
     clear_backup_list = [i for i in os.listdir(dataPath + '/hist_backup') if not i in backup_sel]
     for f in backup_sel:
         file_path = dataPath + '/hist_backup/{}'.format(f)
-        print('Read [ {} ]'.format(filePath))
+        print('Read [ {} ]'.format(file_path))
         try:
             df = df.append(
                 pd.read_csv(file_path).sort_values(['dateTime'],ascending=[True]).tail(5000), ignore_index=True
             )
         except:
-            print('Can\'t Read {}   Column DateTime..'.format(filePath))
+            print('Can\'t Read {}   Column DateTime..'.format(file_path))
         else:
             pass
     # remove longtime backup
