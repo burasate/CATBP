@@ -477,27 +477,17 @@ def subproc_save_image(csv_path, preset_name):
     site_package_path = 'D:/GDrive/Documents/2021/bitkubPy/venv/Lib/site-packages'
 
     command = '''
-try:
-    import sys, os, time
-    
-    if not \'{0}\' in sys.path:
-        sys.path.insert(0,p)
-    
-    import analysis
-    analysis.get_analysis(r\'{1}\', \'{2}\', saveImage=True, showImage=False)
-    #print('rendered')
-except Exception as e:
-    import traceback
-    print(str(traceback.format_exc()))
-    time.sleep(3)
+import sys, os, time
+import analysis
+analysis.get_analysis(r\'{1}\', \'{2}\', saveImage=True, showImage=False)
     '''.format(
         base_path, csv_path, preset_name
     )
 
     is_posix = os.name == 'posix' #raspi os
     if is_posix:
-        subprocess.call(['lxterminal', '-e', 'bash -c \"python3 -c \"{}\"\" '.format(command)])
-        #subprocess.call(['bash', '-c', 'python3 -c {}'.format(command)])
+        #subprocess.call(['lxterminal', '-e', 'bash -c \"python3 -c \"{}\"\" &'.format(command)])
+        subprocess.call(['bash', '-c', 'python3 -c {}'.format(command)])
 
     else:
         subprocess.call(
