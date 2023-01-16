@@ -17,9 +17,6 @@ while True:
         update.updatePreset()
         update.updateSystem()
 
-        import analysis
-        analysis.get_all_analysis() ####################
-
         import historical
         importlib.reload(historical)
         historical.updateGSheetHistory()
