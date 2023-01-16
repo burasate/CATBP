@@ -473,22 +473,14 @@ def get_all_analysis():
         gSheet.updateFromCSV(gsheet_csvPath, 'SignalRecord')
 
 def subproc_save_image(csv_path, preset_name):
-    src_path = 'G:/GDrive/Documents/2022/BRSAnimPipeline/work/NodeProject/NodeProject/_pipeline_/src'
-    site_package_path = 'D:/GDrive/Documents/2021/bitkubPy/venv/Lib/site-packages'
-
     command = '''
 import sys, os
 
-for p in [\'{0}\', \'{1}\', \'{2}\']:
-    if not p in sys.path and os.path.exists(p):
-        sys.path.insert(0,p)
-#print(sys.path)
-
 import analysis
-analysis.get_analysis(r\'{3}\', \'{4}\', saveImage=True, showImage=False)
+analysis.get_analysis(r\'{0}\', \'{1}\', saveImage=True, showImage=False)
 #print('rendered')
     '''.format(
-        base_path, src_path, site_package_path, csv_path, preset_name
+        csv_path, preset_name
     )
 
     is_posix = os.name == 'posix' #raspi os
@@ -506,10 +498,9 @@ if __name__ == '__main__' :
     #update.updatePreset()
     #preset_path = data_path + '/preset.json'
     #preset_json = json.load(open(preset_path))
-    print(hist_path)
     #get_analysis(hist_path + 'THB_'+'ETH' + '.csv', 'P4',saveImage=False,showImage=True)
     #get_all_analysis()
-    #subproc_save_image(hist_path + 'THB_'+'ETH' + '.csv', 'P4')
+    subproc_save_image(hist_path + 'THB_'+'ETH' + '.csv', 'P4')
 
     #Save All Image
     #for file in histFileList:
