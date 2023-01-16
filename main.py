@@ -46,5 +46,5 @@ while True:
         time.sleep(120)
     finally:
         print('Ending of Process')
-        time.sleep(60*2)
+        time.sleep(1*2)
         pass
