@@ -60,21 +60,24 @@ def updateGSheetHistory(limit = 47000):
     backupPath = dataPath + '/hist_backup/cryptoHist_{}_{}.csv'.format(date.replace('-', '_'), 3)
 
     # append backup
-    backupList = os.listdir(dataPath + '/hist_backup')
-    backupList.sort()
-    if len(backupList) > 10:
-        backupList = backupList[-10:]
-    for f in backupList:
-        filePath = dataPath + '/hist_backup/{}'.format(f)
+    backup_list = sorted(os.listdir(dataPath + '/hist_backup'))
+    backup_sel = backup_list[-10:]
+    clear_backup_list = [i for i in os.listdir(dataPath + '/hist_backup') if not i in backup_sel]
+    for f in backup_sel:
+        file_path = dataPath + '/hist_backup/{}'.format(f)
         print('Read [ {} ]'.format(filePath))
         try:
             df = df.append(
-                pd.read_csv(filePath).sort_values(['dateTime'],ascending=[True]).tail(5000), ignore_index=True
+                pd.read_csv(file_path).sort_values(['dateTime'],ascending=[True]).tail(5000), ignore_index=True
             )
         except:
             print('Can\'t Read {}   Column DateTime..'.format(filePath))
         else:
             pass
+    # remove longtime backup
+    for f in clear_backup_list:
+        file_path = dataPath + '/hist_backup/{}'.format(f)
+        os.remove(file_path)
 
     os.system('cls||clear')
     for data in symbols:

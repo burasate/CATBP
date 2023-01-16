@@ -1,10 +1,9 @@
-#import matplotlib
-#matplotlib.use('TkAgg')
+# -*- coding: utf-8 -*-
 from matplotlib import pyplot as plt
 import pandas as pd
 import numpy as np
 import json
-import os
+import os, subprocess
 import datetime as dt
 from shutil import copyfile
 import gSheet
@@ -439,12 +438,14 @@ def get_all_analysis():
                     df['Signal'] = 'Entry'
                     signal_df = signal_df.append(df.iloc[0])
                     #get_analysis(hist_path + os.sep + file, ps, saveImage=True, showImage=False)
+                    subproc_save_image(hist_path + os.sep + file, ps)
                 # Trade Exit
                 elif filter_condition and exit_condition:
                     print('Preset : {} | Exit : {}'.format(ps, file))
                     df['Signal'] = 'Exit'
                     signal_df = signal_df.append(df.iloc[0])
                     #get_analysis(hist_path + os.sep + file, ps, saveImage=True, showImage=False)
+                    subproc_save_image(hist_path + os.sep + file, ps)
                 else:
                     df['Signal'] = ''
                     signal_df = signal_df.append(df.iloc[0])
@@ -471,14 +472,43 @@ def get_all_analysis():
         new_signal_df.to_csv(gsheet_csvPath, index=False)
         gSheet.updateFromCSV(gsheet_csvPath, 'SignalRecord')
 
+def subproc_save_image(csv_path, preset_name):
+    src_path = 'G:/GDrive/Documents/2022/BRSAnimPipeline/work/NodeProject/NodeProject/_pipeline_/src'
+    site_package_path = 'D:/GDrive/Documents/2021/bitkubPy/venv/Lib/site-packages'
+
+    command = '''
+import sys, os
+
+for p in [\'{0}\', \'{1}\', \'{2}\']:
+    if not p in sys.path and os.path.exists(p):
+        sys.path.insert(0,p)
+#print(sys.path)
+
+import analysis
+analysis.get_analysis(r\'{3}\', \'{4}\', saveImage=True, showImage=False)
+#print('rendered')
+    '''.format(
+        base_path, src_path, site_package_path, csv_path, preset_name
+    )
+
+    is_posix = os.name == 'posix' #raspi os
+    if is_posix:
+        subprocess.call(['bash', '-c', 'python -c \"{}\"'.format(command)])
+    else:
+        subprocess.call(
+            [r'D:\GDrive\Documents\2021\bitkubPy\venv\Scripts\python.exe','-c', command]
+        )  # for testing
+        #,creationflags=subprocess.CREATE_NEW_CONSOLE) # for run on pc
+
 if __name__ == '__main__' :
     #import update
     #update.updatePreset()
     #preset_path = data_path + '/preset.json'
     #preset_json = json.load(open(preset_path))
-
-    get_analysis(hist_path + 'THB_'+'ETH' + '.csv', 'P4',saveImage=False,showImage=True)
+    print(hist_path)
+    #get_analysis(hist_path + 'THB_'+'ETH' + '.csv', 'P4',saveImage=False,showImage=True)
     #get_all_analysis()
+    #subproc_save_image(hist_path + 'THB_'+'ETH' + '.csv', 'P4')
 
     #Save All Image
     #for file in histFileList:
