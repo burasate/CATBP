@@ -475,9 +475,10 @@ def get_all_analysis():
 def subproc_save_image(csv_path, preset_name):
     src_path = 'G:/GDrive/Documents/2022/BRSAnimPipeline/work/NodeProject/NodeProject/_pipeline_/src'
     site_package_path = 'D:/GDrive/Documents/2021/bitkubPy/venv/Lib/site-packages'
-
     command = '''
 import sys, os, time
+if not \'{0}\' in sys.path:
+    sys.path.insert(0,\'{0}\')
 import analysis
 analysis.get_analysis(r\'{1}\', \'{2}\', saveImage=True, showImage=False)
     '''.format(
