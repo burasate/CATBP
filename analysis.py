@@ -493,7 +493,7 @@ analysis.get_analysis(r\'{3}\', \'{4}\', saveImage=True, showImage=False)
 
     is_posix = os.name == 'posix' #raspi os
     if is_posix:
-        subprocess.call(['nohup', 'lxterminal', '-e', 'bash -c \"python3 -c \"{}\"\"'.format(command)])
+        subprocess.call(['lxterminal', '-e', 'bash -c \"python3 -c \"{}\"\"'.format(command)])
         #['nohup', 'gnome-terminal', '-e', 'bash -c "python3 -c \\"import code\\""']
     else:
         subprocess.call(
