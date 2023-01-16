@@ -486,8 +486,8 @@ analysis.get_analysis(r\'{1}\', \'{2}\', saveImage=True, showImage=False)
 
     is_posix = os.name == 'posix' #raspi os
     if is_posix:
-        #subprocess.call(['lxterminal', '-e', 'bash -c \"python3 -c \"{}\"\" &'.format(command)])
-        subprocess.call(['bash', '-c', 'python3 -c {}'.format(command)])
+        #subprocess.call(['lxterminal', '-e', 'bash -c \"python3 -c \\"{}\\" \" &'.format(command)])
+        subprocess.call(['bash', '-c', 'python3 -c \"{}\" > /home/pi/Documents/BitPy/command_output.txt'.format(command)])
 
     else:
         subprocess.call(
