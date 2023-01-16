@@ -491,8 +491,9 @@ analysis.get_analysis(r\'{1}\', \'{2}\', saveImage=True, showImage=False)
 
     is_posix = os.name == 'posix' #raspi os
     if is_posix:
-        subprocess.call(['lxterminal', '-e', 'bash -c \"python3 -c \"{}\"\"'.format(command)])
-        #['nohup', 'gnome-terminal', '-e', 'bash -c "python3 -c \\"import code\\""']
+        #subprocess.call(['lxterminal', '-e', 'bash -c \"python3 -c \"{}\"\" &'.format(command)])
+        subprocess.call(['bash', '-c', 'python3 -c {}'.format(command)])
+
     else:
         subprocess.call(
             [r'D:\GDrive\Documents\2021\bitkubPy\venv\Scripts\python.exe','-c', command]
