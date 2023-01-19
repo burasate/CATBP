@@ -488,7 +488,7 @@ analysis.get_analysis(r\'{1}\', \'{2}\', saveImage=True, showImage=False)
     is_posix = os.name == 'posix' #raspi os
     if is_posix:
         #print(command)
-        subprocess.call(['lxterminal', '-e', 'bash -c \"python3 -c \\"{}\\" \" &'.format(command)])
+        #subprocess.call(['lxterminal', '-e', 'bash -c \"python3 -c \\"{}\\" \" &'.format(command)])
         #subprocess.call(['bash', '-c', 'python3 -c \"{}\" > /home/pi/Documents/BitPy/command_output.txt'.format(command)])
 
     else:
@@ -502,7 +502,6 @@ if __name__ == '__main__' :
     #update.updatePreset()
     #preset_path = data_path + '/preset.json'
     #preset_json = json.load(open(preset_path))
-    print(hist_path)
     #get_analysis(hist_path + 'THB_'+'ETH' + '.csv', 'P4',saveImage=False,showImage=True)
     #get_all_analysis()
     #subproc_save_image(hist_path + 'THB_'+'ETH' + '.csv', 'P4')
