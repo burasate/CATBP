@@ -314,7 +314,6 @@ def Realtime(idName,sendNotify=True):
     #print(signal_df_all['NDay_Drawdown%'].mean())
     #print(signal_df_all['Avg_Drawdown%'].mean())
 
-
     # New Column For Signal DF
     signal_df['User'] = idName
     signal_df['Buy'] = signal_df['Close']
