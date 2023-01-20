@@ -490,8 +490,7 @@ analysis.get_analysis(r\'{1}\', \'{2}\', saveImage=True, showImage=False)
     if is_posix:
         pass
         #print(command)
-        #subprocess.call(['lxterminal', '--geometry=10x2+5+5',
-                         '-e', 'python3', '-c', command])
+        #subprocess.call(['lxterminal', '--geometry=10x2+5+5','-e', 'python3', '-c', command])
     else:
         subprocess.call(
             [r'D:\GDrive\Documents\2021\bitkubPy\venv\Scripts\python.exe','-c', command]
