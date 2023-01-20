@@ -500,9 +500,9 @@ analysis.batch_save_image()
 
     is_posix = os.name == 'posix' #raspi os
     if is_posix:
-        pass
+        #pass
         #print(command)
-        #subprocess.call(['lxterminal', '--geometry=10x2+5+5','-e', 'python3', '-c', command])
+        subprocess.call(['lxterminal', '--geometry=10x2+5+5','-e', 'python3', '-c', command])
     else:
         subprocess.call(
             [r'D:\GDrive\Documents\2021\bitkubPy\venv\Scripts\python.exe','-c', command]
