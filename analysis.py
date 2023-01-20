@@ -439,14 +439,12 @@ def get_all_analysis():
                     df['Signal'] = 'Entry'
                     signal_df = signal_df.append(df.iloc[0])
                     #get_analysis(hist_path + os.sep + file, ps, saveImage=True, showImage=False)
-                    subproc_save_image(hist_path + os.sep + file, ps)
                 # Trade Exit
                 elif filter_condition and exit_condition:
                     print('Preset : {} | Exit : {}'.format(ps, file))
                     df['Signal'] = 'Exit'
                     signal_df = signal_df.append(df.iloc[0])
                     #get_analysis(hist_path + os.sep + file, ps, saveImage=True, showImage=False)
-                    subproc_save_image(hist_path + os.sep + file, ps)
                 else:
                     df['Signal'] = ''
                     signal_df = signal_df.append(df.iloc[0])
@@ -457,6 +455,7 @@ def get_all_analysis():
     csvPath = data_path + os.sep + 'signal.csv'
     #if not os.path.exists(csvPath):
     signal_df.to_csv(csvPath,index=False)
+    subproc_batch_save_image()
 
     # New Signal DataFrame (All Signal Record)
     new_signal_df = pd.read_csv(csvPath)
@@ -473,18 +472,31 @@ def get_all_analysis():
         new_signal_df.to_csv(gsheet_csvPath, index=False)
         gSheet.updateFromCSV(gsheet_csvPath, 'SignalRecord')
 
-def subproc_save_image(csv_path, preset_name):
-    src_path = 'G:/GDrive/Documents/2022/BRSAnimPipeline/work/NodeProject/NodeProject/_pipeline_/src'
-    site_package_path = 'D:/GDrive/Documents/2021/bitkubPy/venv/Lib/site-packages'
+def batch_save_image(*_):
+    csv_path = data_path + os.sep + 'signal.csv'
+    df = pd.read_csv(csv_path)
+    df = df.sort_values(['Date'], ascending=[True])
+    df = df[df['Date'] == df.iloc[df.index[-1]]['Date']]
+    df = df[df['Signal'] != '']
+    df = df.sample(frac=1)
+    df.reset_index(inplace=True)
+    #print(df)
+
+    for i in df.index.tolist():
+        row = df.loc[i]
+        sym = row['Symbol']
+        ps = row['Preset']
+        f_path = hist_path + sym + '.csv'
+        get_analysis(f_path, ps,saveImage=True,showImage=False)
+
+def subproc_batch_save_image(*_):
     command = '''
 import sys, os, time
 if not \'{0}\' in sys.path:
     sys.path.insert(0,\'{0}\')
 import analysis
-analysis.get_analysis(r\'{1}\', \'{2}\', saveImage=True, showImage=False)
-    '''.format(
-        base_path, csv_path, preset_name
-    )
+analysis.batch_save_image()
+    '''.format(base_path)
 
     is_posix = os.name == 'posix' #raspi os
     if is_posix:
@@ -504,7 +516,8 @@ if __name__ == '__main__' :
     #preset_json = json.load(open(preset_path))
     #get_analysis(hist_path + 'THB_'+'ETH' + '.csv', 'P4',saveImage=False,showImage=True)
     #get_all_analysis()
-    subproc_save_image(hist_path + 'THB_'+'ETH' + '.csv', 'P4')
+    #batch_save_image()
+    subproc_batch_save_image()
 
     #Save All Image
     #for file in histFileList:
