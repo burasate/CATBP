@@ -387,7 +387,8 @@ def get_all_analysis():
     imgPath = data_path + '/analysis_img/'
     oldImgFiles = os.listdir(imgPath)
     for f in oldImgFiles:
-        os.remove(imgPath + f)
+        #os.remove(imgPath + f)
+        pass
 
     count = 0
     for file in histFileList:
