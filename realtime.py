@@ -591,8 +591,8 @@ def Realtime(idName,sendNotify=True):
     if new_loss_list != []:
         gSheet.setValue('Config', findKey='idName', findValue=idName, key='percentageLossTarget',
                         value=sum(new_loss_list)/len(new_loss_list))
-        if sendNotify:
-            lineNotify.sendNotifyMassage(token, 'New Loss Target : {}%'.format(new_lossTarget))
+        #if sendNotify:
+            #lineNotify.sendNotifyMassage(token, 'New Loss Target : {}%'.format(new_lossTarget))
 
     print('---------------------\nAuto Preset\n---------------------')
     if autoPreset:
