@@ -431,9 +431,11 @@ def Realtime(idName,sendNotify=True):
                 Transaction(idName, 'Buy', row['Symbol'], (configJson[idName]['percentageComission'] / 100) * -1)
                 if sendNotify:
                     quote = row['Symbol'].split('_')[-1]
-                    #imgFilePath = imgPath + os.sep + '{}_{}.png'.format(preset, quote)
-                    #lineNotify.sendNotifyImageMsg(token, imgFilePath, text)
-                    lineNotify.sendNotifyMassage(token, text)
+                    img_file_path = imgPath + os.sep + '{}_{}.png'.format(preset, quote)
+                    if os.path.exists(img_file_path):
+                        lineNotify.sendNotifyImageMsg(token, imgFilePath, text)
+                    else:
+                        lineNotify.sendNotifyMassage(token, text)
                 port_df = port_df.append(row, ignore_index=False)
     #Finish Buy
     port_df.reset_index(drop=True,inplace=True)
@@ -506,7 +508,7 @@ def Realtime(idName,sendNotify=True):
                 #lineNotify.sendNotifyMassage(token, 'New Loss Target : {}%'.format(new_lossTarget))
 
     print('---------------------\nSelling\n---------------------')
-    #Sell Condition
+    new_loss_list = []
     for i in port_df.index.tolist():
         row = port_df.loc[i]
         sell_signal = False
@@ -523,10 +525,7 @@ def Realtime(idName,sendNotify=True):
 
         #Adaptive Loss After Selling
         if adaptiveLoss and sell_loss:
-            gSheet.setValue('Config', findKey='idName', findValue=idName, key='percentageLossTarget',
-                            value=new_lossTarget)
-            #if sendNotify:
-                #lineNotify.sendNotifyMassage(token, 'New Loss Target : {}%'.format(new_lossTarget))
+            new_loss_list.append(new_lossTarget)
 
         if triggerSellPos == 'Lower':
             sell_signal = (
@@ -589,6 +588,11 @@ def Realtime(idName,sendNotify=True):
 
         if port_df.loc[i, 'Count'] <= 0 : #Delete symbol if no count
             port_df = port_df[port_df['Symbol'] != row['Symbol']]
+    if new_loss_list != []:
+        gSheet.setValue('Config', findKey='idName', findValue=idName, key='percentageLossTarget',
+                        value=sum(new_loss_list)/len(new_loss_list))
+        if sendNotify:
+            lineNotify.sendNotifyMassage(token, 'New Loss Target : {}%'.format(new_lossTarget))
 
     print('---------------------\nAuto Preset\n---------------------')
     if autoPreset:
