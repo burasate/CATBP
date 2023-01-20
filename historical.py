@@ -36,7 +36,7 @@ def getHistDataframe(*_):
         df = pd.DataFrame.from_records(sheetData)
     return df
 
-def updateGSheetHistory(limit = 47000):
+def updateGSheetHistory(limit = 50000):
     ticker = kbApi.getTicker()
     symbols = kbApi.getSymbol()
 
@@ -61,7 +61,7 @@ def updateGSheetHistory(limit = 47000):
 
     # append backup
     backup_list = sorted(os.listdir(dataPath + '/hist_backup'))
-    backup_sel = backup_list[-10:]
+    backup_sel = backup_list[-20:]
     clear_backup_list = [i for i in os.listdir(dataPath + '/hist_backup') if not i in backup_sel]
     for f in backup_sel:
         file_path = dataPath + '/hist_backup/{}'.format(f)
