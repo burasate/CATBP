@@ -667,11 +667,9 @@ def run_all_user(*_):
             try:
                 Realtime(user)
             except Exception as e:
-                print('\nError To Record ! : {}  then skip\n'.format(e))
+                import traceback
                 print('!!!! ==========================')
-                exc_type, exc_obj, exc_tb = sys.exc_info()
-                fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-                print('Error Type {}\nFile {}\n Line {}'.format(exc_type, fname, exc_tb.tb_lineno))
+                print(str(traceback.format_exc()))
                 print('!!!! ==========================')
     while isInternetConnect and not os.name == 'nt':
         try:
