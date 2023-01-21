@@ -652,14 +652,17 @@ def Realtime(idName,sendNotify=True):
                 print('Not found Symbol in real balance', sym, list(balance))
                 pass
 
-    #Finish
-    if 'index' in port_df.columns.tolist():
-        port_df.drop(columns=['index'],inplace=True)
-    if 'level_0' in port_df.columns.tolist():
-        port_df.drop(columns=['level_0'], inplace=True)
+    # ===============Finish========================
+    for i in ['index', 'level_0']:
+        if i in port_df.columns.tolist():
+            port_df.drop(columns=[i], inplace=True)
+
     alluser_df = pd.read_csv(mornitorFilePath)
     alluser_df = alluser_df[alluser_df['User'] != idName]
     alluser_df = alluser_df.append(port_df)
+    for i in ['index', 'level_0']:
+        if i in alluser_df.columns.tolist():
+            alluser_df.drop(columns=[i], inplace=True)
     alluser_df.to_csv(mornitorFilePath,index=False)
 
     #Backup All Balance Portfolio
