@@ -433,7 +433,7 @@ def Realtime(idName,sendNotify=True):
                     quote = row['Symbol'].split('_')[-1]
                     img_file_path = imgPath + os.sep + '{}_{}.png'.format(preset, quote)
                     if os.path.exists(img_file_path):
-                        lineNotify.sendNotifyImageMsg(token, imgFilePath, text)
+                        lineNotify.sendNotifyImageMsg(token, img_file_path, text)
                     else:
                         lineNotify.sendNotifyMassage(token, text)
                 port_df = port_df.append(row, ignore_index=False)

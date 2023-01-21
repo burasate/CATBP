@@ -2,8 +2,7 @@
 from matplotlib import pyplot as plt
 import pandas as pd
 import numpy as np
-import json
-import os, subprocess
+import json, os, subprocess, time
 import datetime as dt
 from shutil import copyfile
 import gSheet
@@ -472,7 +471,7 @@ def get_all_analysis():
         new_signal_df.to_csv(gsheet_csvPath, index=False)
         gSheet.updateFromCSV(gsheet_csvPath, 'SignalRecord')
 
-def batch_save_image(*_):
+def batch_save_image(time_out = 60*5):
     csv_path = data_path + os.sep + 'signal.csv'
     df = pd.read_csv(csv_path)
     df = df.sort_values(['Date'], ascending=[True])
@@ -482,12 +481,17 @@ def batch_save_image(*_):
     df.reset_index(inplace=True)
     #print(df)
 
+    st_time = time.time()
+    time_dur = 0.0
     for i in df.index.tolist():
         row = df.loc[i]
         sym = row['Symbol']
         ps = row['Preset']
         f_path = hist_path + sym + '.csv'
         get_analysis(f_path, ps,saveImage=True,showImage=False)
+        time_dur = (time.time() - st_time)
+        if time_dur > time_out:
+            break
 
 def subproc_batch_save_image(*_):
     command = '''
