@@ -638,14 +638,19 @@ def Realtime(idName,sendNotify=True):
     balance = getBalance(idName)
     if balance != None:  # Have Secret API
         portfolioList = port_df['Symbol'].tolist()
-        balanceList = []
+        #balanceList = []
         dropList = []
-        for sym in balance:  # Check Real Balance
+        for sym in balance:  # Check Real Balance -> Mornitor Balance
             if balance[sym]['available'] != 0 and sym != 'THB':  # if not THB and have available
                 symbol = 'THB_{}'.format(sym)
-                if not symbol in portfolioList:  # Not balace in mornitor
+                if not symbol in portfolioList:  # Not balance in mornitor
                     #CreateSellOrder(idName, symbol, count=1)
-                    balanceList.append(symbol)
+                    #balanceList.append(symbol)
+                    pass
+        for symbol in portfolioList: # Check Mornitor Balance -> Real Balance
+            sym = symbol.replace('_THB','')
+            if not sym in balance: # Not found Symbol in real balance get sync
+                port_df = port_df[port_df['Symbol'] != symbol]
 
     #Finish
     if 'index' in port_df.columns.tolist():
