@@ -274,7 +274,7 @@ def createSymbolHistory(symbol,timeFrame = 'minute'):
 
     #delete sub timeframe duplicate and clean up
     histDF.drop_duplicates(group, keep='last', inplace=True)
-    histDF = histDF.tail(101)
+    histDF = histDF.tail(201)
     histDF.reset_index(inplace=True)
 
     # assign df

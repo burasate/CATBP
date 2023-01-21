@@ -711,6 +711,4 @@ def run_all_user(*_):
             break
         time.sleep(10)
 
-if __name__ == '__main__' :
-    bl = getBalance('user1')
-    pprint.pprint(bl)
+if __name__ == '__main__' :pass
