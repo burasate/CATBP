@@ -514,7 +514,7 @@ def Realtime(idName,sendNotify=True):
     print('---------------------\nSelling\n---------------------')
     new_loss_list = []
     for i in port_df.index.tolist():
-        if idName == 'm.nonthawat':
+        if idName == 'm.tunyakarn':
             break
         row = port_df.loc[i]
         sell_signal = False
