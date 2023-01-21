@@ -644,9 +644,7 @@ def Realtime(idName,sendNotify=True):
             if balance[sym]['available'] != 0 and sym != 'THB':  # if not THB and have available
                 symbol = 'THB_{}'.format(sym)
                 if not symbol in portfolioList:  # Not balace in mornitor
-                    CreateSellOrder(idName, symbol, count=1)
-                    #if sendNotify:
-                        #lineNotify.sendNotifyMassage(token, 'Clear {} in Balance'.format(symbol))
+                    #CreateSellOrder(idName, symbol, count=1)
                     balanceList.append(symbol)
 
     #Finish
