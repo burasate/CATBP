@@ -635,7 +635,7 @@ def Realtime(idName,sendNotify=True):
     # Clear Wrong Balnace
     balance = getBalance(idName)
     if balance != None:  # Have Secret API
-        pprint.pprint(balance)
+        print('{} Real Porfolio {}'.format(idName, list(balance)))
         portfolioList = port_df['Symbol'].tolist()
         #balanceList = []
         dropList = []
@@ -667,7 +667,7 @@ def Realtime(idName,sendNotify=True):
     if not os.path.exists(mornitor_backup_dir):
         os.makedirs(mornitor_backup_dir)
     date_str = str(dt.datetime.now().strftime('%Y_%m_%d_%H'))
-    alluser_df.to_csv(mornitor_backup_dir + '/mornitor_{}'.format(date_str), index=False)
+    alluser_df.to_csv(mornitor_backup_dir + '/mornitor_{}.csv'.format(date_str), index=False)
 
     # Clear Portfolio Backup
     backup_list = [i for i in os.listdir(mornitor_backup_dir) if '.csv' in i]
