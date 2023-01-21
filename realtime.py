@@ -652,6 +652,8 @@ def Realtime(idName,sendNotify=True):
             sym = symbol.replace('_THB','')
             if not sym in balance: # Not found Symbol in real balance get sync
                 #port_df = port_df[port_df['Symbol'] != symbol]
+                if idName == 'm.tunyakarn':
+                    port_df = port_df[port_df['Symbol'] != symbol]
                 pass
 
     #Finish
