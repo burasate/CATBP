@@ -646,7 +646,7 @@ def Realtime(idName,sendNotify=True):
                     CreateSellOrder(idName, symbol, count=1)
                     #balanceList.append(symbol)
         for symbol in portfolioList: # Check Mornitor Balance -> Real Balance
-            sym = symbol.replace('_THB','')
+            sym = symbol.replace('THB_','')
             if not sym in balance: # Not found Symbol in real balance get sync
                 #port_df = port_df[port_df['Symbol'] != symbol]
                 print('Not found Symbol in real balance', sym, list(balance))
