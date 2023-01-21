@@ -147,8 +147,9 @@ def CreateBuyOrder(idName,symbol,portfoiloList,countLeft):
     #print('size {}'.format(size))
     #print('portSize {}'.format(portSize))
     print('countLeft {}'.format(countLeft))
-    import pprint
-    pprint.pprint(balance)
+    if not 'THB' in balance:
+        print('cannot found THB in balance')
+        return False
     budget = balance['THB']['available']
     #sizedBudget = ( (budget / (size-portSize)) /countLeft) * (percentageBalanceUsing/100)
     sizedBudget =  ( budget/countLeft ) * (percentageBalanceUsing/100)
@@ -513,6 +514,8 @@ def Realtime(idName,sendNotify=True):
     print('---------------------\nSelling\n---------------------')
     new_loss_list = []
     for i in port_df.index.tolist():
+        if idName == m.nonthawat:
+            break
         row = port_df.loc[i]
         sell_signal = False
         sell_profit = row['Profit%'] > profitTarget
