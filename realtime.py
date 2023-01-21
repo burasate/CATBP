@@ -147,6 +147,7 @@ def CreateBuyOrder(idName,symbol,portfoiloList,countLeft):
     #print('size {}'.format(size))
     #print('portSize {}'.format(portSize))
     print('countLeft {}'.format(countLeft))
+    print(balance)
     budget = balance['THB']['available']
     #sizedBudget = ( (budget / (size-portSize)) /countLeft) * (percentageBalanceUsing/100)
     sizedBudget =  ( budget/countLeft ) * (percentageBalanceUsing/100)
