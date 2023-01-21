@@ -649,7 +649,7 @@ def Realtime(idName,sendNotify=True):
     alluser_df.to_csv(mornitorFilePath,index=False)
     print('---------------------\nFinish\n---------------------\n')
 
-def AllUser(*_):
+def run_all_user(*_):
     os.system('cls||clear')
     global mornitorFilePath
     global transacFilePath

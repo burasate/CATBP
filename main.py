@@ -30,7 +30,7 @@ while True:
         import realtime
         update.updateConfig()
         importlib.reload(realtime)
-        realtime.AllUser()
+        realtime.run_all_user()
         realtime.Reset()
 
     except Exception as e:
