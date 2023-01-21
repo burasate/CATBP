@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-import json,os,time,sys
+import json,os,time,sys,pprint
 import datetime as dt
 import gSheet
 import kbApi
@@ -636,6 +636,7 @@ def Realtime(idName,sendNotify=True):
     print('---------------------\nBalance Checking\n---------------------')
     # Clear Wrong Balnace
     balance = getBalance(idName)
+    pprint.pprint(balance)
     if balance != None:  # Have Secret API
         portfolioList = port_df['Symbol'].tolist()
         #balanceList = []
@@ -650,7 +651,8 @@ def Realtime(idName,sendNotify=True):
         for symbol in portfolioList: # Check Mornitor Balance -> Real Balance
             sym = symbol.replace('_THB','')
             if not sym in balance: # Not found Symbol in real balance get sync
-                port_df = port_df[port_df['Symbol'] != symbol]
+                #port_df = port_df[port_df['Symbol'] != symbol]
+                pass
 
     #Finish
     if 'index' in port_df.columns.tolist():
