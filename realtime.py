@@ -636,8 +636,8 @@ def Realtime(idName,sendNotify=True):
     print('---------------------\nBalance Checking\n---------------------')
     # Clear Wrong Balnace
     balance = getBalance(idName)
-    pprint.pprint(balance)
     if balance != None:  # Have Secret API
+        pprint.pprint(balance)
         portfolioList = port_df['Symbol'].tolist()
         #balanceList = []
         dropList = []
@@ -645,15 +645,13 @@ def Realtime(idName,sendNotify=True):
             if balance[sym]['available'] != 0 and sym != 'THB':  # if not THB and have available
                 symbol = 'THB_{}'.format(sym)
                 if not symbol in portfolioList:  # Not balance in mornitor
-                    #CreateSellOrder(idName, symbol, count=1)
+                    CreateSellOrder(idName, symbol, count=1)
                     #balanceList.append(symbol)
-                    pass
         for symbol in portfolioList: # Check Mornitor Balance -> Real Balance
             sym = symbol.replace('_THB','')
             if not sym in balance: # Not found Symbol in real balance get sync
                 #port_df = port_df[port_df['Symbol'] != symbol]
-                if idName == 'm.tunyakarn':
-                    port_df = port_df[port_df['Symbol'] != symbol]
+                print('Not found Symbol in real balance', sym, list(balance))
                 pass
 
     #Finish
@@ -665,6 +663,23 @@ def Realtime(idName,sendNotify=True):
     alluser_df = alluser_df[alluser_df['User'] != idName]
     alluser_df = alluser_df.append(port_df)
     alluser_df.to_csv(mornitorFilePath,index=False)
+
+    #Backup All Balance Portfolio
+    mornitor_backup_dir = dataPath + '/mornitor_backup'
+    if not os.path.exists(mornitor_backup_dir):
+        os.makedirs(mornitor_backup_dir)
+    date_str = str(dt.datetime.now().strftime('%Y_%m_%d_%H'))
+    alluser_df.to_csv(mornitor_backup_dir + '/mornitor_{}'.format(date_str), index=False)
+
+    # Clear Portfolio Backup
+    backup_list = [i for i in os.listdir(mornitor_backup_dir) if '.csv' in i]
+    backup_path_list = [mornitor_backup_dir + os.sep + i for i in backup_list]
+    backup_f_limit = 24 * 5
+    if len(backup_path_list) > backup_f_limit:
+        backup_path_list = sorted(backup_path_list)[-backup_f_limit:]
+        for fp in [mornitor_backup_dir + os.sep + i for i in backup_list]:
+            if not fp in backup_path_list:
+                os.remove(fp)
     print('---------------------\nFinish\n---------------------\n')
 
 def run_all_user(*_):
@@ -696,4 +711,5 @@ def run_all_user(*_):
         time.sleep(10)
 
 if __name__ == '__main__' :
-    pass
+    bl = getBalance('user1')
+    pprint.pprint(bl)
