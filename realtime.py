@@ -433,7 +433,8 @@ def Realtime(idName,sendNotify=True):
                     quote = row['Symbol'].split('_')[-1]
                     img_file_path = imgPath + os.sep + '{}_{}.png'.format(preset, quote)
                     if os.path.exists(img_file_path):
-                        lineNotify.sendNotifyImageMsg(token, img_file_path, text)
+                        #lineNotify.sendNotifyImageMsg(token, img_file_path, text)
+                        lineNotify.sendNotifyMassage(token, text)
                     else:
                         lineNotify.sendNotifyMassage(token, text)
                 port_df = port_df.append(row, ignore_index=False)
@@ -481,7 +482,7 @@ def Realtime(idName,sendNotify=True):
         unrealize = round(total - available)
         for i in range(len(symbolTextList)):
             sp = '{}   ({}/{}) ({}%)'.format(
-                symbolTextList[i],
+                symbolTextList[i].replace('THB_',''),
                 countTextList[i],
                 buySize,
                 profitTextList[i]
@@ -584,7 +585,12 @@ def Realtime(idName,sendNotify=True):
             Transaction(idName, 'Sell', row['Symbol'],
                         ((configJson[idName]['percentageComission'] / 100) * -1) + profit)
             if sendNotify:
-                lineNotify.sendNotifyMassage(token, text)
+                quote = row['Symbol'].split('_')[-1]
+                img_file_path = imgPath + os.sep + '{}_{}.png'.format(preset, quote)
+                if os.path.exists(img_file_path):
+                    lineNotify.sendNotifyImageMsg(token, img_file_path, text)
+                else:
+                    lineNotify.sendNotifyMassage(token, text)
 
         if port_df.loc[i, 'Count'] <= 0 : #Delete symbol if no count
             port_df = port_df[port_df['Symbol'] != row['Symbol']]
