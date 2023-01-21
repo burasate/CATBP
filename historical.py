@@ -1,4 +1,4 @@
-import os,json,requests,time
+import os, json, requests, time, subprocess
 from datetime import datetime as dt
 import pandas as pd
 import numpy as np
@@ -8,8 +8,8 @@ import gSheet
 pd.set_option('display.max_columns', None)
 pd.set_option('display.max_rows', None)
 
-rootPath = os.path.dirname(os.path.abspath(__file__))
-dataPath = rootPath+'/data'
+base_path = os.path.dirname(os.path.abspath(__file__))
+dataPath = base_path+'/data'
 histPath = dataPath + '/hist'
 configPath = dataPath + '/config.json'
 configJson = json.load(open(configPath))
@@ -176,6 +176,7 @@ def updateGSheetHistory(limit = 50000):
     ticker_df = ticker_df[ticker_df['hour'] == ticker_df['hour'].max()]
     ticker_df.to_csv(tickerPath, index=False)
 
+    '''
     st_time = time.time()
     while True:
         print('Uploading.....')
@@ -191,6 +192,47 @@ def updateGSheetHistory(limit = 50000):
             break
     print('uploading duration {} minute'.format( (time.time() - st_time)/60 ))
     time.sleep(2)
+    '''
+    subproc_update_gsheet_hist()
+
+def update_gsheet_hist():
+    all_hist_path = dataPath + '/cryptoHist.csv'
+    ticker_path = dataPath + '/ticker.csv'
+
+    st_time = time.time()
+    while True:
+        print('Uploading.....')
+        try:
+            if not os.name == 'nt':  # for raspi
+                print('uploading history data...')
+                gSheet.updateFromCSV(all_hist_path, 'History')
+                gSheet.updateFromCSV(ticker_path, 'Ticker')
+                print('upload history data finish')
+        except:
+            pass
+        time.sleep(15)  # Waiting Upload
+        if gSheet.getAllDataS('History') != []:
+            break
+    print('uploading duration {} minute'.format((time.time() - st_time) / 60))
+    time.sleep(2)
+
+def subproc_update_gsheet_hist():
+    command = '''
+import sys, os
+if not \'{0}\' in sys.path:
+    sys.path.insert(0,\'{0}\')
+import historical
+historical.update_gsheet_hist()
+    '''.format(base_path)
+
+    is_posix = os.name == 'posix'  # raspi os
+    if is_posix:
+        subprocess.call(['lxterminal', '--geometry=250x1+5+5', '-e', 'python3', '-c', command])
+    else:
+        subprocess.call(
+            [r'D:\GDrive\Documents\2021\bitkubPy\venv\Scripts\python.exe', '-c', command]
+        )  # for testing
+        # ,creationflags=subprocess.CREATE_NEW_CONSOLE) # for run on pc
 
 def createSymbolHistory(symbol,timeFrame = 'minute'):
     os.system('cls||clear')
@@ -270,6 +312,7 @@ def loadAllHist(timeFrame = 'minute'):
 
 if __name__ == '__main__':
     #createSymbolHistory('THB_WAN','hour')
-    updateGSheetHistory()
+    #updateGSheetHistory()
     #loadAllHist(timeFrame='hour')
+    subproc_update_gsheet_hist()
     pass
