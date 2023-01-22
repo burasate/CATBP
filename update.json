@@ -1,10 +1,10 @@
 {
-  "historical.py" : "https://raw.githubusercontent.com/burasate/BitPy/master/historical.py",
-  "kbApi.py" : "https://raw.githubusercontent.com/burasate/BitPy/master/kbApi.py",
-  "lineNotify.py" : "https://raw.githubusercontent.com/burasate/BitPy/master/lineNotify.py",
-  "update.py" : "https://raw.githubusercontent.com/burasate/BitPy/master/update.py",
-  "analysis.py" : "https://raw.githubusercontent.com/burasate/BitPy/master/analysis.py",
-  "main.py" : "https://raw.githubusercontent.com/burasate/BitPy/master/main.py",
-  "historicalPiZero.py" : "https://raw.githubusercontent.com/burasate/BitPy/master/historicalPiZero.py",
-  "realtime.py" : "https://raw.githubusercontent.com/burasate/BitPy/master/realtime.py"
+  "historical.py" : "https://raw.githubusercontent.com/burasate/CATBP/master/historical.py",
+  "kbApi.py" : "https://raw.githubusercontent.com/burasate/CATBP/master/kbApi.py",
+  "lineNotify.py" : "https://raw.githubusercontent.com/burasate/CATBP/master/lineNotify.py",
+  "update.py" : "https://raw.githubusercontent.com/burasate/CATBP/master/update.py",
+  "analysis.py" : "https://raw.githubusercontent.com/burasate/CATBP/master/analysis.py",
+  "main.py" : "https://raw.githubusercontent.com/burasate/CATBP/master/main.py",
+  "main_priceTracker.py" : "https://raw.githubusercontent.com/burasate/CATBP/master/main_priceTracker.py",
+  "realtime.py" : "https://raw.githubusercontent.com/burasate/CATBP/master/realtime.py"
 }
