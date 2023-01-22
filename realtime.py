@@ -144,6 +144,14 @@ def CreateBuyOrder(idName,symbol,portfoiloList,countLeft):
         q = sym.replace('THB_', '')
         portSymList.append(q)
 
+   # User&Bot Balance Check
+    is_bot_bl = balance == None
+    is_user_bl = not is_bot_bl and 'THB' in balance
+    if is_bot_bl: # Verify Bot
+        return True
+    elif not is_user_bl: # Verify User but Have no THB
+        return False
+
     #print('size {}'.format(size))
     #print('portSize {}'.format(portSize))
     print('countLeft {}'.format(countLeft))
@@ -152,7 +160,7 @@ def CreateBuyOrder(idName,symbol,portfoiloList,countLeft):
         return False
     budget = balance['THB']['available']
     #sizedBudget = ( (budget / (size-portSize)) /countLeft) * (percentageBalanceUsing/100)
-    sizedBudget =  ( budget/countLeft ) * (percentageBalanceUsing/100)
+    sizedBudget =  ( budget/countLeft ) * ( percentageBalanceUsing/100 )
     print('sizedBudget {}'.format(sizedBudget))
     print('sending order for buy {}'.format(symbol))
     result = bitkub.place_bid(sym=symbol, amt=sizedBudget, typ='market')
@@ -405,7 +413,7 @@ def Realtime(idName,sendNotify=True):
                             continue
                         Transaction(idName, 'Buy', row['Symbol'], (configJson[idName]['percentageComission'] / 100) * -1)
                         if sendNotify:
-                            lineNotify.sendNotifyMassage(token, text + '\nOn Dip {}%'.format(dipTarget))
+                            lineNotify.sendNotifyMassage(token, text + '\nDip {}%'.format(dipTarget))
                         port_df.loc[symbol_index, 'Count'] += 1
                         port_df.loc[symbol_index, 'Rec_Date'] = row['Rec_Date']
                         port_df.loc[symbol_index, 'Last_Buy'] = row['Last_Buy']
@@ -711,4 +719,19 @@ def run_all_user(*_):
             break
         time.sleep(10)
 
-if __name__ == '__main__' :pass
+if __name__ == '__main__' :
+    pass
+    ''' # Check Bot or User by Balance Check
+    for user in ['bot0', 'user0']:
+        bl = getBalance(user)
+        print(user, bl)
+
+        is_bot_bl = bl == None
+        is_user_bl = not is_bot_bl and 'THB' in bl
+        if is_bot_bl:
+            print('bot')
+        elif not is_user_bl:
+            print('user no money')
+        else:
+            print('user have money')
+    '''
