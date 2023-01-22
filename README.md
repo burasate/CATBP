@@ -1,2 +1,1 @@
-# BitPy
- 
+# CAT Project (BitPy)
