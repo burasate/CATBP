@@ -281,7 +281,7 @@ def Realtime(idName,sendNotify=True):
     triggerSellPos = systemJson[system]['triggerSellPosition']
     adaptiveLoss = bool(configJson[idName]['adaptiveLoss'])
     autoPreset = bool(configJson[idName]['autoPreset'])
-    maxAdaptiveLoss = configJson[idName]['maxAdaptiveLoss']
+    minAdaptiveLoss = configJson[idName]['minAdaptiveLoss']
     print('Portfolio Size : {} | Buy Position Size : {}'.format(portSize, buySize))
     print('Buy : {} | Sell : {}'.format(triggerBuy,triggerSell))
     print('Trigger Buy : {} | Trigger Sell : {}'.format(triggerBuyPos,triggerSellPos))
@@ -317,8 +317,8 @@ def Realtime(idName,sendNotify=True):
     if np.isnan(new_lossTarget):
         print('adaptive loss error !! new loss target is {}'.format(new_lossTarget))
         new_lossTarget = 15.0
-    if new_lossTarget <= maxAdaptiveLoss:
-        new_lossTarget = maxAdaptiveLoss
+    if new_lossTarget <= minAdaptiveLoss:
+        new_lossTarget = minAdaptiveLoss
     new_lossTarget = round(new_lossTarget, 2)
 
     #print(signal_df_all['Drawdown%'].mean())
