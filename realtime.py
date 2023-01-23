@@ -229,7 +229,7 @@ def Reset(*_):
     t_df.to_csv(transacFilePath, index=False)
     print('User Reset')
 
-def Transaction(idName,code,symbol,change):
+def rec_transaction(idName,code,symbol,change):
     global transacFilePath
     date_time = str(dt.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
     epoch = round(time.time())
@@ -411,7 +411,7 @@ def Realtime(idName,sendNotify=True):
                         buyOrder = CreateBuyOrder(idName, row['Symbol'], portfolioList, countLeft)
                         if not buyOrder:
                             continue
-                        Transaction(idName, 'Buy', row['Symbol'], (configJson[idName]['percentageComission'] / 100) * -1)
+                        rec_transaction(idName, 'Buy', row['Symbol'], (configJson[idName]['percentageComission'] / 100) * -1)
                         if sendNotify:
                             lineNotify.sendNotifyMassage(token, text + '\nDip {}%'.format(dipTarget))
                         port_df.loc[symbol_index, 'Count'] += 1
@@ -439,7 +439,7 @@ def Realtime(idName,sendNotify=True):
                 buyOrder = CreateBuyOrder(idName, row['Symbol'], portfolioList, countLeft)
                 if not buyOrder:
                     continue
-                Transaction(idName, 'Buy', row['Symbol'], (configJson[idName]['percentageComission'] / 100) * -1)
+                rec_transaction(idName, 'Buy', row['Symbol'], (configJson[idName]['percentageComission'] / 100) * -1)
                 if sendNotify:
                     quote = row['Symbol'].split('_')[-1]
                     img_file_path = imgPath + os.sep + '{}_{}.png'.format(preset, quote)
@@ -593,7 +593,7 @@ def Realtime(idName,sendNotify=True):
             CreateSellOrder(idName, row['Symbol'],count=count)
             time.sleep(1)
             profit = (( row['Profit%'] / buySize ) * row['Count']) / portSize #real percentage of total cost
-            Transaction(idName, 'Sell', row['Symbol'],
+            rec_transaction(idName, 'Sell', row['Symbol'],
                         ((configJson[idName]['percentageComission'] / 100) * -1) + profit)
             if sendNotify:
                 quote = row['Symbol'].split('_')[-1]
