@@ -570,7 +570,8 @@ def Realtime(idName,sendNotify=True):
                 port_df.loc[i, 'Count'] = 0 # Sell All
             else:
                 port_df.loc[i, 'Count'] -= 1
-
+            if port_df.loc[i, 'Count'] > buySize:
+                port_df.loc[i, 'Count'] = buySize
             if port_df.loc[i, 'Count'] < 0:
                 port_df.loc[i, 'Count'] = 0
 
