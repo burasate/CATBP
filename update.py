@@ -1,4 +1,4 @@
-import os,json
+import os,json, pprint
 import requests
 import gSheet
 
@@ -38,7 +38,7 @@ def updateConfig(*_):
     dataS = {}
     for row in dataSheet:
         dataS[row['idName']] = row
-    print(dataS)
+    pprint.pprint(dataS)
 
     json.dump(dataS, open(configPath, 'w'), indent=4)
 
@@ -49,7 +49,7 @@ def updatePreset(*_):
     dataS = {}
     for row in dataSheet:
         dataS[row['preset']] = row
-    print(dataS)
+    pprint.pprint(dataS)
 
     json.dump(dataS, open(presetPath, 'w'), indent=4)
 
@@ -60,7 +60,7 @@ def updateSystem(*_):
     dataS = {}
     for row in dataSheet:
         dataS[row['system']] = row
-    print(dataS)
+    pprint.pprint(dataS)
 
     json.dump(dataS, open(systemPath, 'w'), indent=4)
 
