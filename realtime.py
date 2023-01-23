@@ -598,7 +598,7 @@ def Realtime(idName,sendNotify=True):
             if sendNotify:
                 quote = row['Symbol'].split('_')[-1]
                 img_file_path = imgPath + os.sep + '{}_{}.png'.format(preset, quote)
-                if os.path.exists(img_file_path):
+                if os.path.exists(img_file_path) and port_df.loc[i, 'Count'] <= 0: # Send Image at last count
                     lineNotify.sendNotifyImageMsg(token, img_file_path, text)
                 else:
                     lineNotify.sendNotifyMassage(token, text)

@@ -165,7 +165,7 @@ def updateGSheetHistory(limit = 42000):
     allHistPath = dataPath + '/cryptoHist.csv'
     df = df[list(rowData)]
     df.to_csv(allHistPath, index=False)
-    df.tail(5000).to_csv(backupPath, index=False)
+    df.tail(6000).to_csv(backupPath, index=False)
 
     #ticker update
     print('Save Ticker Data...')
