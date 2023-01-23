@@ -296,6 +296,7 @@ def createSymbolHistory(symbol,timeFrame = 'minute'):
     symbolPath = histPath + os.sep + symbol + '.csv'
     df.to_csv(symbolPath,index=False)
     print(df.shape)
+    time.sleep(0.01)
 
 def loadAllHist(timeFrame = 'minute'):
     """
