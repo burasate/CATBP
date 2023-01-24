@@ -71,7 +71,7 @@ def getBalance(idName):
                 else:
                     total += ( ticker['{}_{}'.format('THB',sym)]['last'] * available )
                 #update balance data sheet
-                if sym == 'THB' and available != configJson[idName]['available']:
+                if sym == 'THB' and round(available,0) != round(configJson[idName]['available'],0):
                     gSheet.setValue( 'Config', findKey='idName', findValue=idName, key='available', value=available )
                     #gSheet.setValue( 'Config', findKey='idName', findValue=idName, key='availableHigh',value=available_h )
                     #gSheet.setValue( 'Config', findKey='idName', findValue=idName, key='percentageDrawdown',value=p_drawdown )
@@ -395,8 +395,8 @@ def Realtime(idName,sendNotify=True):
         if row['Symbol'] in port_df['Symbol'].tolist(): #Symbol is in portfolio already
             #print('  Checking buy count')
             symbol_index = port_df[port_df['Symbol'] == row['Symbol']].index.tolist()[0]
-            print('now',now)
-            print('port_df.loc[symbol_index,\'Last_Buy\']',port_df.loc[symbol_index,'Last_Buy'])
+            #print('now',now)
+            #print('port_df.loc[symbol_index,\'Last_Buy\']',port_df.loc[symbol_index,'Last_Buy'])
             buyHourDuration = round(float(((now - port_df.loc[symbol_index,'Last_Buy']) / 60) / 60), 2)
             if port_df.loc[symbol_index,'Count'] < buySize : #Buy position size is not full
                 if buyHourDuration >= configJson[idName]['buyEveryHour']: #if Duration geater than Buy Hour
