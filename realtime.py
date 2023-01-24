@@ -393,6 +393,8 @@ def Realtime(idName,sendNotify=True):
         if row['Symbol'] in port_df['Symbol'].tolist(): #Symbol is in portfolio already
             #print('  Checking buy count')
             symbol_index = port_df[port_df['Symbol'] == row['Symbol']].index.tolist()[0]
+            print('now',now)
+            print('port_df.loc[symbol_index,\'Last_Buy\']',port_df.loc[symbol_index,'Last_Buy'])
             buyHourDuration = round(float(((now - port_df.loc[symbol_index,'Last_Buy']) / 60) / 60), 2)
             if port_df.loc[symbol_index,'Count'] < buySize : #Buy position size is not full
                 if buyHourDuration >= configJson[idName]['buyEveryHour']: #if Duration geater than Buy Hour
