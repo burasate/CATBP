@@ -39,6 +39,7 @@ def getHistDataframe(*_):
 
 def updateGSheetHistory(days_limit = 7):
     ticker = kbApi.getTicker()
+    sym_count = len(list(ticker))
     symbols = kbApi.getSymbol()
 
     df = pd.DataFrame()
@@ -158,7 +159,7 @@ def updateGSheetHistory(days_limit = 7):
     df = df.drop( df[(df['dateTime'].str.isdigit() == True)].index )
     df = df.drop( df[(df['epoch'] < epoch_limit)].index )
     #Limit row
-    #df = df.tail(limit)
+    df = df.tail(days_limit * 24 * 60 * sym_count)
     df.reset_index(inplace=True)
 
     #top gain
