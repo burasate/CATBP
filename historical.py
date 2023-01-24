@@ -308,8 +308,8 @@ def createSymbolHistory(symbol,timeFrame = 'minute'):
     df = df.sort_index(ascending=False)
     symbolPath = histPath + os.sep + symbol + '.csv'
     df.to_csv(symbolPath,index=False)
-    print('shape',df.shape)
-    time.sleep(0.2)
+    print('total hours ',df.shape[0])
+    time.sleep(0.05)
 
 def loadAllHist(timeFrame = 'minute'):
     """
