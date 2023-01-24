@@ -5,8 +5,9 @@ import numpy as np
 import kbApi
 import gSheet
 
-pd.set_option('display.max_columns', None)
 pd.set_option('display.max_rows', None)
+pd.set_option('display.max_columns', None)
+pd.set_option('display.width', None)
 
 base_path = os.path.dirname(os.path.abspath(__file__))
 dataPath = base_path+'/data'
@@ -135,10 +136,18 @@ def updateGSheetHistory(limit = 42000):
             pd.DataFrame(rowData), ignore_index=True
         )
 
+    # Append to all hist csv
+    all_hist_path = dataPath + '/cryptoHist.csv'
+    if not df.empty:
+        df = df.append(
+            pd.read_csv(all_hist_path), ignore_index=True
+        )
+
     # delete duplicate
     df.drop_duplicates(['symbol','date','hour','minute'], keep='last', inplace=True)
     #cleanup & sort
-    epoch_limit = time.time() - (((5*24)*60)*60)
+    days_limit = 7
+    epoch_limit = time.time() - (((days_limit*24)*60)*60)
     df.dropna(subset=['epoch','dateTime'],inplace=True)
     df['epoch'] = pd.to_numeric(df['epoch'], errors='coerce')
     df['dateTime'] = df['dateTime'].astype(str)
@@ -162,9 +171,8 @@ def updateGSheetHistory(limit = 42000):
         df.loc[df['symbol'] == symbol, 'isTopGain'] = 'Yes'
 
     print('Save Historical Data...')
-    allHistPath = dataPath + '/cryptoHist.csv'
     df = df[list(rowData)]
-    df.to_csv(allHistPath, index=False)
+    df.to_csv(all_hist_path, index=False)
     df.tail(6000).to_csv(backupPath, index=False)
 
     #ticker update
@@ -312,9 +320,45 @@ def loadAllHist(timeFrame = 'minute'):
             continue
         createSymbolHistory(sym,timeFrame)
 
+def rec_price(*_):
+    all_hist_path = dataPath + '/cryptoHist.csv'
+    df = pd.read_csv(all_hist_path)
+    if df.empty:
+        raise ValueError(f'\nError - {all_hist_path}\nDataframe is empty Please check csv file or using backup')
+    #print(df.columns.tolist())
+
+    ticker = kbApi.getTicker()
+    ticker_count = len(list(ticker))
+    #print(ticker)
+
+    for sym in ticker:
+        data = {
+            'date': dt.now().strftime('%Y-%m-%d'),
+            'hour': int(dt.now().strftime('%H')),
+            'epoch': time.time(),
+            'minute': int(dt.now().strftime('%M')),
+            'second': int(dt.now().strftime('%S')),
+            'symbol': sym,
+            'dateTime': dt.now().strftime('%Y-%m-%d %H:%M:%S')
+        }
+        for i in ticker[sym]:
+            data[i] = ticker[sym][i]
+        #import pprint
+        #pprint.pprint(data)
+        df = df.append(pd.DataFrame.from_records([data]))
+
+    df.reset_index(inplace=True, drop=True)
+    for i in ['index', 'level_0']:
+        if i in df.columns.tolist():
+            df.drop(columns=[i], inplace=True)
+    df.to_csv(all_hist_path, index=False)
+    print( df.tail(ticker_count)[['symbol', 'dateTime', 'last']] )
+    time.sleep(0.5)
+
 if __name__ == '__main__':
     #createSymbolHistory('THB_WAN','hour')
     #updateGSheetHistory()
     #loadAllHist(timeFrame='hour')
-    subproc_update_gsheet_hist()
+    #subproc_update_gsheet_hist()
+    #rec_price()
     pass

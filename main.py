@@ -19,6 +19,7 @@ while True:
 
         import historical
         importlib.reload(historical)
+        historical.rec_price()
         historical.updateGSheetHistory()
         historical.loadAllHist(timeFrame='hour')
         #historical.loadAllHist(timeFrame='minute')
