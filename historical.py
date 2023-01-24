@@ -37,7 +37,7 @@ def getHistDataframe(*_):
         df = pd.DataFrame.from_records(sheetData)
     return df
 
-def updateGSheetHistory(limit = 100000):
+def updateGSheetHistory(days_limit = 7):
     ticker = kbApi.getTicker()
     symbols = kbApi.getSymbol()
 
@@ -146,7 +146,6 @@ def updateGSheetHistory(limit = 100000):
     # delete duplicate
     df.drop_duplicates(['symbol','date','hour','minute'], keep='last', inplace=True)
     #cleanup & sort
-    days_limit = 7
     epoch_limit = time.time() - (((days_limit*24)*60)*60)
     df.dropna(subset=['epoch','dateTime'],inplace=True)
     df['epoch'] = pd.to_numeric(df['epoch'], errors='coerce')
