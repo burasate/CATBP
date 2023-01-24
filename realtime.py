@@ -723,16 +723,16 @@ def run_all_user(*_):
             pass
         else:
             break
-        print('---------------------\nError Chicking\n---------------------\n')
-        if error_dict == {}:
-            print('no error...')
-        else:
-            for user in error_dict:
-                print('------------\nUSER {}\n-------------\n'.format(user.upper()))
-                print(error_dict[user])
-            time.sleep(3 * 60)
+    print('---------------------\nError Chicking\n---------------------\n')
+    if error_dict == {}:
+        print('no error...')
+    else:
+        for user in error_dict:
+            print('------------\nUSER {}\n-------------\n'.format(user.upper()))
+            print(error_dict[user])
+        time.sleep(3 * 60)
 
-        time.sleep(10)
+    time.sleep(10)
 
 if __name__ == '__main__' :
     pass
