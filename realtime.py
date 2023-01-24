@@ -211,6 +211,8 @@ def Reset(*_):
             bitkub.set_api_secret(API_SECRET)
             balance = getBalance(user)
             #print(balance)
+            if balance == None:
+                continue
             for sym in balance:
                 if sym == 'THB':
                     continue
