@@ -698,6 +698,7 @@ def run_all_user(*_):
     os.system('cls||clear')
     global mornitorFilePath
     global transacFilePath
+    error_dict = {}
     for user in configJson:
         if os.name == 'nt':
             print('[For Dev Testing...]')
@@ -707,9 +708,11 @@ def run_all_user(*_):
                 Realtime(user)
             except Exception as e:
                 import traceback
+                error_str = str(traceback.format_exc())
                 print('!!!! ==========================')
-                print(str(traceback.format_exc()))
+                print(error_str)
                 print('!!!! ==========================')
+                error_dict[user] = error_str
     while isInternetConnect and not os.name == 'nt':
         try:
             if os.path.exists(mornitorFilePath):
@@ -720,7 +723,15 @@ def run_all_user(*_):
             pass
         else:
             break
-        time.sleep(10)
+        #time.sleep(10)
+        print('---------------------\nError Chicking\n---------------------\n')
+        if error_dict == {}:
+            print('no error...')
+        else:
+            for user in error_dict:
+                print('------------\nUSER {}\n-------------\n'.format(user.upper()))
+                print(error_dict[user])
+            time.sleep(3 * 60)
 
 if __name__ == '__main__' :
     pass
