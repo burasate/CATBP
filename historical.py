@@ -37,7 +37,7 @@ def getHistDataframe(*_):
         df = pd.DataFrame.from_records(sheetData)
     return df
 
-def updateGSheetHistory(limit = 15000):
+def updateGSheetHistory(limit = 100000):
     ticker = kbApi.getTicker()
     symbols = kbApi.getSymbol()
 
@@ -158,8 +158,8 @@ def updateGSheetHistory(limit = 15000):
     df = df.drop( df[(df['date'].str.isdigit() == True)].index )
     df = df.drop( df[(df['dateTime'].str.isdigit() == True)].index )
     df = df.drop( df[(df['epoch'] < epoch_limit)].index )
-    #limit row
-    df = df.tail(limit)
+    #Limit row
+    #df = df.tail(limit)
     df.reset_index(inplace=True)
 
     #top gain
@@ -203,9 +203,14 @@ def updateGSheetHistory(limit = 15000):
     '''
     subproc_update_gsheet_hist()
 
-def update_gsheet_hist():
+def update_gsheet_hist(gsheet_row_limit = 30000):
     all_hist_path = dataPath + '/cryptoHist.csv'
+    gsheet_all_hist_path = dataPath + '/crypto_hist_gsheet.csv'
     ticker_path = dataPath + '/ticker.csv'
+
+    #Prepare gsheet csv
+    hist_df = pd.read_csv(all_hist_path).tail(gsheet_row_limit)
+    hist_df.to_csv(gsheet_all_hist_path, index=False)
 
     st_time = time.time()
     while True:
@@ -213,7 +218,7 @@ def update_gsheet_hist():
         try:
             if not os.name == 'nt':  # for raspi
                 print('uploading history data...')
-                gSheet.updateFromCSV(all_hist_path, 'History')
+                gSheet.updateFromCSV(gsheet_all_hist_path, 'History')
                 gSheet.updateFromCSV(ticker_path, 'Ticker')
                 print('upload history data finish')
         except:
