@@ -80,6 +80,13 @@ def updateGSheetHistory(limit = 15000):
         file_path = dataPath + '/hist_backup/{}'.format(f)
         os.remove(file_path)
 
+    # Append all hist csv
+    all_hist_path = dataPath + '/cryptoHist.csv'
+    if not df.empty:
+        df = df.append(
+            pd.read_csv(all_hist_path), ignore_index=True
+        )
+
     os.system('cls||clear')
     for data in symbols:
         sym = data['symbol']
@@ -134,13 +141,6 @@ def updateGSheetHistory(limit = 15000):
         #append data row
         df = df.append(
             pd.DataFrame(rowData), ignore_index=True
-        )
-
-    # Append to all hist csv
-    all_hist_path = dataPath + '/cryptoHist.csv'
-    if not df.empty:
-        df = df.append(
-            pd.read_csv(all_hist_path), ignore_index=True
         )
 
     # delete duplicate
@@ -360,5 +360,5 @@ if __name__ == '__main__':
     #updateGSheetHistory()
     #loadAllHist(timeFrame='hour')
     #subproc_update_gsheet_hist()
-    #rec_price()
+    rec_price()
     pass
