@@ -389,7 +389,7 @@ def Realtime(idName,sendNotify=True):
     #Buy Condition
     for i in buy_df.index.tolist():
         row = buy_df.loc[i]
-        text = '[ Buy ] {}\n{} Bath'.format(row['Symbol'], row['Buy'])
+        text = '[ Buy ] {}\n{} Bath'.format(row['Symbol'].replace('THB_'), row['Buy'])
         if row['Symbol'] in dislikeList:
             continue
         if row['Symbol'] in port_df['Symbol'].tolist(): #Symbol is in portfolio already
@@ -567,7 +567,7 @@ def Realtime(idName,sendNotify=True):
 
         #if sell_profit or sell_signal or sell_loss or isReset or sell_dislike or sell_trailing : #Sell
         if sell_profit or sell_signal or isReset or sell_dislike or sell_trailing : #Sell no Cut Loss
-            text = '[ Sell ] {}\n{} Bath ({}%)'.format(row['Symbol'], row['Market'], row['Profit%'])
+            text = '[ Sell ] {}\n{} Bath ({}%)'.format(row['Symbol'].replace('THB_'), row['Market'], row['Profit%'])
             print(text)
 
             if isReset or sell_dislike or sell_profit or sell_trailing or sell_loss:
