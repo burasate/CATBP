@@ -38,7 +38,7 @@ def getHistDataframe(*_):
         df = df.dropna(subset=['epoch'])
     return df
 
-def updateGSheetHistory(days_limit = 7):
+def updateGSheetHistory(days_limit = 4):
     ticker = kbApi.getTicker()
     sym_count = len(list(ticker))
     symbols = kbApi.getSymbol()
