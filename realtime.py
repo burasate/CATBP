@@ -728,12 +728,12 @@ def run_all_user(*_):
     print('---------------------\nError Chicking\n---------------------\n')
     if error_dict == {}:
         print('no error...')
-        time.sleep(5)
+        time.sleep(1.5 * 60)
     else:
         for user in error_dict:
             print('------------\nUSER {}\n-------------\n'.format(user.upper()))
             print(error_dict[user])
-        time.sleep(3 * 60)
+        time.sleep(5 * 60)
 
 
 
