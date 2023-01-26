@@ -211,8 +211,7 @@ def update_gsheet_hist(gsheet_row_limit = 30000):
 
     #Prepare gsheet csv
     hist_df = pd.read_csv(all_hist_path)
-    hist_df.dropna(subset=['percentChangeAverage','isTopGain'],inplace=True)
-    hist_df = hist_dfdf.sort_values(['epoch', 'date'], ascending=[True, True])
+    hist_df = hist_df.sort_values(['epoch', 'date'], ascending=[True, True])
     hist_df.drop_duplicates(['symbol','date','hour'], keep='last', inplace=True)
     hist_df.reset_index(inplace=True)
     hist_df = hist_df.tail(gsheet_row_limit)
@@ -371,5 +370,6 @@ if __name__ == '__main__':
     #updateGSheetHistory()
     #loadAllHist(timeFrame='hour')
     #subproc_update_gsheet_hist()
-    rec_price()
+    update_gsheet_hist()
+    #rec_price()
     pass
