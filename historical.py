@@ -27,14 +27,17 @@ def isInternetConnect(*_):
 
 def getHistDataframe(*_):
     print('load history data from google sheet...')
-    sheetData = gSheet.getAllDataS('History')
-    print('row count {}'.format(len(sheetData)))
-    if sheetData == []:
-        allHistPath = dataPath + '/cryptoHist.csv'
-        gSheet.updateFromCSV(allHistPath, 'History')
-        df = pd.read_csv(allHistPath)
+    sheet_rec = gSheet.getAllDataS('History')
+    print('row count {}'.format(len(sheet_rec)))
+    all_hist_path  = dataPath + '/cryptoHist.csv'
+    if sheet_rec == []:
+        gSheet.updateFromCSV(all_hist_path, 'History')
+        df = pd.read_csv(all_hist_path)
+    elif not 'epoch' in sheet_rec[0]:
+        gSheet.updateFromCSV(all_hist_path, 'History')
+        df = pd.read_csv(all_hist_path)
     else:
-        df = pd.DataFrame.from_records(sheetData)
+        df = pd.DataFrame.from_records(sheet_rec)
         df = df.dropna(subset=['epoch'])
     return df
 
@@ -374,6 +377,7 @@ if __name__ == '__main__':
     #updateGSheetHistory()
     #loadAllHist(timeFrame='hour')
     #subproc_update_gsheet_hist()
-    update_gsheet_hist()
+    #update_gsheet_hist()
+    print(getHistDataframe())
     #rec_price()
     pass
