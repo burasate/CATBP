@@ -35,6 +35,7 @@ def getHistDataframe(*_):
         df = pd.read_csv(allHistPath)
     else:
         df = pd.DataFrame.from_records(sheetData)
+        df = df.dropna(subset=['epoch'])
     return df
 
 def updateGSheetHistory(days_limit = 7):
