@@ -209,7 +209,9 @@ def update_gsheet_hist(gsheet_row_limit = 30000):
     ticker_path = dataPath + '/ticker.csv'
 
     #Prepare gsheet csv
-    hist_df = pd.read_csv(all_hist_path).tail(gsheet_row_limit)
+    hist_df = pd.read_csv(all_hist_path)
+    hist_df.drop_duplicates(['symbol','date','hour',], keep='last', inplace=True).reset_index(inplace=True)
+    hist_df = hist_df.tail(gsheet_row_limit)
     hist_df.to_csv(gsheet_all_hist_path, index=False)
 
     st_time = time.time()
