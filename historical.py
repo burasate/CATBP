@@ -175,6 +175,7 @@ def updateGSheetHistory(days_limit = 7):
     df = df[list(rowData)]
     df.to_csv(all_hist_path, index=False)
     df.tail(6000).to_csv(backupPath, index=False)
+    print(df)
 
     #ticker update
     print('Save Ticker Data...')
