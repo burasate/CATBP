@@ -149,13 +149,14 @@ def updateGSheetHistory(days_limit = 7):
     df.drop_duplicates(['symbol','date','hour','minute'], keep='last', inplace=True)
     #cleanup & sort
     epoch_limit = time.time() - (((days_limit*24)*60)*60)
-    df.dropna(subset=['epoch','dateTime'],inplace=True)
+    df.dropna(subset=['dateTime'],inplace=True)
+    df.dropna(subset=['epoch'],inplace=True)
     df['epoch'] = pd.to_numeric(df['epoch'], errors='coerce')
     df['dateTime'] = df['dateTime'].astype(str)
     df = df[df['dateTime'] != 'nan']
     #df = df.sort_values(['epoch'], ascending=[True])
     df = df.sort_values(['epoch', 'date'], ascending=[True, True])
-    #df.sort_index(inplace=True)
+    df.sort_index(inplace=True)
     df = df.drop( df[(df['date'].str.isdigit() == True)].index )
     df = df.drop( df[(df['dateTime'].str.isdigit() == True)].index )
     df = df.drop( df[(df['epoch'] < epoch_limit)].index )
