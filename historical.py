@@ -211,8 +211,10 @@ def update_gsheet_hist(gsheet_row_limit = 30000):
 
     #Prepare gsheet csv
     hist_df = pd.read_csv(all_hist_path)
-    df.dropna(subset=['percentChangeAverage','isTopGain'],inplace=True)
-    hist_df.drop_duplicates(['symbol','date','hour'], keep='last', inplace=True).reset_index(inplace=True)
+    hist_df.dropna(subset=['percentChangeAverage','isTopGain'],inplace=True)
+    hist_df = hist_dfdf.sort_values(['epoch', 'date'], ascending=[True, True])
+    hist_df.drop_duplicates(['symbol','date','hour'], keep='last', inplace=True)
+    hist_df.reset_index(inplace=True)
     hist_df = hist_df.tail(gsheet_row_limit)
     hist_df.to_csv(gsheet_all_hist_path, index=False)
 
