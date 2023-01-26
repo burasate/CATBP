@@ -30,10 +30,10 @@ def getHistDataframe(*_):
     sheet_rec = gSheet.getAllDataS('History')
     print('row count {}'.format(len(sheet_rec)))
     all_hist_path  = dataPath + '/cryptoHist.csv'
-    if sheet_rec == []:
+    if sheet_rec == []: # Will update for Empty gsheet
         gSheet.updateFromCSV(all_hist_path, 'History')
         df = pd.read_csv(all_hist_path)
-    elif not 'epoch' in sheet_rec[0]:
+    elif not 'epoch' in sheet_rec[0]: # Will update if no collums
         gSheet.updateFromCSV(all_hist_path, 'History')
         df = pd.read_csv(all_hist_path)
     else:
