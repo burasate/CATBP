@@ -1,9 +1,12 @@
 import time,os,sys
 import importlib
-rootPath = os.path.dirname(os.path.abspath(__file__))
+
+base_path = os.path.dirname(os.path.abspath(__file__))
+if not base_path in sys.path:
+    sys.path.insert(0, base_path)
 
 os.system('cls||clear')
-print('BitPy')
+print('---------------------\nCrypto Automatic Trader BitPy (CATBP)\n---------------------\n')
 time.sleep(2)
 import update
 
