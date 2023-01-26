@@ -85,7 +85,7 @@ def updateGSheetHistory(days_limit = 7):
     all_hist_path = dataPath + '/cryptoHist.csv'
     if not df.empty:
         df = df.append(
-            pd.read_csv(all_hist_path), ignore_index=True
+            pd.read_csv(all_hist_path).tail(3000), ignore_index=True
         )
 
     os.system('cls||clear')
