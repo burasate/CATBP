@@ -389,7 +389,7 @@ def Realtime(idName,sendNotify=True):
     #Buy Condition
     for i in buy_df.index.tolist():
         row = buy_df.loc[i]
-        text = '[ Buy ] {}\n{} Bath'.format(row['Symbol'].replace('THB_'), row['Buy'])
+        text = '[ Buy ] {}\n{} Bath'.format(row['Symbol'].replace('THB_',''), row['Buy'])
         if row['Symbol'] in dislikeList:
             continue
         if row['Symbol'] in port_df['Symbol'].tolist(): #Symbol is in portfolio already
