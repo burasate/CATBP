@@ -115,7 +115,7 @@ def updateGSheetHistory(days_limit = 7):
         #indicator (signal in metric)
         try:
             signal_df = pd.read_csv(dataPath + '/signal.csv')
-            print('sinal csv is EMPTY : ', signal_df.empty)
+            #print('sinal csv is EMPTY : ', signal_df.empty)
         except:
             signal_df = pd.read_csv(dataPath + '/signal_gsheet.csv')
 
@@ -128,6 +128,7 @@ def updateGSheetHistory(days_limit = 7):
             sma_s = signal_df['SMA_S'].mean().round(2)
             sma_l = signal_df['SMA_L'].mean().round(2)
             rowData['percentChangeAverage'] = ((sma_s - sma_l) / sma_l) * 100
+            rowData['percentChangeAverage'] = round(rowData['percentChangeAverage'],1)
             #print('macd {}/{}   {}%'.format(sma_s,sma_l,rowData['percentChangeAverage']))
         except Exception as e:
             import traceback
@@ -154,7 +155,7 @@ def updateGSheetHistory(days_limit = 7):
     df = df[df['dateTime'] != 'nan']
     #df = df.sort_values(['epoch'], ascending=[True])
     df = df.sort_values(['epoch', 'date'], ascending=[True, True])
-    df.sort_index(inplace=True)
+    #df.sort_index(inplace=True)
     df = df.drop( df[(df['date'].str.isdigit() == True)].index )
     df = df.drop( df[(df['dateTime'].str.isdigit() == True)].index )
     df = df.drop( df[(df['epoch'] < epoch_limit)].index )
@@ -210,7 +211,8 @@ def update_gsheet_hist(gsheet_row_limit = 30000):
 
     #Prepare gsheet csv
     hist_df = pd.read_csv(all_hist_path)
-    hist_df.drop_duplicates(['symbol','date','hour',], keep='last', inplace=True).reset_index(inplace=True)
+    df.dropna(subset=['percentChangeAverage','isTopGain'],inplace=True)
+    hist_df.drop_duplicates(['symbol','date','hour'], keep='last', inplace=True).reset_index(inplace=True)
     hist_df = hist_df.tail(gsheet_row_limit)
     hist_df.to_csv(gsheet_all_hist_path, index=False)
 
