@@ -173,6 +173,8 @@ def updateGSheetHistory(days_limit = 7):
         df.loc[df['symbol'] == symbol, 'isTopGain'] = 'Yes'
 
     print('Save Historical Data...')
+    df.dropna(inplace=True)
+    print('fix_drop_na')
     df = df[list(rowData)]
     df.to_csv(all_hist_path, index=False)
     df.tail(6000).to_csv(backupPath, index=False)
