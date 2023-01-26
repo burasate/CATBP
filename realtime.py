@@ -567,7 +567,7 @@ def Realtime(idName,sendNotify=True):
 
         #if sell_profit or sell_signal or sell_loss or isReset or sell_dislike or sell_trailing : #Sell
         if sell_profit or sell_signal or isReset or sell_dislike or sell_trailing : #Sell no Cut Loss
-            text = '[ Sell ] {}\n{} Bath ({}%)'.format(row['Symbol'].replace('THB_'), row['Market'], row['Profit%'])
+            text = '[ Sell ] {}\n{} Bath ({}%)'.format(row['Symbol'].replace('THB_',''), row['Market'], row['Profit%'])
             print(text)
 
             if isReset or sell_dislike or sell_profit or sell_trailing or sell_loss:
