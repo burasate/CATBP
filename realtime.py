@@ -399,6 +399,9 @@ def Realtime(idName,sendNotify=True):
     print(buy_df[['Symbol','Signal','Market','BreakOut_MH','BreakOut_ML']].head(5))
     #Buy Condition
     for i in buy_df.index.tolist():
+        #Reset Port df index
+        port_df.reset_index(inplace=True, drop=True)
+
         row = buy_df.loc[i]
         text = '[ Buy ] {}\n{} Bath'.format(row['Symbol'].replace('THB_',''), row['Buy'])
         if row['Symbol'] in dislikeList:
