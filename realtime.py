@@ -76,7 +76,7 @@ def getBalance(idName):
                     #gSheet.setValue( 'Config', findKey='idName', findValue=idName, key='availableHigh',value=available_h )
                     #gSheet.setValue( 'Config', findKey='idName', findValue=idName, key='percentageDrawdown',value=p_drawdown )
         #update total value sheet
-        if configJson[idName]['totalValue'] != total:
+        if round(configJson[idName]['totalValue']*.1,0) != round(total*.1,0):
             gSheet.setValue('Config', findKey='idName', findValue=idName, key='totalValue', value=total)
     return data
 
