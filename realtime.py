@@ -261,7 +261,9 @@ def rec_transaction(idName,code,symbol,change):
     entry_df.to_csv(transacFilePath,index=False)
 
 def Realtime(idName,sendNotify=True):
+    # Backup
     mornitor_backup_dir = dataPath + '/mornitor_backup'
+    mornitor_backup_list_dir = [i for i in os.listdir(mornitor_backup_dir) if i.endswith('.csv')]
 
     isActive = bool(configJson[idName]['active'])
     isReset = bool(configJson[idName]['reset'])
@@ -352,9 +354,9 @@ def Realtime(idName,sendNotify=True):
     try: #Use main File
         port_df = pd.read_csv(mornitorFilePath)
     except: #Use Backup file
-        mornitor_backup_list_dir = [i for i in os.listdir(mornitor_backup_dir) if i.endswith('.csv')]
+
         if os.path.exists(mornitor_backup_dir) and mornitor_backup_list_dir != []:
-            last_mornitor_fp = [mornitor_backup_dir+'/'+i for i in mornitor_backup_list_dir][-1]
+            last_mornitor_fp = [mornitor_backup_dir+'/'+i for i in mornitor_backup_list_dir][-2]
             port_df = pd.read_csv(last_mornitor_fp)
 
     port_df = port_df[
@@ -746,7 +748,10 @@ def run_all_user(*_):
 
 
 if __name__ == '__main__' :
-    print('tt.csv'.endswith('csv'))
+    ''' sell data
+    {'error': 0, 'result': {'id': 44454663, 'hash': 'fwQ6do9eqwAuC6bEXp3nXdpjCMy', 'typ': 'market',
+     'amt': 0.33796304, 'rat': 1, 'fee': 0, 'cre': 0, 'rec': 0, 'ts': 1674790919}}
+    '''
     pass
     ''' # Check Bot or User by Balance Check
     for user in ['bot0', 'user0']:
