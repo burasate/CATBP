@@ -261,6 +261,8 @@ def rec_transaction(idName,code,symbol,change):
     entry_df.to_csv(transacFilePath,index=False)
 
 def Realtime(idName,sendNotify=True):
+    mornitor_backup_dir = dataPath + '/mornitor_backup'
+
     isActive = bool(configJson[idName]['active'])
     isReset = bool(configJson[idName]['reset'])
     if isActive == False:
@@ -347,7 +349,14 @@ def Realtime(idName,sendNotify=True):
         port_df.to_csv(mornitorFilePath,index=False)
 
     #Read User Portfolio
-    port_df = pd.read_csv(mornitorFilePath)
+    try: #Use main File
+        port_df = pd.read_csv(mornitorFilePath)
+    except: #Use Backup file
+        mornitor_backup_list_dir = [i for i in os.listdir(mornitor_backup_dir) if i.endswith('.csv')]
+        if os.path.exists(mornitor_backup_dir) and mornitor_backup_list_dir != []:
+            last_mornitor_fp = [mornitor_backup_dir+'/'+i for i in mornitor_backup_list_dir][-1]
+            port_df = pd.read_csv(last_mornitor_fp)
+
     port_df = port_df[
         (port_df['User'] == idName)
     ]
@@ -679,7 +688,6 @@ def Realtime(idName,sendNotify=True):
     alluser_df.to_csv(mornitorFilePath,index=False)
 
     #Backup All Balance Portfolio
-    mornitor_backup_dir = dataPath + '/mornitor_backup'
     if not os.path.exists(mornitor_backup_dir):
         os.makedirs(mornitor_backup_dir)
     date_str = str(dt.datetime.now().strftime('%Y_%m_%d_%H'))
@@ -738,6 +746,7 @@ def run_all_user(*_):
 
 
 if __name__ == '__main__' :
+    print('tt.csv'.endswith('csv'))
     pass
     ''' # Check Bot or User by Balance Check
     for user in ['bot0', 'user0']:
