@@ -356,7 +356,7 @@ def Realtime(idName,sendNotify=True):
     except: #Use Backup file
 
         if os.path.exists(mornitor_backup_dir) and mornitor_backup_list_dir != []:
-            last_mornitor_fp = [mornitor_backup_dir+'/'+i for i in mornitor_backup_list_dir][-2]
+            last_mornitor_fp = [mornitor_backup_dir+'/'+i for i in mornitor_backup_list_dir][-2] #Select before 1H
             port_df = pd.read_csv(last_mornitor_fp)
 
     port_df = port_df[
