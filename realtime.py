@@ -562,21 +562,21 @@ def Realtime(idName,sendNotify=True):
                 (row['Signal'] == triggerSell) and
                 (row['Market'] < row['BreakOut_ML']) and
                 (row['Profit%'] > 0.15*profitTarget) and
-                (row['Profit%'] > 1)
+                (row['Profit%'] > 3)
             )
         elif triggerSellPos == 'Upper':
             sell_signal = (
                 (row['Signal'] == triggerSell) and
                 (row['Market'] > row['BreakOut_MH']) and
                 (row['Profit%'] > 0.15*profitTarget) and
-                (row['Profit%'] > 1)
+                (row['Profit%'] > 3)
             )
         elif triggerSellPos == 'Middle':
             sell_signal = (
                 (row['Signal'] == triggerSell) and
                 (row['Market'] > row['BreakOut_M']) and
                 (row['Profit%'] > 0.15*profitTarget) and
-                (row['Profit%'] > 1)
+                (row['Profit%'] > 3)
             )
 
         #if sell_profit or sell_signal or sell_loss or isReset or sell_dislike or sell_trailing : #Sell
@@ -751,9 +751,12 @@ def run_all_user(*_):
 
 
 if __name__ == '__main__' :
-    ''' sell data
+    ''' 
+    sell data
     {'error': 0, 'result': {'id': 44454663, 'hash': 'fwQ6do9eqwAuC6bEXp3nXdpjCMy', 'typ': 'market',
      'amt': 0.33796304, 'rat': 1, 'fee': 0, 'cre': 0, 'rec': 0, 'ts': 1674790919}}
+     if error
+     {'error': 2}
     '''
     pass
     ''' # Check Bot or User by Balance Check
