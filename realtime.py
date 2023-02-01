@@ -562,21 +562,21 @@ def Realtime(idName,sendNotify=True):
                 (row['Signal'] == triggerSell) and
                 (row['Market'] < row['BreakOut_ML']) and
                 (row['Profit%'] > 0.15*profitTarget) and
-                (row['Profit%'] > 3)
+                (row['Profit%'] > 2.7)
             )
         elif triggerSellPos == 'Upper':
             sell_signal = (
                 (row['Signal'] == triggerSell) and
                 (row['Market'] > row['BreakOut_MH']) and
                 (row['Profit%'] > 0.15*profitTarget) and
-                (row['Profit%'] > 3)
+                (row['Profit%'] > 2.7)
             )
         elif triggerSellPos == 'Middle':
             sell_signal = (
                 (row['Signal'] == triggerSell) and
                 (row['Market'] > row['BreakOut_M']) and
                 (row['Profit%'] > 0.15*profitTarget) and
-                (row['Profit%'] > 3)
+                (row['Profit%'] > 2.7)
             )
 
         #if sell_profit or sell_signal or sell_loss or isReset or sell_dislike or sell_trailing : #Sell
@@ -645,6 +645,7 @@ def Realtime(idName,sendNotify=True):
             if bool(configJson[user]['autoPreset']):
                 tran_df = tran_df[tran_df['User'] != user]
         # Select Top User
+        tran_df.reset_index(inplace=True, drop=True)
         topUser = tran_df.iloc[0]['User']
         aPreset = configJson[topUser]['preset']
         aSystem = configJson[topUser]['system']
