@@ -179,7 +179,7 @@ def updateGSheetHistory(days_limit = 6):
     print('Save Historical Data...')
     df.dropna(inplace=True)
     print('fix_drop_na')
-    df = df[list(rowData)]
+    #df = df[list(rowData)]
     df.to_csv(all_hist_path, index=False)
     df.tail(6000).to_csv(backupPath, index=False)
 
