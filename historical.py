@@ -116,8 +116,6 @@ def updateGSheetHistory(days_limit = 6):
         for colName in ticker[sym]:
             rowData[colName] = [ticker[sym][colName]]
 
-        column_ls = list(rowData)
-
         #signal data
         #indicator (signal in metric)
         try:
@@ -151,6 +149,8 @@ def updateGSheetHistory(days_limit = 6):
         df = df.append(
             pd.DataFrame(rowData), ignore_index=True
         )
+        if column_ls != list(rowData):
+            column_ls = list(rowData)
 
     # delete duplicate
     df.drop_duplicates(['symbol','date','hour','minute'], keep='last', inplace=True)
