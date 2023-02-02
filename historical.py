@@ -181,7 +181,8 @@ def updateGSheetHistory(days_limit = 6):
 
     print('Save Historical Data...')
     df.dropna(inplace=True)
-    df = df[column_ls]
+    if column_ls != []:
+        df = df[column_ls]
     for i in ['index', 'level_0']:
         if i in df.columns.tolist():
             df.drop(columns=[i], inplace=True)
