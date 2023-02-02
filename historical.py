@@ -183,7 +183,7 @@ def updateGSheetHistory(days_limit = 6):
             df.drop(columns=[i], inplace=True)
     print('- Clean up data')
     df.to_csv(all_hist_path, index=False)
-    df.tail(6000).to_csv(backupPath, index=False)
+    df.tail(10000).to_csv(backupPath, index=False)
 
     #ticker update
     print('Save Ticker Data...')
