@@ -345,11 +345,13 @@ def loadAllHist(timeFrame = 'minute'):
 
 def rec_price(*_):
     all_hist_path = dataPath + '/cryptoHist.csv'
-    df = pd.read_csv(all_hist_path)
-    if df.empty:
+    try:
+        df = pd.read_csv(all_hist_path)
+    except:
         backup_dir = dataPath + '/hist_backup'
-        backup_path_list = [backup_dir+'/'+i for i in sorted(os.listdir(backup_dir))]
+        backup_path_list = [backup_dir + '/' + i for i in sorted(os.listdir(backup_dir))]
         df = pd.read_csv(backup_path_list[-2])
+    if df.empty:
         print(f'\nError - {all_hist_path}\nDataframe is empty Please check csv file or using backup')
     #print(df.columns.tolist())
 
