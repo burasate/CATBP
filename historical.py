@@ -346,7 +346,7 @@ def rec_price(*_):
         backup_dir = dataPath + '/hist_backup'
         backup_path_list = [backup_dir+'/'+i for i in sorted(os.listdir(backup_dir))]
         df = pd.read_csv(backup_path_list[-2])
-        raise ValueError(f'\nError - {all_hist_path}\nDataframe is empty Please check csv file or using backup')
+        print(f'\nError - {all_hist_path}\nDataframe is empty Please check csv file or using backup')
     #print(df.columns.tolist())
 
     ticker = kbApi.getTicker()
