@@ -18,8 +18,9 @@ configJson = json.load(open(configPath))
 presetJson = json.load(open(presetPath))
 systemJson = json.load(open(systemPath))
 
-pd.set_option('display.max_columns', None)
 pd.set_option('display.max_rows', None)
+pd.set_option('display.max_columns', None)
+pd.set_option('display.width', None)
 mornitorFilePath = dataPath + '/mornitor.csv'
 transacFilePath = dataPath + '/transaction.csv'
 
@@ -632,13 +633,12 @@ def Realtime(idName,sendNotify=True):
 
     print('---------------------\nAuto Preset\n---------------------')
     if autoPreset:
-        dayScore = 7
+        days_score = 7
         tran_df = pd.read_csv(transacFilePath)
-        tran_df = tran_df[
-            tran_df['epoch'] >= now - ((1 * 60 * 60 * 24) * dayScore)
-            ]
+        tran_df = tran_df[tran_df['epoch'] >= now - ((1 * 60 * 60 * 24) * days_score)]
         tran_df['Change%'] = tran_df.groupby(['User'])['Change%'].transform('sum')
         tran_df.drop_duplicates(subset=['User'], keep='last', inplace=True)
+        tran_df = tran_df[tran_df['CashBalance'] == 0.0]
         tran_df = tran_df.sort_values(['Change%'], ascending=[False])
         # Delete if Use Auto Preset
         for user in configJson:
@@ -646,18 +646,21 @@ def Realtime(idName,sendNotify=True):
                 tran_df = tran_df[tran_df['User'] != user]
         # Select Top User
         tran_df.reset_index(inplace=True, drop=True)
-        topUser = tran_df.iloc[0]['User']
-        aPreset = configJson[topUser]['preset']
-        aSystem = configJson[topUser]['system']
-        # Apply New Preset and System
-        if configJson[topUser]['preset'] != configJson[idName]['preset']:
-            gSheet.setValue('Config', findKey='idName', findValue=idName, key='preset', value=aPreset)
-            if sendNotify:
-                lineNotify.sendNotifyMassage(token, 'Change Preset to {}\n{}'.format(aPreset,presetJson[aPreset]['description']))
-        if configJson[topUser]['system'] != configJson[idName]['system']:
-            gSheet.setValue('Config', findKey='idName', findValue=idName, key='system', value=aSystem)
-            if sendNotify:
-                lineNotify.sendNotifyMassage(token, 'Change System to {}\n{}'.format(aSystem,systemJson[aSystem]['description']))
+        if not tran_df.empty:
+            top_user = tran_df.iloc[0]['User']
+            top_chg = tran_df.iloc[0]['Change%'].round(2)
+            print('highest score bot user in {} days : {} : {} %'.format(days_score, top_user, top_chg))
+            aPreset = configJson[top_user]['preset']
+            aSystem = configJson[top_user]['system']
+            # Apply New Preset and System
+            if configJson[top_user]['preset'] != configJson[idName]['preset']:
+                gSheet.setValue('Config', findKey='idName', findValue=idName, key='preset', value=aPreset)
+                if sendNotify:
+                    lineNotify.sendNotifyMassage(token, 'Change Preset to {}\n{}'.format(aPreset,presetJson[aPreset]['description']))
+            if configJson[top_user]['system'] != configJson[idName]['system']:
+                gSheet.setValue('Config', findKey='idName', findValue=idName, key='system', value=aSystem)
+                if sendNotify:
+                    lineNotify.sendNotifyMassage(token, 'Change System to {}\n{}'.format(aSystem,systemJson[aSystem]['description']))
 
     print('---------------------\nBalance Checking\n---------------------')
     # Clear Wrong Balnace
@@ -748,8 +751,6 @@ def run_all_user(*_):
             print('------------\nUSER {}\n-------------\n'.format(user.upper()))
             print(error_dict[user])
         time.sleep(5 * 60)
-
-
 
 if __name__ == '__main__' :
     ''' 
