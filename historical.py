@@ -179,8 +179,8 @@ def updateGSheetHistory(days_limit = 6):
     print('Save Historical Data...')
     df.dropna(inplace=True)
     for i in ['index', 'level_0']:
-        if i in port_df.columns.tolist():
-            port_df.drop(columns=[i], inplace=True)
+        if i in df.columns.tolist():
+            df.drop(columns=[i], inplace=True)
     print('- Clean up data')
     df.to_csv(all_hist_path, index=False)
     df.tail(6000).to_csv(backupPath, index=False)
@@ -343,6 +343,9 @@ def rec_price(*_):
     all_hist_path = dataPath + '/cryptoHist.csv'
     df = pd.read_csv(all_hist_path)
     if df.empty:
+        backup_dir = dataPath + '/hist_backup'
+        backup_path_list = [backup_dir+'/'+i for i in sorted(os.listdir(backup_dir))]
+        df = pd.read_csv(backup_path_list[-2])
         raise ValueError(f'\nError - {all_hist_path}\nDataframe is empty Please check csv file or using backup')
     #print(df.columns.tolist())
 
