@@ -93,6 +93,7 @@ def updateGSheetHistory(days_limit = 6):
         )
 
     os.system('cls||clear')
+    column_ls = []
     for data in symbols:
         sym = data['symbol']
         if not sym in ticker:
@@ -114,6 +115,8 @@ def updateGSheetHistory(days_limit = 6):
         #bitkub api data
         for colName in ticker[sym]:
             rowData[colName] = [ticker[sym][colName]]
+
+        column_ls = list(rowData)
 
         #signal data
         #indicator (signal in metric)
@@ -178,6 +181,7 @@ def updateGSheetHistory(days_limit = 6):
 
     print('Save Historical Data...')
     df.dropna(inplace=True)
+    df = df[column_ls]
     for i in ['index', 'level_0']:
         if i in df.columns.tolist():
             df.drop(columns=[i], inplace=True)
