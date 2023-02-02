@@ -310,6 +310,9 @@ def createSymbolHistory(symbol,timeFrame = 'minute'):
     histDF = histDF.tail(201)
     histDF.reset_index(inplace=True)
 
+    if histDF['close'].index.tolist()[-1] < 50:
+        raise Warning('\nrow count is less than 50\nCheck Hist Data!')
+
     # assign df
     df['Date'] = histDF['dateTime']
     df['Close'] = histDF['close'].round(2)
