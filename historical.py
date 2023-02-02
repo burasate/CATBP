@@ -178,8 +178,10 @@ def updateGSheetHistory(days_limit = 6):
 
     print('Save Historical Data...')
     df.dropna(inplace=True)
-    print('fix_drop_na')
-    #df = df[list(rowData)]
+    for i in ['index', 'level_0']:
+        if i in port_df.columns.tolist():
+            port_df.drop(columns=[i], inplace=True)
+    print('- Clean up data')
     df.to_csv(all_hist_path, index=False)
     df.tail(6000).to_csv(backupPath, index=False)
 
