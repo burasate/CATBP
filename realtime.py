@@ -633,7 +633,7 @@ def Realtime(idName,sendNotify=True):
 
     print('---------------------\nAuto Preset\n---------------------')
     if autoPreset:
-        days_score = 7
+        days_score = 3
         tran_df = pd.read_csv(transacFilePath)
         tran_df = tran_df[tran_df['epoch'] >= now - ((1 * 60 * 60 * 24) * days_score)]
         tran_df['Change%'] = tran_df.groupby(['User'])['Change%'].transform('sum')

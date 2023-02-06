@@ -8,6 +8,10 @@ from shutil import copyfile
 import gSheet
 import kbApi
 
+pd.set_option('display.max_rows', None)
+pd.set_option('display.max_columns', None)
+pd.set_option('display.width', None)
+
 base_path = os.path.dirname(os.path.abspath(__file__))
 data_path = base_path+'/data'
 hist_path = data_path+'/hist/'
@@ -139,6 +143,8 @@ def get_analysis(csvPath,preset,saveImage=False,showImage=False):
     #Risk
     df['Risk%'] = df['Max_Drawdown%']-df['NDay_Drawdown%']
     df['Risk%'] = df['Risk%'].abs().round(2)
+
+    print(df)
 
     if saveImage or showImage:
         # Plot Figure
@@ -518,10 +524,10 @@ if __name__ == '__main__' :
     #update.updatePreset()
     #preset_path = data_path + '/preset.json'
     #preset_json = json.load(open(preset_path))
-    #get_analysis(hist_path + 'THB_'+'ETH' + '.csv', 'P4',saveImage=False,showImage=True)
+    get_analysis(hist_path + 'THB_'+'ETH' + '.csv', 'P2',saveImage=False,showImage=True)
     #get_all_analysis()
     #batch_save_image()
-    subproc_batch_save_image()
+    #subproc_batch_save_image()
 
     #Save All Image
     #for file in histFileList:
