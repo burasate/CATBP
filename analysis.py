@@ -144,8 +144,6 @@ def get_analysis(csvPath,preset,saveImage=False,showImage=False):
     df['Risk%'] = df['Max_Drawdown%']-df['NDay_Drawdown%']
     df['Risk%'] = df['Risk%'].abs().round(2)
 
-    print(df)
-
     if saveImage or showImage:
         # Plot Figure
         pltColor = {
