@@ -71,7 +71,7 @@ def updateGSheetHistory(days_limit = 6):
     clear_backup_list = [i for i in os.listdir(dataPath + '/hist_backup') if not i in backup_sel]
     for f in backup_sel:
         file_path = dataPath + '/hist_backup/{}'.format(f)
-        print('Read [ {} ]'.format(file_path))
+        print('Load : {}'.format(os.path.basename(file_path)))
         try:
             df = df.append(
                 pd.read_csv(file_path).sort_values(['dateTime'],ascending=[True]).tail(5000), ignore_index=True
