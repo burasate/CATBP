@@ -8,17 +8,30 @@ if not base_path in sys.path:
 os.system('cls||clear')
 print('---------------------\nCrypto Automatic Trader BitPy (CATBP)\n---------------------\n')
 time.sleep(2)
-import update
 
+class connect:
+    @staticmethod
+    def internet():
+        import requests
+        try: r = requests.get('https://google.com')
+        except Exception as e:
+            raise Warning('No internet connection or Can\'t connecting..')
+        else: return None
+
+import update
 if not os.name == 'nt':
     time.sleep(5)
     update.updateAllFile()
 
 while True:
     try:
+        connect.internet()
+
         update.updateConfig()
         update.updatePreset()
         update.updateSystem()
+
+        connect.internet()
 
         import historical
         importlib.reload(historical)
@@ -27,9 +40,13 @@ while True:
         historical.loadAllHist(timeFrame='hour')
         #historical.loadAllHist(timeFrame='minute')
 
+        connect.internet()
+
         import analysis
         importlib.reload(analysis)
         analysis.get_all_analysis()
+
+        connect.internet()
 
         import realtime
         update.updateConfig()
