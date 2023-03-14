@@ -421,8 +421,8 @@ def Realtime(idName,sendNotify=True):
                     if dipTarget < 20.0:
                         dipTarget = 20.0
                         if abs(lossTarget) > dipTarget:
-                            dip_weight = abs(lossTarget) * 0.3
-                            dipTarget = (20.0 + dip_weight) * 0.5  # avg value , weight
+                            dip_loss_rate = abs(lossTarget) * 0.3
+                            dipTarget = 20.0 + dip_loss_rate  # avg value , weight
                         dipTarget = round(dipTarget, 3)
                     dipPrice = port_df.loc[symbol_index, 'Buy'] - (port_df.loc[symbol_index, 'Buy'] * (dipTarget / 100))
 
