@@ -415,13 +415,17 @@ def Realtime(idName,sendNotify=True):
             buyHourDuration = round(float(((now - port_df.loc[symbol_index,'Last_Buy']) / 60) / 60), 2)
             if port_df.loc[symbol_index,'Count'] < buySize : #Buy position size is not full
                 if buyHourDuration >= configJson[idName]['buyEveryHour']: #if Duration geater than Buy Hour
-                    #dipTarget = ( dipTarget + ( abs(lossTarget)/buySize ) ) / 2
+
+                    # dip target calculate
                     dipTarget = (abs(lossTarget)/buySize)
                     if dipTarget < 20.0:
                         dipTarget = 20.0
-                    #dipTarget = abs(lossTarget) / 2
-                    #dipTarget = round(dipTarget, 2)
+                        if abs(lossTarget) > dipTarget:
+                            dip_weight = abs(lossTarget) * 0.3
+                            dipTarget = (20.0 + dip_weight) * 0.5  # avg value , weight
+                        dipTarget = round(dipTarget, 3)
                     dipPrice = port_df.loc[symbol_index, 'Buy'] - (port_df.loc[symbol_index, 'Buy'] * (dipTarget / 100))
+
                     if row['Market'] <= dipPrice: #Buy on Dip or Not Dip
                         # Do Buy
                         print('Buy {} more'.format(row['Symbol']))
@@ -432,7 +436,7 @@ def Realtime(idName,sendNotify=True):
                             continue
                         rec_transaction(idName, 'Buy', row['Symbol'], (configJson[idName]['percentageComission'] / 100) * -1)
                         if sendNotify:
-                            lineNotify.sendNotifyMassage(token, text + '\nDip {}%'.format(dipTarget))
+                            lineNotify.sendNotifyMassage(token, text + '\nOn dip lower {}%'.format(dipTarget))
                         port_df.loc[symbol_index, 'Count'] += 1
                         port_df.loc[symbol_index, 'Rec_Date'] = row['Rec_Date']
                         port_df.loc[symbol_index, 'Last_Buy'] = row['Last_Buy']
