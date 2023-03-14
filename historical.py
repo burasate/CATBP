@@ -268,6 +268,7 @@ historical.update_gsheet_hist()
         # ,creationflags=subprocess.CREATE_NEW_CONSOLE) # for run on pc
 
 def createSymbolHistory(symbol,timeFrame = 'minute'):
+    csv_path = histPath + os.sep + symbol + '.csv'
     os.system('cls||clear')
     print('create price history ... {}  time frame {}'.format(symbol,timeFrame.upper()))
     df = pd.DataFrame(
@@ -310,8 +311,15 @@ def createSymbolHistory(symbol,timeFrame = 'minute'):
     histDF = histDF.tail(201)
     histDF.reset_index(inplace=True)
 
+    if histDF['close'].index.tolist() == []:
+        if os.path.exists(csv_path):
+            os.remove(csv_path)
+        return None
     if histDF['close'].index.tolist()[-1] < 50:
-        raise Warning('\nrow count is less than 50\nCheck Hist Data!')
+        if os.path.exists(csv_path):
+            os.remove(csv_path)
+        print('!! WARNNING ROW < 50:\nrow count is less than 50\nCheck Hist Data!')
+        return None
 
     # assign df
     df['Date'] = histDF['dateTime']
@@ -329,8 +337,7 @@ def createSymbolHistory(symbol,timeFrame = 'minute'):
 
     #revese index and save
     df = df.sort_index(ascending=False)
-    symbolPath = histPath + os.sep + symbol + '.csv'
-    df.to_csv(symbolPath,index=False)
+    df.to_csv(csv_path,index=False)
     print('total hours ',df.shape[0])
     time.sleep(0.05)
 
