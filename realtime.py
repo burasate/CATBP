@@ -358,6 +358,8 @@ def Realtime(idName,sendNotify=True):
         if os.path.exists(mornitor_backup_dir) and mornitor_backup_list_dir != []:
             last_mornitor_fp = [mornitor_backup_dir+'/'+i for i in mornitor_backup_list_dir][-2] #Select before 1H
             port_df = pd.read_csv(last_mornitor_fp)
+        else: #Cannot load Backup file
+            port_df = None
 
     port_df = port_df[
         (port_df['User'] == idName)
@@ -691,12 +693,14 @@ def Realtime(idName,sendNotify=True):
         if i in port_df.columns.tolist():
             port_df.drop(columns=[i], inplace=True)
 
-    try:
+    try: #Use Main file
         alluser_df = pd.read_csv(mornitorFilePath)
     except: #Use Backup file
         if os.path.exists(mornitor_backup_dir) and mornitor_backup_list_dir != []:
             last_mornitor_fp = [mornitor_backup_dir+'/'+i for i in mornitor_backup_list_dir][-2] #Select before 1H
-            port_df = pd.read_csv(last_mornitor_fp)
+            alluser_df = pd.read_csv(last_mornitor_fp)
+        else: #Cannot load Backup file
+            alluser_df = None
 
     alluser_df = alluser_df[alluser_df['User'] != idName]
     alluser_df = alluser_df.append(port_df)
