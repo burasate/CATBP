@@ -250,7 +250,13 @@ def rec_transaction(idName,code,symbol,change):
     if not os.path.exists(transacFilePath):
         entry_df = pd.DataFrame(columns=list(data))
         entry_df.to_csv(transacFilePath, index=False)
-    entry_df = pd.read_csv(transacFilePath)
+
+    try: #Use Main file
+        entry_df = pd.read_csv(transacFilePath)
+    except: #Use Backup file
+        alluser_df = pd.read_csv(
+            backup_version(transacFilePath, rollback_version=True)
+        )
 
     # Checking Column
     for c in list(data):
@@ -355,11 +361,9 @@ def Realtime(idName,sendNotify=True):
     try: #Use main File
         port_df = pd.read_csv(mornitorFilePath)
     except: #Use Backup file
-        if os.path.exists(mornitor_backup_dir) and mornitor_backup_list_dir != []:
-            last_mornitor_fp = [mornitor_backup_dir+'/'+i for i in mornitor_backup_list_dir][-2] #Select before 1H
-            port_df = pd.read_csv(last_mornitor_fp)
-        else: #Cannot load Backup file
-            port_df = None
+        port_df = pd.read_csv(
+            backup_version(mornitorFilePath, rollback_version=True)
+        )
 
     port_df = port_df[
         (port_df['User'] == idName)
@@ -696,11 +700,9 @@ def Realtime(idName,sendNotify=True):
     try: #Use Main file
         alluser_df = pd.read_csv(mornitorFilePath)
     except: #Use Backup file
-        if os.path.exists(mornitor_backup_dir) and mornitor_backup_list_dir != []:
-            last_mornitor_fp = [mornitor_backup_dir+'/'+i for i in mornitor_backup_list_dir][-2] #Select before 1H
-            alluser_df = pd.read_csv(last_mornitor_fp)
-        else: #Cannot load Backup file
-            alluser_df = None
+        alluser_df = pd.read_csv(
+            backup_version(mornitorFilePath, rollback_version=True)
+        )
 
     alluser_df = alluser_df[alluser_df['User'] != idName]
     alluser_df = alluser_df.append(port_df)
@@ -709,22 +711,39 @@ def Realtime(idName,sendNotify=True):
             alluser_df.drop(columns=[i], inplace=True)
     alluser_df.to_csv(mornitorFilePath,index=False)
 
-    #Backup All Balance Portfolio
-    if not os.path.exists(mornitor_backup_dir):
-        os.makedirs(mornitor_backup_dir)
-    date_str = str(dt.datetime.now().strftime('%Y_%m_%d_%H'))
-    alluser_df.to_csv(mornitor_backup_dir + '/mornitor_{}.csv'.format(date_str), index=False)
-
-    # Clear Portfolio Backup
-    backup_list = [i for i in os.listdir(mornitor_backup_dir) if '.csv' in i]
-    backup_path_list = [mornitor_backup_dir + os.sep + i for i in backup_list]
-    backup_f_limit = 24 * 5
-    if len(backup_path_list) > backup_f_limit:
-        backup_path_list = sorted(backup_path_list)[-backup_f_limit:]
-        for fp in [mornitor_backup_dir + os.sep + i for i in backup_list]:
-            if not fp in backup_path_list:
-                os.remove(fp)
+    #Backup
+    backup_version(mornitorFilePath, rollback_version=False)
+    backup_version(transacFilePath, rollback_version=False)
     print('---------------------\nFinish\n---------------------\n')
+
+def backup_version(df_path, rollback_version=False):
+    if not df_path.endswith('.csv'): return None
+    backup_dir = os.path.dirname(df_path) + os.sep + os.path.basename(df_path).split('.')[0] + '_backup'
+    if not os.path.exists(backup_dir):
+        os.makedirs(backup_dir)
+
+    if rollback_version: #Get latest backup file
+        backup_list_dir = os.listdir(backup_dir)
+        if os.path.exists(backup_dir) and backup_list_dir != []:
+            last_mornitor_fp = [backup_dir + '/' + i for i in backup_list_dir][-2]  # Select before 1H
+            return last_mornitor_fp
+        else:
+            raise Warning('cannot rollback version of {}'.format(os.path.basename(df_path)))
+
+    if not rollback_version: # Backup mode
+        date_str = str(dt.datetime.now().strftime('%Y_%m_%d_%H'))
+        name_new = os.path.basename(df_path).replace('.csv', '_{}.csv'.format(date_str))
+
+        # Clear Backup
+        backup_list = [i for i in os.listdir(backup_dir) if '.csv' in i]
+        backup_path_list = [backup_dir + os.sep + i for i in backup_list]
+        backup_f_limit = 24 * 5
+        if len(backup_path_list) > backup_f_limit:
+            backup_path_list = sorted(backup_path_list)[-backup_f_limit:]
+            for fp in [mornitor_backup_dir + os.sep + i for i in backup_list]:
+                if not fp in backup_path_list:
+                    os.remove(fp)
+
 
 def run_all_user(*_):
     os.system('cls||clear')
