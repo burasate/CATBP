@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-import json,os,time,sys,pprint
+import json,os,time,sys,pprint,shutil
 import datetime as dt
 import gSheet
 import kbApi
@@ -732,7 +732,9 @@ def backup_version(df_path, rollback_version=False):
 
     if not rollback_version: # Backup mode
         date_str = str(dt.datetime.now().strftime('%Y_%m_%d_%H'))
-        name_new = os.path.basename(df_path).replace('.csv', '_{}.csv'.format(date_str))
+        new_name = os.path.basename(df_path).replace('.csv', '_{}.csv'.format(date_str))
+        new_path = backup_dir + os.sep + new_name
+        shutil.copy(df_path, new_path)
 
         # Clear Backup
         backup_list = [i for i in os.listdir(backup_dir) if '.csv' in i]
