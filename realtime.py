@@ -742,7 +742,7 @@ def backup_version(df_path, rollback_version=False):
         backup_f_limit = 24 * 5
         if len(backup_path_list) > backup_f_limit:
             backup_path_list = sorted(backup_path_list)[-backup_f_limit:]
-            for fp in [mornitor_backup_dir + os.sep + i for i in backup_list]:
+            for fp in [backup_dir + os.sep + i for i in backup_list]:
                 if not fp in backup_path_list:
                     os.remove(fp)
 
