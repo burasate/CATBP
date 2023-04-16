@@ -82,14 +82,22 @@ def getBalance(idName):
     return data
 
 def CreateSellOrder(idName,symbol,count=1):
+    result = {}
+    def return_true():
+        global result
+        return [True, result]
+    def return_false():
+        global result
+        return [False, result]
+
     if not symbol.__contains__('THB_'):
         print('symbol name need contains THB_')
-        return None
+        return return_false()
     API_KEY = configJson[idName]['bk_apiKey']
     API_SECRET = configJson[idName]['bk_apiSecret']
     if API_KEY == '' or API_SECRET == '' :
         print('this user have no API KEY or API SECRET to send order')
-        return None
+        return return_false()
     bitkub = Bitkub()
     bitkub.set_api_key(API_KEY)
     bitkub.set_api_secret(API_SECRET)
@@ -98,26 +106,35 @@ def CreateSellOrder(idName,symbol,count=1):
 
     if not sym in list(balance):
         print('not found [{}] in balance'.format(sym))
-        return None
+        return return_false()
 
     amount = balance[sym]['available'] / count
     if count <= 1:
         amount = balance[sym]['available']
     result = bitkub.place_ask(sym=symbol, amt=amount, typ='market')
     print(result)
+    return return_true()
 
 def CreateBuyOrder(idName,symbol,portfoiloList,countLeft):
+    result = {}
+    def return_true():
+        global result
+        return [True, result]
+    def return_false():
+        global result
+        return [False, result]
+
     if countLeft <= 0 :
         print('count left = 0')
-        return False
+        return return_false()
     if not symbol.__contains__('THB_'):
         print('symbol name need contains THB_')
-        return False
+        return return_false()
     API_KEY = configJson[idName]['bk_apiKey']
     API_SECRET = configJson[idName]['bk_apiSecret']
     if API_KEY == '' or API_SECRET == '' :
         print('this user have no API KEY or API SECRET to send order')
-        return True #True When Bot is using
+        return return_true() #True When Bot is using
     bitkub = Bitkub()
     bitkub.set_api_key(API_KEY)
     bitkub.set_api_secret(API_SECRET)
@@ -138,7 +155,7 @@ def CreateBuyOrder(idName,symbol,portfoiloList,countLeft):
                 print(data['date'])
                 print(data['side'])
                 print(buyHourDuration)
-                return False
+                return return_false()
 
     portSymList = []
     for sym in portfoiloList:  # Chane Symbol to Sym
@@ -149,16 +166,16 @@ def CreateBuyOrder(idName,symbol,portfoiloList,countLeft):
     is_bot_bl = balance == None
     is_user_bl = not is_bot_bl and 'THB' in balance
     if is_bot_bl: # Verify Bot
-        return True
+        return return_true()
     elif not is_user_bl: # Verify User but Have no THB
-        return False
+        return return_false()
 
     #print('size {}'.format(size))
     #print('portSize {}'.format(portSize))
     print('countLeft {}'.format(countLeft))
     if not 'THB' in balance:
         print('cannot found THB in balance')
-        return False
+        return return_false()
     budget = balance['THB']['available']
     #sizedBudget = ( (budget / (size-portSize)) /countLeft) * (percentageBalanceUsing/100)
     sizedBudget =  ( budget/countLeft ) * ( percentageBalanceUsing/100 )
@@ -166,7 +183,7 @@ def CreateBuyOrder(idName,symbol,portfoiloList,countLeft):
     print('sending order for buy {}'.format(symbol))
     result = bitkub.place_bid(sym=symbol, amt=sizedBudget, typ='market')
     print(result)
-    return True
+    return return_true()
 
 def Reset(*_):
     print('---------------------\nReset\n---------------------')
@@ -220,8 +237,7 @@ def Reset(*_):
                 symbol = 'THB_{}'.format(sym)
                 print(symbol)
                 print('Sell {} {}'.format(balance[sym]['available'],sym))
-                CreateSellOrder(user, symbol, count=1)
-
+                sell_order = CreateSellOrder(user, symbol, count=1)
 
     for user in deleteList:
         print('delete [ {} ]'.format(user))
@@ -232,7 +248,7 @@ def Reset(*_):
     t_df.to_csv(transacFilePath, index=False)
     print('User Reset')
 
-def rec_transaction(idName,code,symbol,change):
+def rec_transaction(idName,code,symbol,change,result_msg=''):
     global transacFilePath
     date_time = str(dt.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
     epoch = round(time.time())
@@ -244,7 +260,8 @@ def rec_transaction(idName,code,symbol,change):
         'Symbol' : [symbol],
         'Change%' : [change],
         'CashBalance' : [configJson[idName]['available']],
-        'TotalValue' : [configJson[idName]['totalValue']]
+        'TotalValue' : [configJson[idName]['totalValue']],
+        'Result' : [result_msg],
     }
     #col = ['dateTime']
     if not os.path.exists(transacFilePath):
@@ -436,10 +453,12 @@ def Realtime(idName,sendNotify=True):
                         print('Buy {} more'.format(row['Symbol']))
                         portfolioList = port_df['Symbol'].tolist()
                         countLeft = (buySize * portSize) - (port_df['Count'].sum())
-                        buyOrder = CreateBuyOrder(idName, row['Symbol'], portfolioList, countLeft)
-                        if not buyOrder:
+                        buy_order = CreateBuyOrder(idName, row['Symbol'], portfolioList, countLeft)
+                        if not buy_order[0]:
                             continue
-                        rec_transaction(idName, 'Buy', row['Symbol'], (configJson[idName]['percentageComission'] / 100) * -1)
+                        rec_transaction(
+                            idName, 'Buy', row['Symbol'],(configJson[idName]['percentageComission'] / 100) * -1,
+                            result_msg=json.dumps(buy_order[1], sort_keys=True))
                         if sendNotify:
                             lineNotify.sendNotifyMassage(token, text + '\nOn dip lower {}%'.format(dipTarget))
                         port_df.loc[symbol_index, 'Count'] += 1
@@ -464,10 +483,12 @@ def Realtime(idName,sendNotify=True):
                 print('Buy {} as new symbol'.format(row['Symbol']))
                 portfolioList = port_df['Symbol'].tolist()
                 countLeft = (buySize * portSize) - (port_df['Count'].sum())
-                buyOrder = CreateBuyOrder(idName, row['Symbol'], portfolioList, countLeft)
-                if not buyOrder:
+                buy_order = CreateBuyOrder(idName, row['Symbol'], portfolioList, countLeft)
+                if not buy_order[0]:
                     continue
-                rec_transaction(idName, 'Buy', row['Symbol'], (configJson[idName]['percentageComission'] / 100) * -1)
+                rec_transaction(
+                    idName, 'Buy', row['Symbol'], (configJson[idName]['percentageComission'] / 100) * -1,
+                    result_msg=json.dumps(buy_order[1], sort_keys=True))
                 if sendNotify:
                     quote = row['Symbol'].split('_')[-1]
                     img_file_path = imgPath + os.sep + '{}_{}.png'.format(preset, quote)
@@ -619,11 +640,12 @@ def Realtime(idName,sendNotify=True):
 
             # Do Sell
             count = port_df.loc[i, 'Count'] + 1
-            CreateSellOrder(idName, row['Symbol'],count=count)
+            sell_order = CreateSellOrder(idName, row['Symbol'],count=count)
             time.sleep(1)
             profit = (( row['Profit%'] / buySize ) * row['Count']) / portSize #real percentage of total cost
-            rec_transaction(idName, 'Sell', row['Symbol'],
-                        ((configJson[idName]['percentageComission'] / 100) * -1) + profit)
+            rec_transaction(
+                idName, 'Sell', row['Symbol'],((configJson[idName]['percentageComission'] / 100) * -1) + profit,
+                result_msg=json.dumps(sell_order[1], sort_keys=True))
             if sendNotify:
                 quote = row['Symbol'].split('_')[-1]
                 img_file_path = imgPath + os.sep + '{}_{}.png'.format(preset, quote)
@@ -683,7 +705,7 @@ def Realtime(idName,sendNotify=True):
             if balance[sym]['available'] != 0 and sym != 'THB':  # if not THB and have available
                 symbol = 'THB_{}'.format(sym)
                 if not symbol in portfolioList:  # Not balance in mornitor
-                    CreateSellOrder(idName, symbol, count=1)
+                    sell_order = CreateSellOrder(idName, symbol, count=1)
                     #balanceList.append(symbol)
         for symbol in portfolioList: # Check Mornitor Balance -> Real Balance
             sym = symbol.replace('THB_','')
@@ -795,7 +817,7 @@ if __name__ == '__main__' :
      {'error': 2}
     '''
     pass
-    ''' # Check Bot or User by Balance Check
+    #''' # Check Bot or User by Balance Check
     for user in ['bot0', 'user0']:
         bl = getBalance(user)
         print(user, bl)
@@ -808,4 +830,4 @@ if __name__ == '__main__' :
             print('user no money')
         else:
             print('user have money')
-    '''
+    #'''
