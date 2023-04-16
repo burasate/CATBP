@@ -24,13 +24,6 @@ mornitorFilePath = dataPath + '/mornitor.csv'
 transacFilePath = dataPath + '/transaction.csv'
 
 
-def isInternetConnect(*_):
-    url = 'http://google.com'
-    connectStatus = requests.get(url).status_code
-    if connectStatus == 200:
-        return True
-    else:
-        return False
 
 class bitkub_v2:
     @staticmethod
@@ -786,8 +779,15 @@ def backup_version(df_path, rollback_version=False):
                 if not fp in backup_path_list:
                     os.remove(fp)
 
-
 def run_all_user(*_):
+    def isInternetConnect(*_):
+        url = 'http://google.com'
+        connectStatus = requests.get(url).status_code
+        if connectStatus == 200:
+            return True
+        else:
+            return False
+
     os.system('cls||clear')
     global mornitorFilePath
     global transacFilePath
