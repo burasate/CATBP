@@ -84,10 +84,8 @@ def getBalance(idName):
 def CreateSellOrder(idName,symbol,count=1):
     result = {}
     def return_true():
-        global result
         return [True, result]
     def return_false():
-        global result
         return [False, result]
 
     if not symbol.__contains__('THB_'):
@@ -118,10 +116,8 @@ def CreateSellOrder(idName,symbol,count=1):
 def CreateBuyOrder(idName,symbol,portfoiloList,countLeft):
     result = {}
     def return_true():
-        global result
         return [True, result]
     def return_false():
-        global result
         return [False, result]
 
     if countLeft <= 0 :
