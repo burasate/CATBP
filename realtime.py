@@ -53,7 +53,6 @@ Bitkub = bk.Bitkub
 """"""
 # REALTIME TRADER FUNC
 """"""
-
 def getBalance(idName):
     API_KEY = configJson[idName]['bk_apiKey']
     API_SECRET = configJson[idName]['bk_apiSecret']
