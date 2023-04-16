@@ -4,7 +4,7 @@ import json,os,time,sys,pprint,shutil
 import datetime as dt
 import gSheet
 import lineNotify
-from bitkub import Bitkub
+#from bitkub import Bitkub #have no updated v2
 
 rootPath = os.path.dirname(os.path.abspath(__file__))
 dataPath = rootPath+'/data'
@@ -23,24 +23,36 @@ pd.set_option('display.width', None)
 mornitorFilePath = dataPath + '/mornitor.csv'
 transacFilePath = dataPath + '/transaction.csv'
 
-
-
+""""""
+# BITKUB API V2 PATCH
+""""""
 class bitkub_v2:
     @staticmethod
-    def get_api_root(API_ROOT):
+    def get_endpoints(ENDPOINTS):
         '''
-        :param API_ROOT: self.API_ROOT (from Bitkub Module)
+        :param ENDPOINTS: (from Bitkub Module)
         :return: new replaced API_ROOT
         '''
-        new_api_path = {
+        new_endpoints = {
             "MARKET_PLACE_BID" : "/api/market/v2/place-bid",
             "MARKET_PLACE_ASK" : "/api/market/v2/place-ask",
             "MARKET_CANCEL_ORDER": "/api/market/v2/cancel-order"
         }
-        for k in new_api_path:
-            API_ROOT[k] = new_api_path[k]
-        return API_ROOT
+        for k in new_endpoints:
+            ENDPOINTS[k] = new_endpoints[k]
+        return ENDPOINTS
 
+""""""
+# BITKUB API V2 INIT
+""""""
+#from bitkub import Bitkub #have no updated v2
+import bitkub as bk
+bk.bitkub.ENDPOINTS = bitkub_v2.get_endpoints(bk.bitkub.ENDPOINTS)
+Bitkub = bk.Bitkub
+
+""""""
+# REALTIME TRADER FUNC
+""""""
 
 def getBalance(idName):
     API_KEY = configJson[idName]['bk_apiKey']
@@ -49,7 +61,6 @@ def getBalance(idName):
         print('this user have no API KEY or API SECRET to send order')
         return None
     bitkub = Bitkub()
-    bitkub.API_ROOT = bitkub_v2.get_api_root(bitkub.API_ROOT)  # v2 api root
     bitkub.set_api_key(API_KEY)
     bitkub.set_api_secret(API_SECRET)
     balance = bitkub.balances()
@@ -108,7 +119,6 @@ def CreateSellOrder(idName,symbol,count=1):
         print('this user have no API KEY or API SECRET to send order')
         return return_false()
     bitkub = Bitkub()
-    bitkub.API_ROOT = bitkub_v2.get_api_root(bitkub.API_ROOT)  # v2 api root
     bitkub.set_api_key(API_KEY)
     bitkub.set_api_secret(API_SECRET)
     balance = getBalance(idName)
@@ -144,7 +154,6 @@ def CreateBuyOrder(idName,symbol,portfoiloList,countLeft):
         print('this user have no API KEY or API SECRET to send order')
         return return_true() #True When Bot is using
     bitkub = Bitkub()
-    bitkub.API_ROOT = bitkub_v2.get_api_root(bitkub.API_ROOT) #v2 api root
     bitkub.set_api_key(API_KEY)
     bitkub.set_api_secret(API_SECRET)
     balance = getBalance(idName)
@@ -234,7 +243,6 @@ def Reset(*_):
             API_KEY = configJson[user]['bk_apiKey']
             API_SECRET = configJson[user]['bk_apiSecret']
             bitkub = Bitkub()
-            bitkub.API_ROOT = bitkub_v2.get_api_root(bitkub.API_ROOT)  # v2 api root
             bitkub.set_api_key(API_KEY)
             bitkub.set_api_secret(API_SECRET)
             balance = getBalance(user)
@@ -305,7 +313,6 @@ def Realtime(idName,sendNotify=True):
         return None
     print('---------------------\n[ {} ]  Monitoring\n---------------------'.format(idName))
     bitkub = Bitkub()
-    bitkub.API_ROOT = bitkub_v2.get_api_root(bitkub.API_ROOT)  # v2 api root
     ticker = bitkub.ticker()
     now = round(time.time())
     reportHourDuration = round(float(((now - configJson[idName]['lastReport']) / 60) / 60), 2)
