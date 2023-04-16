@@ -23,7 +23,7 @@ pd.set_option('display.width', None)
 mornitorFilePath = dataPath + '/mornitor.csv'
 transacFilePath = dataPath + '/transaction.csv'
 
-'''
+
 def isInternetConnect(*_):
     url = 'http://google.com'
     connectStatus = requests.get(url).status_code
@@ -31,7 +31,7 @@ def isInternetConnect(*_):
         return True
     else:
         return False
-'''
+
 class bitkub_v2:
     @staticmethod
     def get_api_root(API_ROOT):
