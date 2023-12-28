@@ -46,7 +46,7 @@ class bitkub_version_contol:
 
     @staticmethod
     def get_api_version(API_KEY):
-        result = True if len(API_KEY) <= 32 else False
+        result = True if len(API_KEY) > 32 else False
         if result:
             return 3
         else:
