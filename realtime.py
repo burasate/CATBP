@@ -69,7 +69,8 @@ def getBalance(idName):
     if API_KEY == '' or API_SECRET == '' :
         print('this user have no API KEY or API SECRET to send order')
         return None
-    if bitkub_version_contol.get_api_version(API_KEY) == 3:
+    API_VER = bitkub_version_contol.get_api_version(API_KEY)
+    if API_VER == 3:
         bk.bitkub.ENDPOINTS = bitkub_version_contol.get_endpoints(bk.bitkub.ENDPOINTS, version=3)
         Bitkub = bk.Bitkub
     bitkub = Bitkub()
@@ -131,7 +132,8 @@ def CreateSellOrder(idName,symbol,count=1):
     if API_KEY == '' or API_SECRET == '' :
         print('this user have no API KEY or API SECRET to send order')
         return return_false()
-    if bitkub_version_contol.get_api_version(API_KEY) == 3:
+    API_VER = bitkub_version_contol.get_api_version(API_KEY)
+    if API_VER == 3:
         bk.bitkub.ENDPOINTS = bitkub_version_contol.get_endpoints(bk.bitkub.ENDPOINTS, version=3)
         Bitkub = bk.Bitkub
     bitkub = Bitkub()
@@ -170,7 +172,8 @@ def CreateBuyOrder(idName,symbol,portfoiloList,countLeft):
     if API_KEY == '' or API_SECRET == '' :
         print('this user have no API KEY or API SECRET to send order')
         return return_true() #True When Bot is using
-    if bitkub_version_contol.get_api_version(API_KEY) == 3:
+    API_VER = bitkub_version_contol.get_api_version(API_KEY)
+    if API_VER == 3:
         bk.bitkub.ENDPOINTS = bitkub_version_contol.get_endpoints(bk.bitkub.ENDPOINTS, version=3)
         Bitkub = bk.Bitkub
     bitkub = Bitkub()
@@ -191,6 +194,7 @@ def CreateBuyOrder(idName,symbol,portfoiloList,countLeft):
         {0}
         KEY : {1}
         SECRET : {2}
+        API VERSION : {}
         '''.strip().format(history, API_KEY, API_SECRET)
         raise Warning(err_msg)
     if len(history['result']) != 0:
