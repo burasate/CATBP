@@ -62,7 +62,7 @@ Bitkub = bk.Bitkub
 # REALTIME TRADER FUNC
 """"""
 def getBalance(idName):
-    global Bitkub
+    global Bitkub, bk
     API_KEY = configJson[idName]['bk_apiKey']
     API_SECRET = configJson[idName]['bk_apiSecret']
     if API_KEY == '' or API_SECRET == '' :
@@ -115,7 +115,7 @@ def getBalance(idName):
     return data
 
 def CreateSellOrder(idName,symbol,count=1):
-    global Bitkub
+    global Bitkub, bk
     result = {}
     def return_true():
         return [True, result]
@@ -151,7 +151,7 @@ def CreateSellOrder(idName,symbol,count=1):
     return return_true()
 
 def CreateBuyOrder(idName,symbol,portfoiloList,countLeft):
-    global Bitkub
+    global Bitkub, bk
     result = {}
     def return_true():
         return [True, result]
