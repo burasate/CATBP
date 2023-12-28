@@ -50,7 +50,7 @@ class bitkub_version_contol:
         if result:
             return 3
         else:
-            2
+            return 2
 
 """"""
 # BITKUB API Vxxx INIT
@@ -194,8 +194,8 @@ def CreateBuyOrder(idName,symbol,portfoiloList,countLeft):
         {0}
         KEY : {1}
         SECRET : {2}
-        API VERSION : {}
-        '''.strip().format(history, API_KEY, API_SECRET)
+        API VERSION : {3}
+        '''.strip().format(history, API_KEY, API_SECRET, API_VER)
         raise Warning(err_msg)
     if len(history['result']) != 0:
         for data in history['result']:
