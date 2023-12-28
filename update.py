@@ -72,6 +72,6 @@ def updateSystem(*_):
 
 if __name__ == '__main__':
     updateConfig()
-    updatePreset()
-    updateSystem()
+    #updatePreset()
+    #updateSystem()
     #updateAllFile()

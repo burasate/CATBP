@@ -530,4 +530,3 @@ if __name__ == '__main__' :
     #Save All Image
     #for file in histFileList:
         #(hist_path + os.sep + file, 'P3', saveImage=True, showImage=False)
-    pass

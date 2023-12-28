@@ -159,10 +159,18 @@ def CreateBuyOrder(idName,symbol,portfoiloList,countLeft):
     percentageBalanceUsing = configJson[idName]['percentageBalanceUsing']
     system = configJson[idName]['system']
     size = int(configJson[idName]['portSize'])
-    portSize = len(list(balance))-1 #Real Port
+    portSize = len(list(balance))-1 if balance !=None else 0 #Real Port
     buySize = int(configJson[idName]['buySize'])
     history = bitkub.my_open_history(sym=symbol)
 
+    if 'error' in history or not 'result' in history:
+        err_msg = '''
+        'can\'t connect to Bitkub API please check key and secret.
+        {0}
+        KEY : {1}
+        SECRET : {2}
+        '''.strip().format(history, API_KEY, API_SECRET)
+        raise Warning('can\'t connect to Bitkub API please check key and secret\n{}\n'.format(history))
     if len(history['result']) != 0:
         for data in history['result']:
             data_select = history['result'][0]
@@ -833,6 +841,7 @@ def run_all_user(*_):
         time.sleep(5 * 60)
 
 if __name__ == '__main__' :
+    run_all_user()
     ''' 
     sell data
     {'error': 0, 'result': {'id': 44454663, 'hash': 'fwQ6do9eqwAuC6bEXp3nXdpjCMy', 'typ': 'market',
@@ -840,8 +849,8 @@ if __name__ == '__main__' :
      if error
      {'error': 2}
     '''
-    pass
-    #''' # Check Bot or User by Balance Check
+    #pass
+    ''' # Check Bot or User by Balance Check
     for user in ['bot0', 'user0']:
         bl = getBalance(user)
         print(user, bl)
@@ -854,4 +863,4 @@ if __name__ == '__main__' :
             print('user no money')
         else:
             print('user have money')
-    #'''
+    '''
