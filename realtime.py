@@ -37,7 +37,8 @@ class bitkub_version_contol:
         new_endpoints = {
             "MARKET_PLACE_BID" : "/api/market/v{}/place-bid".format(version),
             "MARKET_PLACE_ASK" : "/api/market/v{}/place-ask".format(version),
-            "MARKET_CANCEL_ORDER": "/api/market/v{}/cancel-order".format(version)
+            "MARKET_CANCEL_ORDER": "/api/market/v{}/cancel-order".format(version),
+            "MARKET_BALANCES": "/api/v{}/market/balances".format(version)
         }
         for k in new_endpoints:
             ENDPOINTS[k] = new_endpoints[k]
