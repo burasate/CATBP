@@ -26,28 +26,35 @@ transacFilePath = dataPath + '/transaction.csv'
 """"""
 # BITKUB API V2 PATCH
 """"""
-class bitkub_v2:
+class bitkub_version_contol:
     @staticmethod
-    def get_endpoints(ENDPOINTS):
+    def get_endpoints(ENDPOINTS, version=2):
         '''
         :param ENDPOINTS: (from Bitkub Module)
         :return: new replaced API_ROOT
         '''
         new_endpoints = {
-            "MARKET_PLACE_BID" : "/api/market/v2/place-bid",
-            "MARKET_PLACE_ASK" : "/api/market/v2/place-ask",
-            "MARKET_CANCEL_ORDER": "/api/market/v2/cancel-order"
+            "MARKET_PLACE_BID" : "/api/market/v{}/place-bid".format(version),
+            "MARKET_PLACE_ASK" : "/api/market/v{}/place-ask".format(version),
+            "MARKET_CANCEL_ORDER": "/api/market/v{}/cancel-order".format(version)
         }
         for k in new_endpoints:
             ENDPOINTS[k] = new_endpoints[k]
         return ENDPOINTS
 
+    @staticmethod
+    def get_api_version(API_KEY):
+        result = True if len(API_KEY) <= 32 else False
+        if result:
+            return 3
+        else:
+            2
+
 """"""
-# BITKUB API V2 INIT
+# BITKUB API Vxxx INIT
 """"""
-#from bitkub import Bitkub #have no updated v2
 import bitkub as bk
-bk.bitkub.ENDPOINTS = bitkub_v2.get_endpoints(bk.bitkub.ENDPOINTS)
+bk.bitkub.ENDPOINTS = bitkub_version_contol.get_endpoints(bk.bitkub.ENDPOINTS)
 Bitkub = bk.Bitkub
 
 """"""
@@ -59,6 +66,9 @@ def getBalance(idName):
     if API_KEY == '' or API_SECRET == '' :
         print('this user have no API KEY or API SECRET to send order')
         return None
+    if bitkub_version_contol.get_api_version(API_KEY) == 3:
+        bk.bitkub.ENDPOINTS = bitkub_version_contol.get_endpoints(bk.bitkub.ENDPOINTS, version=3)
+        Bitkub = bk.Bitkub
     bitkub = Bitkub()
     bitkub.set_api_key(API_KEY)
     bitkub.set_api_secret(API_SECRET)
@@ -117,6 +127,9 @@ def CreateSellOrder(idName,symbol,count=1):
     if API_KEY == '' or API_SECRET == '' :
         print('this user have no API KEY or API SECRET to send order')
         return return_false()
+    if bitkub_version_contol.get_api_version(API_KEY) == 3:
+        bk.bitkub.ENDPOINTS = bitkub_version_contol.get_endpoints(bk.bitkub.ENDPOINTS, version=3)
+        Bitkub = bk.Bitkub
     bitkub = Bitkub()
     bitkub.set_api_key(API_KEY)
     bitkub.set_api_secret(API_SECRET)
@@ -152,6 +165,9 @@ def CreateBuyOrder(idName,symbol,portfoiloList,countLeft):
     if API_KEY == '' or API_SECRET == '' :
         print('this user have no API KEY or API SECRET to send order')
         return return_true() #True When Bot is using
+    if bitkub_version_contol.get_api_version(API_KEY) == 3:
+        bk.bitkub.ENDPOINTS = bitkub_version_contol.get_endpoints(bk.bitkub.ENDPOINTS, version=3)
+        Bitkub = bk.Bitkub
     bitkub = Bitkub()
     bitkub.set_api_key(API_KEY)
     bitkub.set_api_secret(API_SECRET)
@@ -163,14 +179,15 @@ def CreateBuyOrder(idName,symbol,portfoiloList,countLeft):
     buySize = int(configJson[idName]['buySize'])
     history = bitkub.my_open_history(sym=symbol)
 
-    if 'error' in history or not 'result' in history:
+    #history {'error' : 0, 'result': []}
+    if not 'result' in history:
         err_msg = '''
         'can\'t connect to Bitkub API please check key and secret.
         {0}
         KEY : {1}
         SECRET : {2}
         '''.strip().format(history, API_KEY, API_SECRET)
-        raise Warning('can\'t connect to Bitkub API please check key and secret\n{}\n'.format(history))
+        raise Warning(err_msg)
     if len(history['result']) != 0:
         for data in history['result']:
             data_select = history['result'][0]
