@@ -192,7 +192,7 @@ def CreateBuyOrder(idName,symbol,portfoiloList,countLeft):
     size = int(configJson[idName]['portSize'])
     portSize = len(list(balance))-1 if balance !=None else 0 #Real Port
     buySize = int(configJson[idName]['buySize'])
-    history = bitkub.my_open_history(sym=symbol)
+    history = bitkub.my_open_history(sym=symbol, lmt=20)
 
     #history {'error' : 0, 'result': []}
     if not 'result' in history:
@@ -209,9 +209,9 @@ def CreateBuyOrder(idName,symbol,portfoiloList,countLeft):
             data_select = history['result'][0]
             buyHourDuration = (time.time() - data['ts']) / 60 / 60 #hour
             if buyHourDuration < configJson[idName]['buyEveryHour'] and data['side'].lower() == 'buy':
-                print('Order Cancel')
-                print(data['date'])
-                print(data['side'])
+                print('Order Cancel (buy hour duration)')
+                #print(data['date'])
+                #print(data['side'])
                 print(buyHourDuration)
                 return return_false()
 
