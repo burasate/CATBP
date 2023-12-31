@@ -35,10 +35,10 @@ class bitkub_version_contol:
         :return: new replaced API_ROOT
         '''
         new_endpoints = {
-            "MARKET_PLACE_BID" : "/api/market/v{}/place-bid".format(version),
-            "MARKET_PLACE_ASK" : "/api/market/v{}/place-ask".format(version),
-            "MARKET_CANCEL_ORDER": "/api/market/v{}/cancel-order".format(version),
-            "MARKET_BALANCES": "/api/v{}/market/balances".format(version)
+            #"MARKET_PLACE_BID" : "/api/market/v{}/place-bid".format(version),
+            #"MARKET_PLACE_ASK" : "/api/market/v{}/place-ask".format(version),
+            #"MARKET_CANCEL_ORDER": "/api/market/v{}/cancel-order".format(version),
+            #"MARKET_BALANCES": "/api/v{}/market/balances".format(version)
         }
         for k in new_endpoints:
             ENDPOINTS[k] = new_endpoints[k]
@@ -58,6 +58,11 @@ class bitkub_version_contol:
 import bitkub as bk
 bk.bitkub.ENDPOINTS = bitkub_version_contol.get_endpoints(bk.bitkub.ENDPOINTS)
 Bitkub = bk.Bitkub
+print('-------BITKUB API STATUS--------')
+pprint.pprint(bk.bitkub.ENDPOINTS)
+print(Bitkub().status())
+print(Bitkub().servertime())
+time.sleep(2)
 
 """"""
 # REALTIME TRADER FUNC
@@ -869,7 +874,7 @@ def run_all_user(*_):
         time.sleep(5 * 60)
 
 if __name__ == '__main__' :
-    run_all_user()
+    #run_all_user()
     ''' 
     sell data
     {'error': 0, 'result': {'id': 44454663, 'hash': 'fwQ6do9eqwAuC6bEXp3nXdpjCMy', 'typ': 'market',
@@ -877,18 +882,5 @@ if __name__ == '__main__' :
      if error
      {'error': 2}
     '''
-    #pass
-    ''' # Check Bot or User by Balance Check
-    for user in ['bot0', 'user0']:
-        bl = getBalance(user)
-        print(user, bl)
-
-        is_bot_bl = bl == None
-        is_user_bl = not is_bot_bl and 'THB' in bl
-        if is_bot_bl:
-            print('bot')
-        elif not is_user_bl:
-            print('user no money')
-        else:
-            print('user have money')
-    '''
+    balance = getBalance('user1')
+    print(balance)
