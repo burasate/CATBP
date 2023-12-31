@@ -125,8 +125,8 @@ def CreateSellOrder(idName,symbol,count=1):
     def return_false():
         return [False, result]
 
-    if not symbol.__contains__('THB_'):
-        print('symbol name need contains THB_')
+    if not symbol.__contains__('thb'):
+        print('symbol name need contains thb')
         return return_false()
     API_KEY = configJson[idName]['bk_apiKey']
     API_SECRET = configJson[idName]['bk_apiSecret']
@@ -166,8 +166,8 @@ def CreateBuyOrder(idName,symbol,portfoiloList,countLeft):
     if countLeft <= 0 :
         print('count left = 0')
         return return_false()
-    if not symbol.__contains__('THB_'):
-        print('symbol name need contains THB_')
+    if not symbol.__contains__('thb'):
+        print('symbol name need contains thb')
         return return_false()
     API_KEY = configJson[idName]['bk_apiKey']
     API_SECRET = configJson[idName]['bk_apiSecret']
