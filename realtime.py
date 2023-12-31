@@ -176,6 +176,7 @@ def CreateSellOrder(idName,symbol,count=1):
     bitkub.set_api_secret(API_SECRET)
     balance = getBalance(idName)
     sym = symbol.replace('THB_','')
+    symbol = str(symbol).lower().replace('thb', '').replace('_', '') + '_thb'  # convert symbol to api v3
 
     if not sym in list(balance):
         print('not found [{}] in balance'.format(sym))
@@ -221,6 +222,7 @@ def CreateBuyOrder(idName,symbol,portfoiloList,countLeft):
     portSize = len(list(balance))-1 if balance !=None else 0 #Real Port
     buySize = int(configJson[idName]['buySize'])
     history = bitkub.my_open_history(sym=symbol)
+    symbol = str(symbol).lower().replace('thb','').replace('_','') + '_thb' #convert symbol to api v3
 
     #history {'error' : 0, 'result': []}
     if not 'result' in history:
