@@ -35,45 +35,10 @@ class bitkub_version_contol:
         :return: new replaced API_ROOT
         '''
         new_endpoints = {
-            "API_ROOT": "https://api.bitkub.com",
-            "STATUS_PATH": "/api/status",
-            "SERVERTIME_PATH": "/api/v{}/servertime".format(version),
-            "MARKET_SYMBOLS_PATH": "/api/market/symbols",
-            "MARKET_TICKER_PATH": "/api/market/ticker?sym={sym}",
-            "MARKET_TRADES_PATH": "/api/market/trades?sym={sym}&lmt={lmt}",
-            "MARKET_BIDS_PATH": "/api/market/bids?sym={sym}&lmt={lmt}",
-            "MARKET_ASKS_PATH": "/api/market/asks?sym={sym}&lmt={lmt}",
-            "MARKET_BOOKS_PATH": "/api/market/books?sym={sym}&lmt={lmt}",
-            "MARKET_TRADING_VIEW_PATH": "/tradingview/history?symbol={sym}&resolution={resolution}&from={frm}&to={to}",
-            "MARKET_DEPTH_PATH": "/api/market/depth?sym={sym}&lmt={lmt}",
-
-            "MARKET_WALLET": "/api/v{}/market/wallet".format(version),
-            "USER_TRADING_CREDITS": "/api/v{}/user/trading-credits".format(version),
-            "MARKET_PLACE_BID": "/api/v{}/market/place-bid".format(version),
-            "MARKET_PLACE_ASK": "/api/v{}/market/place-ask".format(version),
-            "MARKET_CANCEL_ORDER": "/api/v{}/market/cancel-order",
-            "MARKET_BALANCES": "/api/v{}/market/balances".format(version),
-            "MARKET_MY_OPEN_ORDERS": "/api/v{}/market/my-open-orders?sym={sym}".format(version),
-            "MARKET_MY_ORDER_HISTORY": "/api/v{}/market/my-order-history?sym={sym}&p={p}&lmt={lmt}".format(version),
-            "MARKET_MY_ORDER_HISTORY_STARTEND": "/api/v{}/market/my-order-history?sym={sym}&p={p}&lmt={lmt}&start={start}&end={end}".format(version),
-            "MARKET_ORDER_INFO": "/api/v{}/market/order-info?sym={sym}&id={id}&sd={sd}&hash={hash}".format(version),
-            "CRYPTO_ADDRESSES": "/api/v{}/crypto/addresses".format(version),
-            "CRYPTO_WITHDRAW": "/api/v{}/crypto/withdraw".format(version),
-            "CRYPTO_INTERNAL_WITHDRAW": "/api/v{}/crypto/internal-withdraw".format(version),
-            "CRYPTO_DEPOSIT_HISTORY": "/api/v{}/crypto/deposit-history".format(version),
-            "CRYPTO_WITHDRAW_HISTORY": "/api/v{}/crypto/withdraw-history".format(version),
-            "CRYPTO_GENERATE_ADDRESS": "/api/v{}/crypto/generate-address".format(version),
-            "FIAT_ACCOUNTS": "/api/v{}/fiat/accounts".format(version),
-            "FIAT_WITHDRAW": "/api/v{}/fiat/withdraw".format(version),
-            "FIAT_DEPOSIT_HISTORY": "/api/v{}/fiat/deposit-history",
-            "FIAT_WITHDRAW_HISTORY": "/api/v{}/fiat/withdraw-history".format(version),
-            "MARKET_WSTOKEN": "/api/v{}/market/wstoken".format(version),
-            "USER_LIMITS": "/api/v{}/user/limits".format(version)
-
-            #"MARKET_PLACE_BID" : "/api/market/v{}/place-bid".format(version),
-            #"MARKET_PLACE_ASK" : "/api/market/v{}/place-ask".format(version),
-            #"MARKET_CANCEL_ORDER": "/api/market/v{}/cancel-order".format(version),
-            #"MARKET_BALANCES": "/api/v{}/market/balances".format(version)
+            "MARKET_PLACE_BID" : "/api/market/v{}/place-bid".format(version),
+            "MARKET_PLACE_ASK" : "/api/market/v{}/place-ask".format(version),
+            "MARKET_CANCEL_ORDER": "/api/market/v{}/cancel-order".format(version),
+            "MARKET_BALANCES": "/api/v{}/market/balances".format(version)
         }
         for k in new_endpoints:
             ENDPOINTS[k] = new_endpoints[k]
