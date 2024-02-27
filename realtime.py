@@ -204,7 +204,7 @@ def CreateBuyOrder(idName,symbol,portfoiloList,countLeft):
         API VERSION : {3}
         '''.strip().format(history, API_KEY, API_SECRET, API_VER)
         raise Warning(err_msg)
-    if history['result'] is not None or len(history['result']) != 0:
+    if history['result'] is not None and len(history['result']) != 0:
         for data in history['result']:
             data_select = history['result'][0]
             buyHourDuration = (time.time() - data['ts']) / 60 / 60 #hour
