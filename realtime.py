@@ -240,6 +240,7 @@ def CreateBuyOrder(idName,symbol,portfoiloList,countLeft):
     print('sizedBudget {}'.format(sizedBudget))
     print('sending order for buy {}'.format(symbol))
     result = bitkub.place_bid(sym=symbol, amt=sizedBudget, typ='market')
+    result['api_symbol'] = symbol
     print(result)
     return return_true()
 
