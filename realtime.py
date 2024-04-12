@@ -227,8 +227,7 @@ def CreateBuyOrder(idName,symbol,portfoiloList,countLeft):
     if history['result'] is not None and len(history['result']) != 0:
         for data in history['result']:
             data_ts_second = data['ts'] / sever_second_rate
-            buy_hour_duration = (time.time() - data_ts_second) / 60 / 60 #hour
-            print('{} - {} / 60 / 60'.format(time.time(), data['ts']))
+            buy_hour_duration = (time.time() - data_ts_second) / 60 / 60 # hour
             if buy_hour_duration < configJson[idName]['buyEveryHour'] and data['side'].lower() == 'buy':
                 print('Order was cancel because in bought hour duration - {}'.format(buy_hour_duration))
                 return return_false()
