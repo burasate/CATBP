@@ -52,6 +52,8 @@ class bitkub_version_contol:
         else:
             return 2
 
+
+
 """"""
 # BITKUB API Vxxx INIT
 """"""
@@ -59,14 +61,30 @@ import bitkub as bk
 bk.bitkub.ENDPOINTS = bitkub_version_contol.get_endpoints(bk.bitkub.ENDPOINTS)
 Bitkub = bk.Bitkub
 print('-------BITKUB API STATUS--------')
-pprint.pprint(bk.bitkub.ENDPOINTS)
+#pprint.pprint(bk.bitkub.ENDPOINTS)
 print(Bitkub().status())
 print(Bitkub().servertime())
-time.sleep(2)
+time.sleep(1)
+
+""""""
+# SEVER TIME RATE
+""""""
+def get_servertime_second():
+    load_time_st = time.time()
+    x1 = Bitkub().servertime()
+    load_time_en = time.time()
+    connect_duration = load_time_en - load_time_st
+    time.sleep(1)
+    x2 = Bitkub().servertime()
+    return x2 - x1 - connect_duration
+
+sever_second_rate = get_servertime_second()
 
 """"""
 # REALTIME TRADER FUNC
 """"""
+
+
 def getBalance(idName):
     global Bitkub, bk
     API_KEY = configJson[idName]['bk_apiKey']
@@ -162,7 +180,7 @@ def CreateSellOrder(idName,symbol,count=1):
     return return_true()
 
 def CreateBuyOrder(idName,symbol,portfoiloList,countLeft):
-    global Bitkub, bk
+    global Bitkub, bk, sever_second_rate
     symbol = str(symbol).lower().replace('thb', '').replace('_', '') + '_thb'  # convert symbol to api v3
     result = {}
     def return_true():
@@ -208,13 +226,11 @@ def CreateBuyOrder(idName,symbol,portfoiloList,countLeft):
         raise Warning(err_msg)
     if history['result'] is not None and len(history['result']) != 0:
         for data in history['result']:
-            pprint.pprint(data)
-            data_select = history['result'][0]
-            buy_hour_duration = (time.time() - data['ts']) / 60 / 60 #hour
+            data_ts_second = data['ts'] / sever_second_rate
+            buy_hour_duration = (time.time() - data_ts_second) / 60 / 60 #hour
             print('{} - {} / 60 / 60'.format(time.time(), data['ts']))
             if buy_hour_duration < configJson[idName]['buyEveryHour'] and data['side'].lower() == 'buy':
-                print('Order was cancel because in bought hour duration...')
-                print(data['date'], data['side'], buy_hour_duration)
+                print('Order was cancel because in bought hour duration - {}'.format(buy_hour_duration))
                 return return_false()
 
     portSymList = []
@@ -877,6 +893,7 @@ def run_all_user(*_):
         time.sleep(5 * 60)
 
 if __name__ == '__main__' :
+    pass
     #run_all_user()
     ''' 
     sell data
@@ -885,5 +902,5 @@ if __name__ == '__main__' :
      if error
      {'error': 2}
     '''
-    balance = getBalance('user1')
-    print(balance)
+    #balance = getBalance('user1')
+    #print(balance)
