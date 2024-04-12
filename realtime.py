@@ -113,12 +113,14 @@ def getBalance(idName):
                     total += ( ticker['{}_{}'.format('THB',sym)]['last'] * available )
                 #update balance data sheet
                 if sym == 'THB' and round(available,0) != round(configJson[idName]['available'],0):
-                    gSheet.setValue( 'Config', findKey='idName', findValue=idName, key='available', value=available )
-                    #gSheet.setValue( 'Config', findKey='idName', findValue=idName, key='availableHigh',value=available_h )
-                    #gSheet.setValue( 'Config', findKey='idName', findValue=idName, key='percentageDrawdown',value=p_drawdown )
+                    try:
+                        gSheet.setValue( 'Config', findKey='idName', findValue=idName, key='available', value=available )
+                    except:pass
         #update total value sheet
         if round(configJson[idName]['totalValue']*.1,0) != round(total*.1,0):
-            gSheet.setValue('Config', findKey='idName', findValue=idName, key='totalValue', value=total)
+            try:
+                gSheet.setValue('Config', findKey='idName', findValue=idName, key='totalValue', value=total)
+            except:pass
     return data
 
 def CreateSellOrder(idName,symbol,count=1):
@@ -206,13 +208,13 @@ def CreateBuyOrder(idName,symbol,portfoiloList,countLeft):
         raise Warning(err_msg)
     if history['result'] is not None and len(history['result']) != 0:
         for data in history['result']:
+            pprint.pprint(data)
             data_select = history['result'][0]
-            buyHourDuration = (time.time() - data['ts']) / 60 / 60 #hour
-            if buyHourDuration < configJson[idName]['buyEveryHour'] and data['side'].lower() == 'buy':
-                print('Order Cancel (buy hour duration)')
-                #print(data['date'])
-                #print(data['side'])
-                print(buyHourDuration)
+            buy_hour_duration = (time.time() - data['ts']) / 60 / 60 #hour
+            print('{} - {} / 60 / 60'.format(time.time(), data['ts']))
+            if buy_hour_duration < configJson[idName]['buyEveryHour'] and data['side'].lower() == 'buy':
+                print('Order was cancel because in bought hour duration...')
+                print(data['date'], data['side'], buy_hour_duration)
                 return return_false()
 
     portSymList = []
