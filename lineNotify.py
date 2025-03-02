@@ -16,18 +16,21 @@ ImgFiles = os.listdir(imgPath)
 url = 'https://notify-api.line.me/api/notify'
 
 def sendNotifyMassage (token,text):
+    return
     print('Sending Massage')
     headers = {'Authorization': 'Bearer ' + token}
     r = requests.post(url, headers=headers , data = {'message':'\n'+text})
     print (r.text)
 
 def sendNotifyImageMsg (token,imagePath,text):
+    return
     print('Sending Image {}'.format(imagePath))
     headers = {'Authorization': 'Bearer ' + token}
     r = requests.post(url, headers=headers ,data = {'message':'\n'+text}, files = {'imageFile':open(imagePath,'rb')})
     print (r.text)
 
 def signalReportToUser(*_):
+    return
     import datetime as dt
     date = dt.date.today().strftime('%d/%m/%Y')
     import stockAnalysis
