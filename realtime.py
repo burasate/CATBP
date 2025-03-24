@@ -52,8 +52,6 @@ class bitkub_version_contol:
         else:
             return 2
 
-
-
 """"""
 # BITKUB API Vxxx INIT
 """"""
@@ -292,7 +290,7 @@ def Reset(*_):
                    'Portfolio Size : {} \n'.format(configJson[user]['portSize']) +\
                    'Position Size : {} \n'.format(configJson[user]['buySize']) +\
                    'Target Profit : {}%'.format(configJson[user]['percentageProfitTarget'])
-            lineNotify.sendNotifyMassage(configJson[user]['lineToken'],text)
+            #lineNotify.sendNotifyMassage(configJson[user]['lineToken'],text)
             gSheet.setValue('Config', findKey='idName', findValue=user, key='reset', value=0)
             gSheet.setValue('Config', findKey='idName', findValue=user, key='lastReport', value=time.time())
             print(text)
@@ -536,7 +534,8 @@ def Realtime(idName,sendNotify=True):
                             idName, 'Buy', row['Symbol'],(configJson[idName]['percentageComission'] / 100) * -1,
                             result_msg=json.dumps(buy_order[1], sort_keys=True))
                         if sendNotify:
-                            lineNotify.sendNotifyMassage(token, text + '\nOn dip lower {}%'.format(dipTarget))
+                            pass
+                            #lineNotify.sendNotifyMassage(token, text + '\nOn dip lower {}%'.format(dipTarget))
                         port_df.loc[symbol_index, 'Count'] += 1
                         port_df.loc[symbol_index, 'Rec_Date'] = row['Rec_Date']
                         port_df.loc[symbol_index, 'Last_Buy'] = row['Last_Buy']
@@ -569,10 +568,11 @@ def Realtime(idName,sendNotify=True):
                     quote = row['Symbol'].split('_')[-1]
                     img_file_path = imgPath + os.sep + '{}_{}.png'.format(preset, quote)
                     if os.path.exists(img_file_path):
-                        #lineNotify.sendNotifyImageMsg(token, img_file_path, text)
-                        lineNotify.sendNotifyMassage(token, text)
+                        pass
+                        #lineNotify.sendNotifyMassage(token, text)
                     else:
-                        lineNotify.sendNotifyMassage(token, text)
+                        pass
+                        #lineNotify.sendNotifyMassage(token, text)
                 port_df = port_df.append(row, ignore_index=False)
     #Finish Buy
     port_df.reset_index(drop=True,inplace=True)
@@ -635,14 +635,13 @@ def Realtime(idName,sendNotify=True):
                '\nTotal Value {:,.2f} B.'.format(total)
 
         if sendNotify:
-            lineNotify.sendNotifyMassage(token, text)
+            pass
+            #lineNotify.sendNotifyMassage(token, text)
 
         #Adaptive Loss Update
         if adaptiveLoss and abs(lossTarget) > new_lossTarget:
             gSheet.setValue('Config', findKey='idName', findValue=idName, key='percentageLossTarget',
                             value=new_lossTarget)
-            #if sendNotify:
-                #lineNotify.sendNotifyMassage(token, 'New Loss Target : {}%'.format(new_lossTarget))
 
     print('---------------------\nSelling\n---------------------')
     new_loss_list = []
@@ -726,17 +725,17 @@ def Realtime(idName,sendNotify=True):
                 quote = row['Symbol'].split('_')[-1]
                 img_file_path = imgPath + os.sep + '{}_{}.png'.format(preset, quote)
                 if os.path.exists(img_file_path) and port_df.loc[i, 'Count'] <= 0: # Send Image at last count
-                    lineNotify.sendNotifyImageMsg(token, img_file_path, text)
+                    pass
+                    #lineNotify.sendNotifyImageMsg(token, img_file_path, text)
                 else:
-                    lineNotify.sendNotifyMassage(token, text)
+                    pass
+                    #lineNotify.sendNotifyMassage(token, text)
 
         if port_df.loc[i, 'Count'] <= 0 : #Delete symbol if no count
             port_df = port_df[port_df['Symbol'] != row['Symbol']]
     if new_loss_list != []:
         gSheet.setValue('Config', findKey='idName', findValue=idName, key='percentageLossTarget',
                         value=sum(new_loss_list)/len(new_loss_list))
-        #if sendNotify:
-            #lineNotify.sendNotifyMassage(token, 'New Loss Target : {}%'.format(new_lossTarget))
 
     print('---------------------\nAuto Preset\n---------------------')
     if autoPreset:
@@ -763,11 +762,13 @@ def Realtime(idName,sendNotify=True):
             if configJson[top_user]['preset'] != configJson[idName]['preset']:
                 gSheet.setValue('Config', findKey='idName', findValue=idName, key='preset', value=aPreset)
                 if sendNotify:
-                    lineNotify.sendNotifyMassage(token, 'Change Preset to {}\n{}'.format(aPreset,presetJson[aPreset]['description']))
+                    pass
+                    #lineNotify.sendNotifyMassage(token, 'Change Preset to {}\n{}'.format(aPreset,presetJson[aPreset]['description']))
             if configJson[top_user]['system'] != configJson[idName]['system']:
                 gSheet.setValue('Config', findKey='idName', findValue=idName, key='system', value=aSystem)
                 if sendNotify:
-                    lineNotify.sendNotifyMassage(token, 'Change System to {}\n{}'.format(aSystem,systemJson[aSystem]['description']))
+                    pass
+                    #lineNotify.sendNotifyMassage(token, 'Change System to {}\n{}'.format(aSystem,systemJson[aSystem]['description']))
 
     print('---------------------\nBalance Checking\n---------------------')
     # Clear Wrong Balnace
