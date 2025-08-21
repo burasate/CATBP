@@ -2,7 +2,6 @@
   "historical.py" : "https://raw.githubusercontent.com/burasate/CATBP/master/historical.py",
   "kbApi.py" : "https://raw.githubusercontent.com/burasate/CATBP/master/kbApi.py",
   "lineNotify.py" : "https://raw.githubusercontent.com/burasate/CATBP/master/lineNotify.py",
-  "update.py" : "https://raw.githubusercontent.com/burasate/CATBP/master/update.py",
   "analysis.py" : "https://raw.githubusercontent.com/burasate/CATBP/master/analysis.py",
   "main.py" : "https://raw.githubusercontent.com/burasate/CATBP/master/main.py",
   "main_priceTracker.py" : "https://raw.githubusercontent.com/burasate/CATBP/master/main_priceTracker.py",
