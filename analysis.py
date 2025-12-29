@@ -464,7 +464,7 @@ def get_all_analysis():
     # New Signal DataFrame (All Signal Record)
     new_signal_df = pd.read_csv(csvPath)
     new_signal_df = new_signal_df[new_signal_df['Rec_Date'] != rec_date]
-    new_signal_df = new_signal_df.concat([new_signal_df, signal_df], ignore_index=True)
+    new_signal_df = pd.concat([new_signal_df, signal_df], ignore_index=True)
     new_signal_df = new_signal_df.sort_values(['Date','Rec_Date','Signal'], ascending=[True,True,True])
     new_signal_df.drop_duplicates(['Rec_Date','Preset','Symbol'],keep='last', inplace=True, ignore_index=False)
     new_signal_df = new_signal_df.tail(5000)
