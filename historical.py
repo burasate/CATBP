@@ -47,7 +47,7 @@ def updateGSheetHistory(days_limit = 6):
     symbols = kbApi.getSymbol()
 
     df = pd.DataFrame()
-    df = df.append(getHistDataframe())
+    df = pd.concat([df, getHistDataframe()], ignore_index=True)
 
     date = dt.now().strftime('%Y-%m-%d')
     hour = int(dt.now().strftime('%H'))
@@ -73,9 +73,7 @@ def updateGSheetHistory(days_limit = 6):
         file_path = dataPath + '/hist_backup/{}'.format(f)
         print('Load : {}'.format(os.path.basename(file_path)))
         try:
-            df = df.append(
-                pd.read_csv(file_path).sort_values(['dateTime'],ascending=[True]).tail(5000), ignore_index=True
-            )
+            df = pd.concat([df, pd.read_csv(file_path).sort_values(['dateTime'],ascending=[True]).tail(5000)], ignore_index=True)
         except:
             print('Can\'t Read {}   Column DateTime..'.format(file_path))
         else:
@@ -88,9 +86,7 @@ def updateGSheetHistory(days_limit = 6):
     # Append all hist csv
     all_hist_path = dataPath + '/cryptoHist.csv'
     if not df.empty:
-        df = df.append(
-            pd.read_csv(all_hist_path).tail(3000), ignore_index=True
-        )
+        df = pd.concat([df, pd.read_csv(all_hist_path).tail(3000)], ignore_index=True)
 
     os.system('cls||clear')
     column_ls = []
@@ -146,9 +142,8 @@ def updateGSheetHistory(days_limit = 6):
             pass
 
         #append data row
-        df = df.append(
-            pd.DataFrame(rowData), ignore_index=True
-        )
+        df = pd.concat([df, pd.DataFrame(rowData)], ignore_index=True)
+
         if column_ls != list(rowData):
             column_ls = list(rowData)
 
@@ -385,7 +380,7 @@ def rec_price(*_):
             data[i] = ticker[sym][i]
         #import pprint
         #pprint.pprint(data)
-        df = df.append(pd.DataFrame.from_records([data]))
+        df = pd.concat([df, pd.DataFrame.from_records([data])], ignore_index=True)
 
     df.reset_index(inplace=True, drop=True)
     for i in ['index', 'level_0']:
