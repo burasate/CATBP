@@ -440,17 +440,18 @@ def get_all_analysis():
                 if filter_condition and entry_condition:
                     print('Preset : {} | Entry : {}'.format(ps,file))
                     df['Signal'] = 'Entry'
-                    signal_df = signal_df.append(df.iloc[0])
+                    #signal_df = signal_df.append(df.iloc[0])
                     #get_analysis(hist_path + os.sep + file, ps, saveImage=True, showImage=False)
                 # Trade Exit
                 elif filter_condition and exit_condition:
                     print('Preset : {} | Exit : {}'.format(ps, file))
                     df['Signal'] = 'Exit'
-                    signal_df = signal_df.append(df.iloc[0])
+                    #signal_df = signal_df.append(df.iloc[0])
                     #get_analysis(hist_path + os.sep + file, ps, saveImage=True, showImage=False)
                 else:
                     df['Signal'] = ''
-                    signal_df = signal_df.append(df.iloc[0])
+                    #signal_df = signal_df.append(df.iloc[0])
+                signal_df = pd.concat([signal_df, df.iloc[[0]].copy()], ignore_index=True)
             except:
                 pass
 
