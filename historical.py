@@ -245,6 +245,7 @@ def update_gsheet_hist(gsheet_row_limit = 30000):
     time.sleep(2)
 
 def subproc_update_gsheet_hist():
+    import shlex
     command = '''
 import sys, os
 if not \'{0}\' in sys.path:
@@ -256,8 +257,19 @@ historical.update_gsheet_hist()
     is_posix = os.name == 'posix'  # raspi os
     if is_posix:
         venv_path = os.path.expanduser('~/.env/bin/activate')
-        python_cmd = f'source {venv_path} && python3' if os.path.exists(venv_path) else 'python3'
-        subprocess.call(['lxterminal', '--geometry=75x1+0+0', '-e', python_cmd, '-c', command])
+
+        if os.path.exists(venv_path):
+            cmd = f'source {venv_path} && python3 -c {shlex.quote(command)}'
+        else:
+            cmd = f'python3 -c {shlex.quote(command)}'
+        subprocess.call([
+            'lxterminal',
+            '--geometry=75x1+0+0',
+            '-e',
+            'bash',
+            '-c',
+            cmd
+        ])
     else:
         subprocess.call(
             [r'D:\GDrive\Documents\2021\bitkubPy\venv\Scripts\python.exe', '-c', command]
