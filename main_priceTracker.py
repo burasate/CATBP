@@ -20,9 +20,7 @@ def getHistDataframe(*_):
         rowData = {}
         for colName in row:
             rowData[colName] = [row[colName]]
-        df = df.append(
-            pd.DataFrame(rowData),ignore_index=True
-        )
+        df = pd.concat([df, pd.DataFrame(rowData)], ignore_index=True)
     df.sort_index(inplace=True)
     return df
 
