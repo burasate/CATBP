@@ -354,7 +354,7 @@ def rec_transaction(idName,code,symbol,change,result_msg=''):
         if not c in entry_df.columns.tolist():
             entry_df[c] = None
     rec = pd.DataFrame(data)
-    entry_df = entry_df.append(rec,ignore_index=True)
+    entry_df = pd.concat([entry_df, pd.DataFrame(rec)], ignore_index=True)
     entry_df = entry_df.tail(15000)
     entry_df.to_csv(transacFilePath,index=False)
 
@@ -573,7 +573,8 @@ def Realtime(idName,sendNotify=True):
                     else:
                         pass
                         #lineNotify.sendNotifyMassage(token, text)
-                port_df = port_df.append(row, ignore_index=False)
+                port_df = pd.concat([port_df, pd.DataFrame([row])], ignore_index=False)
+
     #Finish Buy
     port_df.reset_index(drop=True,inplace=True)
 
@@ -804,7 +805,7 @@ def Realtime(idName,sendNotify=True):
         )
 
     alluser_df = alluser_df[alluser_df['User'] != idName]
-    alluser_df = alluser_df.append(port_df)
+    alluser_df = pd.concat([alluser_df, port_df], ignore_index=True)
     for i in ['index', 'level_0']:
         if i in alluser_df.columns.tolist():
             alluser_df.drop(columns=[i], inplace=True)
