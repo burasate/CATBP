@@ -511,20 +511,11 @@ analysis.batch_save_image()
 
     if is_posix:
         venv_path = os.path.expanduser('~/.env/bin/activate')
-
-        if os.path.exists(venv_path):
-            cmd = f'source {venv_path} && python3 {command}'
-        else:
-            cmd = f'python3 {command}'
-
-        subprocess.call([
-            'lxterminal',
-            '--geometry=10x2+5+5',
-            '-e',
-            'bash',
-            '-c',
-            cmd
-        ])
+        is_posix = os.name == 'posix'  # raspi os
+        if is_posix:
+            venv_path = os.path.expanduser('~/.env/bin/activate')
+            python_cmd = f'source {venv_path} && python3' if os.path.exists(venv_path) else 'python3'
+            subprocess.call(['lxterminal', '--geometry=10x2+5+5', '-e', python_cmd, '-c', command])
     else:
         subprocess.call(
             [r'D:\GDrive\Documents\2021\bitkubPy\venv\Scripts\python.exe','-c', command]
