@@ -297,9 +297,9 @@ def createSymbolHistory(symbol,timeFrame = 'minute'):
     histDF['low'] = histDF.groupby(group)['last'].transform('min')
     histDF['high'] = histDF.groupby(group)['last'].transform('max')
     histDF['open'] = histDF.groupby(group)['last'].head(1)
-    histDF['open'] = histDF['open'].fillna(method='ffill')
+    histDF['open'] = histDF['open'].ffill()
     histDF['close'] = histDF.groupby(group)['last'].tail(1)
-    histDF['close'] = histDF['close'].fillna(method='ffill')
+    histDF['close'] = histDF['close'].ffill()
 
     #delete sub timeframe duplicate and clean up
     histDF.drop_duplicates(group, keep='last', inplace=True)
